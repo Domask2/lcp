@@ -1,0 +1,73 @@
+.portals-notify {
+  position: absolute;
+  display: flex;
+  z-index: 1000000;
+  align-items: center;
+  justify-content: space-between;
+  width: 320px;
+  height: 56px;
+  right: 0;
+  bottom: 2%;
+  padding: 0 47px 0 16px;
+  border-radius: 12px;
+  transition: all 0.4s ease;
+}
+
+.portals-text-error {
+  display: flex;
+  align-items: center;
+}
+
+.portals-text-error  p {
+    color: #FFF;
+  }
+
+.portals-text-error  i {
+    margin-right: 10px;
+    font-size: 24px;
+    line-height: 24px;
+    color: #FFF;
+  }
+
+
+.close-notify {
+  top: 20px;
+  right: 16px;
+}
+
+.notify-button {
+  color: #FFF;
+}
+
+.portals-notify-error {
+  background: #F65354;
+}
+
+.portals-notify-success {
+  display: flex;
+  align-items: center;
+  background: #FFFFFF;
+}
+
+.portals-text-success {
+  display: flex;
+  align-items: center;
+}
+
+.portals-text-success p {
+    color: #1D1929;
+  }
+
+.portals-text-success i {
+    color: green;
+    margin-right: 10px;
+    font-size: 24px;
+    line-height: 24px;
+  }
+
+
+@media(min-width: 768px) {
+  .portals-notify {
+    width: 376px;
+  }
+}

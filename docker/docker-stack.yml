@@ -1,0 +1,30 @@
+version: '3.8'
+
+services:
+  app:
+    image: $CI_REGISTRY_IMAGE:$CI_COMMIT_SHORT_SHA
+    deploy:
+      replicas: 1
+      restart_policy:
+        condition: on-failure
+      labels:
+        - traefik.enable=true
+        - traefik.http.routers.admin-lcp-http.entrypoints=web
+        - traefik.http.routers.admin-lcp-http.rule=Host(`admin.lcp.plinor.team`)
+        - traefik.http.routers.admin-lcp-http.middlewares=admin-lcp-to-https
+        - traefik.http.middlewares.admin-lcp-to-https.redirectscheme.scheme=https
+        - traefik.http.routers.admin-lcp-https.entrypoints=websecure
+        - traefik.http.routers.admin-lcp-https.rule=Host(`admin.lcp.plinor.team`)
+        - traefik.http.routers.admin-lcp-https.tls=true
+        - traefik.http.services.admin-lcp-https.loadbalancer.server.port=8080
+    networks:
+      - traefik_net
+
+networks:
+  traefik_net:
+    external: true
+
+# volumes:
+#   vol_db:
+#     driver: glusterfs
+#     name: "gfs/lcp/frontadmin/data"

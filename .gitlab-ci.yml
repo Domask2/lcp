@@ -1,0 +1,123 @@
+stages:
+  - create
+  - build
+  - testing
+  - deploy
+
+.tags_only: &tags_only
+  tags:
+    - docker
+
+
+build_react:
+  stage: create
+  image: node:16.14.0-alpine
+  cache:
+    - key:
+        files:
+          - package-lock.json
+      paths:
+        - node_modules
+    - key:
+        files:
+          - yarn.lock
+      paths:
+        - .yarn-cache/
+  script:
+    - echo "Install dependencies and build app"
+    - yarn install --cache-folder .yarn-cache
+    - yarn build || true
+  artifacts:
+    expire_in: 3 hrs
+    paths:
+      - build
+  rules:
+    - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH || $CI_PIPELINE_SOURCE == "merge_request_event" || $CI_COMMIT_BRANCH == "test"
+  <<: *tags_only
+
+build_image:
+  stage: build
+  image: docker
+  script:
+    - echo "Build docker image"
+    - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
+    - docker build -t $CI_REGISTRY_IMAGE:$CI_COMMIT_SHORT_SHA -f docker/Dockerfile .
+    - docker push $CI_REGISTRY_IMAGE:$CI_COMMIT_SHORT_SHA
+  rules:
+    - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH || $CI_PIPELINE_SOURCE == "merge_request_event" || $CI_COMMIT_BRANCH == "test"
+  <<: *tags_only
+
+deploy_staging:
+  stage: testing
+  image: docker
+  environment: staging
+  variables:
+    DOCKER_HOST: tcp://cluster.docsw.stage:2376
+    DOCKER_TLS_VERIFY: 1
+    DOCKER_CERT_PATH: "/certs"
+  script:
+    - mkdir -p $DOCKER_CERT_PATH
+    - echo "$ST_TLSCACERT" > $DOCKER_CERT_PATH/ca.pem
+    - echo "$ST_TLSCERT" > $DOCKER_CERT_PATH/cert.pem
+    - echo "$ST_TLSKEY" > $DOCKER_CERT_PATH/key.pem
+    - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
+    - >
+      if docker stack ls | grep $CI_PROJECT_NAME ; then
+        docker stack rm $CI_PROJECT_NAME
+        sleep 10
+      else
+        echo "Containers $CI_PROJECT_NAME not running"
+      fi
+    - docker stack deploy -c docker/docker-stack.yml --with-registry-auth lcp-$CI_PROJECT_NAME
+    - rm -rf $DOCKER_CERT_PATH
+  rules:
+     - if: $CI_COMMIT_BRANCH == "test" || $CI_PIPELINE_SOURCE == "merge_request_event"
+  <<: *tags_only
+
+stop_staging:
+  stage: testing
+  image: docker
+  environment: staging
+  when: manual
+  variables:
+    DOCKER_HOST: tcp://cluster.docsw.stage:2376
+    DOCKER_TLS_VERIFY: 1
+    DOCKER_CERT_PATH: "/certs"
+  script:
+    - mkdir -p $DOCKER_CERT_PATH
+    - echo "$ST_TLSCACERT" > $DOCKER_CERT_PATH/ca.pem
+    - echo "$ST_TLSCERT" > $DOCKER_CERT_PATH/cert.pem
+    - echo "$ST_TLSKEY" > $DOCKER_CERT_PATH/key.pem
+    - docker stack rm $CI_PROJECT_NAME
+    - rm -rf $DOCKER_CERT_PATH
+  rules:
+     - if: $CI_COMMIT_BRANCH == "test" || $CI_PIPELINE_SOURCE == "merge_request_event"
+  <<: *tags_only
+
+deploy_to_prod:
+  stage: deploy
+  image: docker
+  environment: production
+  variables:
+    DOCKER_HOST: tcp://cluster.docsw.prod:2376
+    DOCKER_TLS_VERIFY: 1
+    DOCKER_CERT_PATH: "/certs"
+  script:
+    - mkdir -p $DOCKER_CERT_PATH
+    - echo "$PR_TLSCACERT" > $DOCKER_CERT_PATH/ca.pem
+    - echo "$PR_TLSCERT" > $DOCKER_CERT_PATH/cert.pem
+    - echo "$PR_TLSKEY" > $DOCKER_CERT_PATH/key.pem
+    - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
+    - >
+      if docker stack ls | grep $CI_PROJECT_NAME ; then
+        docker stack rm $CI_PROJECT_NAME
+        sleep 10
+      else
+        echo "Containers $CI_PROJECT_NAME not running"
+      fi
+    - sed -i "s/admin.lcp.plinor.team/admin.lcp.plinor.ru/g" docker/docker-stack.yml
+    - docker stack deploy -c docker/docker-stack.yml --with-registry-auth $CI_PROJECT_NAME
+    - rm -rf $DOCKER_CERT_PATH
+  rules:
+    - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH || $CI_PIPELINE_SOURCE == "merge_request_event"
+  <<: *tags_only
