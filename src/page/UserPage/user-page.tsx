@@ -6,11 +6,10 @@ import {verification} from '../../utils';
 import RenderRoles from './render-roles';
 import DownLoad from "../../components/DownLoad/DownLoad";
 import {useTypedSelector} from '../../hooks';
-import {Avatar, Button, Card, Col, Row} from 'antd';
+import {Button, Card, Col, Row} from 'antd';
 import {RootState} from '../../redux/redux.store';
 import {IProject} from "../../redux/project/project.initial";
 import styles from './user-page.module.css'
-import {baseUrl} from "../../saga/api/api";
 
 const UserPage: React.FC = () => {
     const auth = useTypedSelector((state: RootState) => getAuth(state));
@@ -67,7 +66,7 @@ const UserPage: React.FC = () => {
                         : ''
                 }
             </Row>
-            <DownLoad url={'users/' + auth?.name?.split(' ').join('')} project={'users'} page={auth?.name?.split(' ').join('')} strPage={'users'}/>
+            <DownLoad url={'users/' + auth?.name?.split(' ').join('')} project={'users'} page={auth?.name?.split(' ').join('')} strPage={'users'} />
         </Card>
     )
 };

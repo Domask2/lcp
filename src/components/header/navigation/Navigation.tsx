@@ -19,9 +19,15 @@ const Navigation: React.FC = () => {
     const editMode = useTypedSelector((state: RootState) => getEditMode(state));
     const roleKey = currentProject ? currentProject.key : '';
 
+    console.log(currentProject)
+
     function renderMenu(arr: any) {
         return (
-            <Menu theme="light" style={{background: 'none'}} defaultSelectedKeys={['2']} mode="horizontal">
+            <Menu
+                theme="light"
+                style={{background: 'none'}}
+                // defaultSelectedKeys={['2']}
+                mode="horizontal">
                 {/*eslint-disable-next-line array-callback-return*/}
                 {arr?.navigation?.map((item: INavigation) => {
                     const url = `/${arr.key}/${item.key}`;
@@ -39,7 +45,9 @@ const Navigation: React.FC = () => {
 
     function renderSubMenu(arr: any, url: string) {
         return (
-            <SubMenu style={{background: 'none'}} key={arr.id ? arr.id : url}
+            <SubMenu
+                style={{background: 'none'}}
+                key={arr.id ? arr.id : url}
                 title={arr.active_page ? (
                     <Link to={`${url}`}>{arr.title} <span
                         style={{fontSize: '10px'}}>{`${editMode ? `${arr.project_roles && arr.project_roles.length ? `(${arr.project_roles})` : ''}` : ''}`}</span></Link>

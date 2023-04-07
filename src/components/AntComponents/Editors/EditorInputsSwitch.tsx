@@ -22,6 +22,7 @@ import InputsInitDictionarySettings from "./UniqSettingsElements/InputsInitDicti
 import InputsDetPickMenuSettings from "./UniqSettingsElements/InputsDetPickMenuSettings";
 import InputsDsSettings from "./UniqSettingsElements/InputsDsSettings";
 import EditorCheckboxTwoInputElement from "./InputsElements/EditorCheckboxTwoInputElement";
+import GeoCode from "./UniqSettingsElements/GeoCode";
 
 type AntInputType = {
     props: any
@@ -29,7 +30,13 @@ type AntInputType = {
 
 const EditorInputsSwitch: React.FC<AntInputType> = ({props}) => {
 
-    const [value, setValue] = useState<any>(props.keyTwoLevel ? (props.value[props.key] && props.value[props.key][props.keyTwoLevel] ? props.value[props.key][props.keyTwoLevel] : props.startValue) : (props.value[props.key] ? props.value[props.key] : props.startValue));
+    const [value, setValue] = useState<any>(
+        props.keyTwoLevel ? (
+            props.value[props.key] && props.value[props.key][props.keyTwoLevel] ? props.value[props.key][props.keyTwoLevel] : props.startValue
+        ) : (
+            props.value[props.key] ? props.value[props.key] : props.startValue
+        )
+    );
     const [valueTwo, setValueTwo] = useState(props.value[props.keyTwo]);
 
     const debouncedValue = useDebounce(value, 500);
@@ -94,7 +101,7 @@ const EditorInputsSwitch: React.FC<AntInputType> = ({props}) => {
                 return <EditorCheckboxElement
                     props={props}
                     setValue={setValue}
-                    value={value}
+                    value={!!value}
                 />
             case SettingsType.CHECKBOX_INPUT:
                 return <EditorCheckboxInputElement
@@ -125,6 +132,13 @@ const EditorInputsSwitch: React.FC<AntInputType> = ({props}) => {
                     valueTwo={valueTwo}
                     setValueTwo={setValueTwo}
                 />
+            case SettingsType.GEOCODE:
+                return <GeoCode
+                    props={props}
+                    setValue={setValue}
+                    value={value}
+                    setValueTwo={setValueTwo}
+                />
             case SettingsType.TABLE_DS:
                 return <EditorTableDsElement
                     props={props}
@@ -146,7 +160,10 @@ const EditorInputsSwitch: React.FC<AntInputType> = ({props}) => {
             case SettingsType.GET_URL:
                 return <>
                     <h3>Get URL</h3>
-                    <ObjectUrlEditor object={value} setObject={setValue} />
+                    <ObjectUrlEditor
+                        object={value}
+                        setObject={setValue}
+                    />
                 </>
             case SettingsType.STYLE:
                 return <div>

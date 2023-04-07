@@ -44,17 +44,23 @@ const AntRow = ({cmp, props}: any) => {
     if (cmp.children === undefined)
         return <></>
 
-    return <>
+    return <div style={{position: 'relative'}}>
         {cmp.anchor && <ScrollableAnchor id={`${cmp.anchor}`}>
-            <span></span>
+            <span/>
         </ScrollableAnchor>}
-        <Editor cmp={cmp} onMouseOut={onMouseOut} onMouseOver={onMouseOver} />
-        <Row {...cmp.props} style={style}>
+        <Editor cmp={cmp} rowStyle={{height: '100%', left: '-3px',padding: '0px 3px 1px', width:'0', writingMode:'vertical-rl', background: '#40a9ff'}}
+                onMouseOut={onMouseOut}
+                onMouseOver={onMouseOver}
+                direction='left'
+                testEditorStyle={true}
+                height='20px'
+        />
+        <Row {...cmp.props} style={{marginLeft: '0px', marginRight: '0px', ...style}}>
             {cmp.children.map((item: ComponentInterface) =>
                 <Master key={item.key} cmp={{...item, page_key: cmp.page_key, ext: cmp.ext}} props={props} />)}
         </Row>
         {editMode && editModeRowElements && <Button onClick={() => onAddCmp(templates['Row'])}>Добавить Row</Button>}
-    </>
+    </div>
 }
 
 export default AntRow

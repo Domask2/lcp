@@ -21,8 +21,8 @@ const TableCellStyleAddictions: React.FC<TableCellStyleAddictionsType> = ({addic
     }
     const addItem = () => {
         setAddictions((prevState: any) => {
-            const newArr2 = [...prevState, addictTemplate]
-            return newArr2
+            const newArr = [...prevState, addictTemplate]
+            return newArr
         })
     }
     const changeItem = (index: number, item: any) => {

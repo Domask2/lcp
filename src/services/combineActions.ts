@@ -164,7 +164,11 @@ export const getGlobalFunction = (fncAll: any, functionKey: string, functionPara
         source = functionSource[0]
 
         if (functionParam) {
-            dsFilter = functionSource[1] + '=' + functionParam
+            if (Array.isArray(functionParam)) {
+                dsFilter = functionSource[1] + '=' + functionParam.join('|')
+            } else {
+                dsFilter = functionSource[1] + '=' + functionParam
+            }
         }
 
         if (functionParamArray) {
@@ -239,7 +243,7 @@ export const getAllReloadDs = (allDsProject: IDataSourceAll, reloadDS: Array<str
         newds.push(strDs_table)
     }
 
-    let newDsFilter: Array<{ key: string, filter: string }> = [];
+    let newDsFilter: Array<{key: string, filter: string}> = [];
     newds.forEach((ds: any) => {
         Object.keys(allDsProject).forEach((allDs: any) => {
             if (ds === allDs) {
@@ -255,6 +259,7 @@ export const getAllReloadDs = (allDsProject: IDataSourceAll, reloadDS: Array<str
 export const combineAction = (objectAction: any, fncAll: any, actionsHooks: any, ds?: any, reduxObj?: boolean) => {
     const {typeSwitch, functionKey, functionParam, functionParamArray, formValue, formatDL} = objectAction;
     switch (typeSwitch) {
+        // временно удаленно
         case 'to':
             actionsHooks.to(functionKey, functionParam)
             break
@@ -262,6 +267,7 @@ export const combineAction = (objectAction: any, fncAll: any, actionsHooks: any,
             const {source, dsFilter, target} = getGlobalFunction(fncAll, functionKey, functionParam, functionParamArray)
             actionsHooks.loadDataSourceWithCache(source, "__filter=" + dsFilter, false, target)
             break
+        // временно удаленно
         case 'dl':
             const {sourceDl, filterDl} = getSourceDownload(fncAll, functionKey, functionParam, functionParamArray)
             let fullSourceDl: any
@@ -331,11 +337,11 @@ export const combineAction = (objectAction: any, fncAll: any, actionsHooks: any,
             }
 
             if (Object.keys(procObj).length !== 0 && !reduxObj) {
-                // console.log(procObj)
                 actionsHooks.executeDbProcedure(ds_source, procObj, [ds])
             }
 
             break
+        // временно удаленно
         case 'get':
             let urlSource: any;
             fncAll.forEach((fnc: any) => {

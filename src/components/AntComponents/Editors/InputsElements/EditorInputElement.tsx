@@ -1,7 +1,8 @@
-import React, {memo} from "react";
+import React, {memo, useEffect, useState} from "react";
 import {Button, Input, Space} from 'antd';
 import AntPopover from "../../Popover/AntPopover";
 import {ClearOutlined} from '@ant-design/icons';
+import EditorPopoverElement from "./EditorPopoverElement";
 
 type AntInputType = {
     props: any
@@ -10,6 +11,8 @@ type AntInputType = {
 }
 
 const EditorInputElement: React.FC<AntInputType> = ({props, setValue, value}) => {
+
+    const [string, setString] = useState<string>('')
 
     const getValue = (val: any) => {
         if (typeof val === 'string') {
@@ -31,6 +34,12 @@ const EditorInputElement: React.FC<AntInputType> = ({props, setValue, value}) =>
             })
         }
     }
+
+    useEffect(() => {
+        string && setValue(`${value}${string}`);
+        setString('');
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [string])
 
     return <>
         <div style={props.containerStyle}>
@@ -71,6 +80,7 @@ const EditorInputElement: React.FC<AntInputType> = ({props, setValue, value}) =>
                         className="lcEditorInput"
                         onChange={e => handleChangeValue(props.inputsType.numeric ? +e.target.value : e.target.value)}
                     />
+                    {props.inputsType.mappedTextButton && <EditorPopoverElement setValue={setString} value={value} />}
                     {props.clearButton !== false && <Button
                         type="link"
                         onClick={() => setValue(props.startValue)}

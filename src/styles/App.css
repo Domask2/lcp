@@ -205,6 +205,66 @@ div .preview p {
     margin: 0;
 }
 
+.ant-carousel .slick-prev,
+.ant-carousel .slick-next {
+    color: currentColor;
+    z-index: 2;
+    font-size: 20px;
+    height: 30px;
+    opacity: .5;
+}
+
+.ant-carousel .slick-prev {
+    left: 10px;
+}
+
+.ant-carousel .slick-next {
+    right: 10px;
+}
+
+.ant-carousel .slick-prev:focus,
+.ant-carousel .slick-next:focus {
+    color: currentColor;
+    opacity: .8;
+}
+
+.ant-carousel .slick-prev:hover,
+.ant-carousel .slick-next:hover {
+    color: currentColor;
+    opacity: 1;
+}
+
+/* div.slick-slider .slick-dots li button {
+    background: red;
+} */
+
 /*tbody.ant-table-tbody tr.ant-table-row td.ant-table-cell {*/
 /*    padding: 0;*/
 /*}*/
+
+div.cascade-table table tr.ant-table-row {
+    cursor: pointer;
+}
+
+/*.ant-menu-horizontal > .ant-menu-item::after, .ant-menu-horizontal > .ant-menu-submenu::after {*/
+/*    border: none !important;*/
+/*}*/
+
+/*.ant-menu-horizontal > .ant-menu-submenu > .ant-menu-submenu-title .ant-menu-title-content a:active {*/
+/*    color: #000 !important;*/
+/*}*/
+
+/*.ant-menu-horizontal > .ant-menu-submenu > .ant-menu-submenu-title .ant-menu-title-content a:hover {*/
+/*    color: #1890ff;*/
+/*}*/
+
+/*.ant-menu-horizontal > .ant-menu-item a {*/
+/*    color: rgba(0, 0, 0, 0.85);*/
+/*}*/
+
+/*.ant-menu-horizontal > .ant-menu-submenu > .ant-menu-submenu-title .ant-menu-title-content a {*/
+/*    color: rgba(0, 0, 0, 0.85);*/
+
+/*}*/
+
+

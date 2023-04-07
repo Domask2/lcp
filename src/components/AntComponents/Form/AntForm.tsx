@@ -228,10 +228,10 @@ const AntForm = ({cmp, props}: AntFormType) => {
     const blocks = GetBlocks(items, cmp, form, form_type, ObjectFncDsHooksAll, onChange);
 
     return <>
-        <Editor cmp={cmp} />
+        <Editor cmp={cmp} oldComponent={true} />
 
         {cmp.anchor && <ScrollableAnchor id={`${cmp.anchor}`}>
-            <span>''</span>
+            <span></span>
         </ScrollableAnchor>}
 
         <ConfigProvider locale={ru_RU}>

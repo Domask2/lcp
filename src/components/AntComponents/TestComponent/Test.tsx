@@ -9,7 +9,7 @@ const TestComponent = ({cmp, props}: any) => {
         {cmp.anchor && <ScrollableAnchor id={`${cmp.anchor}`}>
             <span></span>
         </ScrollableAnchor>}
-        <Editor cmp={cmp} />
+        <Editor cmp={cmp} oldComponent={true} />
         <br />
         <p>{cmp.caption}</p>
         <br />

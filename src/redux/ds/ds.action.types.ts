@@ -35,6 +35,9 @@ export enum DsActionsEnum {
     EXECUTE_DB_PROCEDURE_FAILED = "EXECUTE_DB_PROCEDURE_FAILED",
     SET_PAGINATION = "SET_PAGINATION",
     CLEAR_SELECT = 'CLEAR_SELECT',
+    CREATE_RESPONSE = 'CREATE_RESPONSE',
+    CREATE_RESPONSE_SUCCESS = 'CREATE_RESPONSE_SUCCESS',
+    CREATE_RESPONSE_FAILED = 'CREATE_RESPONSE_FAILED',
 
     LOAD_REMOTE_DB = 'LOAD_REMOTE_DB',
 }
@@ -81,12 +84,15 @@ export type updateDs = {type: typeof DsActionsEnum.UPDATE_DS, key: string, paylo
 export type executeDbProcedure = {type: typeof DsActionsEnum.EXECUTE_DB_PROCEDURE, ds_key: string, payload: any, reload_ds: any}
 export type executeDbProcedureSuccess = {type: typeof DsActionsEnum.EXECUTE_DB_PROCEDURE_SUCCESS, ds_key: string, payload: any}
 export type executeDbProcedureFailed = {type: typeof DsActionsEnum.EXECUTE_DB_PROCEDURE_FAILED, message: string}
-
 export type clearSelect = {type: typeof DsActionsEnum.CLEAR_SELECT, sourceDs: string}
+
+export type response = { type: typeof  DsActionsEnum.CREATE_RESPONSE, href: string, key: string}
+export type responseSuccess = { type: typeof  DsActionsEnum.CREATE_RESPONSE_SUCCESS, key:string, payload: any}
+export type responseFailed = { type: typeof  DsActionsEnum.CREATE_RESPONSE_FAILED, key:string, payload: any}
 
 export type DsActionCreatorsType = createRecordFailedType | dataSourceAddKeyValueType | createRecordSuccessType | createRecordType |
     dataSourceSelectMultiType | deleteRecordFailedType | deleteRecordPrimariesType | deleteRecordSuccessType |
     deleteRecordType | editRecordFailedType | editRecordPrimariesType | editRecordSuccessType | editRecordType |
     loadDataSourceFailedType | loadDataSourceSuccessType | loadDataSourceType | setLsType | setLsByType | initLsPPType |
     setLsPPType | initLsInputsType | setLsInputsType | setLsVarsType | setLsBadVarsType | setLoadingType | addChildrenToItemsDsType |
-    setCache | clearCache | clearDs | updateDs | executeDbProcedure | clearSelect
+    setCache | clearCache | clearDs | updateDs | executeDbProcedure | clearSelect | response | responseSuccess | responseFailed

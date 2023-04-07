@@ -1,5 +1,5 @@
-import {IPage, IProjectAll, IProject, IPages} from "./project.initial";
-import { RootState } from "../redux.store";
+import {IPage, IProjectAll, IProject, IPages, IPageDataSource} from "./project.initial";
+import {RootState} from "../redux.store";
 
 export const getProjectsAll = (state: RootState): IProjectAll => {
     return state.project.all
@@ -9,6 +9,9 @@ export const getPages = (state: RootState): IPages => {
 }
 export const getPage = (state: RootState, path: string): IPage => {
     return state.project.pages[path]
+}
+export const getPageDsByKey = (state: RootState, path: string, dsKey: string): IPageDataSource => {
+    return state.project.pages[path].datasources[dsKey]
 }
 export const getMessage = (state: RootState, key: string): any => {
     return state.project.all[key]?.message

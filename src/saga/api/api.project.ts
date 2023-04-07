@@ -1,5 +1,5 @@
 import instance from "./api";
-import default_values from "./data/default_values";
+import DefaultTamplates from "./data/default_values";
 
 const ApiProject = {
     loadProject(project_id: any): any {
@@ -30,7 +30,7 @@ const ApiProject = {
         else {
             instance.defaults.headers.authorization = 'Bearer ' + token;
             const data = {
-                ...default_values,
+                ...DefaultTamplates.STANDART.template,
                 title: 'Новая страница',
                 key: key,
                 project_id: project.id,
@@ -40,6 +40,35 @@ const ApiProject = {
                 .then(response => response.data)
         }
     },
+    createTemplatesPage(project: any, key: string, tamplateKey: string): any {
+        console.log(tamplateKey);
+
+        const token = window.localStorage.getItem('user-token');
+        if (token === null)
+            return []
+        else {
+            instance.defaults.headers.authorization = 'Bearer ' + token;
+            let tamplate = DefaultTamplates[tamplateKey].template;
+            // switch (tamplateKey) {
+            //     case DefaultTamplates.STANDART.key:
+            //         tamplate = DefaultTamplates.STANDART.template
+            //         break;
+            //     case DefaultTamplates.LEFT_MENU.key:
+            //         tamplate = DefaultTamplates.LEFT_MENU.template
+            //         break;
+            // }
+            const data = {
+                ...tamplate,
+                title: 'Новая страница',
+                key: key,
+                project_id: project.id,
+            }
+
+            return instance.post('/api/page', data)
+                .then(response => response.data)
+        }
+    },
+
     createProject(): any {
         const token = window.localStorage.getItem('user-token');
         if (token === null)
@@ -70,7 +99,7 @@ const ApiProject = {
                 .then(response => response.data)
         }
     },
-    saveProjectFormData(form_data:any): any {
+    saveProjectFormData(form_data: any): any {
         const token = window.localStorage.getItem('user-token');
         if (token === null)
             return []

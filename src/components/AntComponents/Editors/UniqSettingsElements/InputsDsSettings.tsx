@@ -165,6 +165,26 @@ const InputsDsSettings: React.FC<InputsSettingsType> = ({setModel, model}) => {
                 />
             </div>
 
+            <div style={containerStyle}>
+                <AntPopover
+                    title="initValueKey:"
+                    hoverText="Ключ для сохранния в Redux при инициализации initValue (должно быть число)"
+                />
+                <Input
+                    style={inputStyle}
+                    value={model.initValueKey}
+                    className="lcEditorInput"
+                    onChange={(e) => {
+                        handleModelUpdate('initValueKey', e.currentTarget.value);
+                    }}
+                />
+                <Button
+                    type="link"
+                    onClick={() => handleModelUpdate('initValueKey', '')}
+                    icon={<ClearOutlined />}
+                />
+            </div>
+
             {/* {renderInitValueBlock(inputsType) && */}
             <div style={containerStyle}>
                 <AntPopover
@@ -186,6 +206,7 @@ const InputsDsSettings: React.FC<InputsSettingsType> = ({setModel, model}) => {
                 />
             </div>
             {/* } */}
+
             <br />
 
             <div style={containerStyle}>

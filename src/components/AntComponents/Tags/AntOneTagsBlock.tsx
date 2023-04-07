@@ -27,32 +27,44 @@ const AntOneTagsBlock: FC<AntOneTagsBlockType> = ({title, tags, checkedTags, con
                 [projectKey]: checkedTags
             })
         }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [ds])
 
 
     const handleChange = (tag: string, checked: boolean) => {
         const nextSelectedTags = checked ? [...selectedTags[projectKey], tag] : selectedTags[projectKey].filter((t: any) => t !== tag);
-        setSelectedTags({
-            [projectKey]: nextSelectedTags
-        });
-        setValue({
-            [projectKey]: nextSelectedTags
-        })
+        if (projectKey === 'tags') {
+            setSelectedTags({
+                [projectKey]: nextSelectedTags
+            });
+            setValue(nextSelectedTags)
+        } else {
+            setSelectedTags({
+                [projectKey]: nextSelectedTags
+            });
+            setValue({
+                [projectKey]: nextSelectedTags
+            })
+        }
     };
 
     return (
         <div style={{marginBottom: '10px'}}>
             <span style={{width: '100px', display: 'inline-block', ...labelStyle}}>{title}:</span>
-            {tags?.map((tag: any) => (
-                <CheckableTag
-                    style={contentStyle}
-                    key={tag}
-                    checked={selectedTags[projectKey]?.indexOf(tag) > -1}
-                    onChange={checked => handleChange(tag, checked)}
-                >
-                    {tag}
-                </CheckableTag>
-            ))}
+            {Array.isArray(tags) ? (
+                tags?.map((tag: any) => (
+                    <CheckableTag
+                        style={contentStyle}
+                        key={tag}
+                        checked={selectedTags[projectKey]?.indexOf(tag) > -1}
+                        onChange={checked => handleChange(tag, checked)}
+                    >
+                        {tag}
+                    </CheckableTag>
+                ))
+            ) : (
+                'неподходящий формат источника данных'
+            )}
         </div>
     );
 };

@@ -38,7 +38,7 @@ interface dataSourceFieldsType {
 
 export interface objectType {
     baseUrl: string,
-    params: { [key: string]: { [key: string]: { name: string, type: string, clear?: boolean } } }[]
+    params: {[key: string]: {[key: string]: {name: string, type: string, clear?: boolean}}}[]
     random?: boolean
     download?: boolean
 }
@@ -53,6 +53,7 @@ const ObjectUrlEditor = ({object, setObject}: any) => {
     const [checkedFly, setCheckedFly] = useState(false);
     const [random, setRandom] = useState(model.random)
     const [download, setDownload] = useState(model.download)
+    const [ajax, setAjax] = useState(model.ajax)
     const [nameUrl, setNameUrl] = useState('')
     const [baseUrl, setBaseUrl] = useState(model.baseUrl)
 
@@ -84,9 +85,10 @@ const ObjectUrlEditor = ({object, setObject}: any) => {
         model.baseUrl = baseUrl
         model.random = random
         model.download = download
+        model.ajax = ajax
         setObject(model)
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [baseUrl, random, download])
+    }, [baseUrl, random, download, ajax])
 
     const onConfirmDelete = (index: number) => {
         setObject((obj: objectType) => {
@@ -99,7 +101,7 @@ const ObjectUrlEditor = ({object, setObject}: any) => {
     }
 
     const addParam = () => {
-        let newObj: { [key: string]: { name: string, type: string, clear?: boolean } } = {}
+        let newObj: {[key: string]: {name: string, type: string, clear?: boolean}} = {}
 
         switch (selectChange) {
             case 'ds':
@@ -162,9 +164,10 @@ const ObjectUrlEditor = ({object, setObject}: any) => {
                         className="lcEditorInput"
                         size="small"
                         onChange={(e) => {
-                            if (!download) {
-                                setBaseUrl(e.currentTarget.value)
-                            }
+                            // if (!download) {
+                            //     setBaseUrl(e.currentTarget.value)
+                            // }
+                            setBaseUrl(e.currentTarget.value)
                         }}
                         value={baseUrl}
                     />
@@ -172,10 +175,15 @@ const ObjectUrlEditor = ({object, setObject}: any) => {
             </Row>
 
             {
-                download && <ProcedureOrFunctionUrl baseUrl={baseUrl} setBaseUrl={setBaseUrl}/>
+                (download || ajax) && <ProcedureOrFunctionUrl baseUrl={baseUrl} setBaseUrl={setBaseUrl} />
             }
 
             <Row>
+                {(download && ajax) && <div style={{color: 'red', fontSize: '12px'}}>Не может быть включено одновременно Download и Ajax</div>}
+            </Row>
+
+            <Row>
+
                 <Col flex="70px">
                     <h4>Random</h4>
                 </Col>
@@ -197,15 +205,26 @@ const ObjectUrlEditor = ({object, setObject}: any) => {
                         size='small'
                     />
                 </Col>
+
+                <Col flex="70px">
+                    <h4>Ajax</h4>
+                </Col>
+                <Col flex='auto'>
+                    <Switch
+                        checked={ajax}
+                        onChange={() => setAjax(!ajax)}
+                        size='small'
+                    />
+                </Col>
             </Row>
 
             {
                 object?.params?.map((obj: any, index: number) =>
                     <ArrayEditorList index={index}
-                                     key={index}
-                                     obj={obj}
-                                     onConfirm={() => onConfirmDelete(index)}
-                                     onCheckbox={(e) => onRemoveCheckbox(e, obj, index)}
+                        key={index}
+                        obj={obj}
+                        onConfirm={() => onConfirmDelete(index)}
+                        onCheckbox={(e) => onRemoveCheckbox(e, obj, index)}
                     />)
 
             }
@@ -242,8 +261,8 @@ const ObjectUrlEditor = ({object, setObject}: any) => {
                             <>
                                 <Input
                                     style={{
-                                        width: '25%',
-                                        marginRight: '10px',
+                                        width: '20%',
+                                        marginRight: '5px',
                                         borderBottom: '1px solid #eee',
                                         backgroundColor: '#fff'
                                     }}
@@ -252,12 +271,12 @@ const ObjectUrlEditor = ({object, setObject}: any) => {
                                     className="lcEditorInput"
                                     onChange={(e) => {
                                         setNameUrl(e.currentTarget.value)
-                                    }}/>
+                                    }} />
 
                                 <Select
                                     style={{
                                         width: '45%',
-                                        marginRight: '10px',
+                                        marginRight: '5px',
                                         borderBottom: '1px solid #eee',
                                         backgroundColor: '#fff'
                                     }}
@@ -311,8 +330,8 @@ const ObjectUrlEditor = ({object, setObject}: any) => {
                             <>
                                 <Input
                                     style={{
-                                        width: '25%',
-                                        marginRight: '10px',
+                                        width: '20%',
+                                        marginRight: '5px',
                                         borderBottom: '1px solid #eee',
                                         backgroundColor: '#fff'
                                     }}
@@ -321,12 +340,12 @@ const ObjectUrlEditor = ({object, setObject}: any) => {
                                     className="lcEditorInput"
                                     onChange={(e) => {
                                         setNameUrl(e.currentTarget.value)
-                                    }}/>
+                                    }} />
 
                                 <Select
                                     style={{
                                         width: '56%',
-                                        marginRight: '10px',
+                                        marginRight: '5px',
                                         borderBottom: '1px solid #eee',
                                         backgroundColor: '#fff'
                                     }}
@@ -361,7 +380,7 @@ const ObjectUrlEditor = ({object, setObject}: any) => {
                                 <Input
                                     style={{
                                         width: '30%',
-                                        marginRight: '10px',
+                                        marginRight: '5px',
                                         borderBottom: '1px solid #eee',
                                         backgroundColor: '#fff'
                                     }}
@@ -370,7 +389,7 @@ const ObjectUrlEditor = ({object, setObject}: any) => {
                                     className="lcEditorInput"
                                     onChange={(e) => {
                                         setNameUrl(e.currentTarget.value)
-                                    }}/>
+                                    }} />
 
                                 <Input
                                     style={{
@@ -382,7 +401,7 @@ const ObjectUrlEditor = ({object, setObject}: any) => {
                                     className="lcEditorInput"
                                     onChange={(e) => {
                                         setSelectDsValue(e.currentTarget.value)
-                                    }}/>
+                                    }} />
                             </>
                         )
                     }
@@ -393,7 +412,7 @@ const ObjectUrlEditor = ({object, setObject}: any) => {
                                 <Input
                                     style={{
                                         width: '30%',
-                                        marginRight: '10px',
+                                        marginRight: '5px',
                                         borderBottom: '1px solid #eee',
                                         backgroundColor: '#fff'
                                     }}
@@ -402,7 +421,7 @@ const ObjectUrlEditor = ({object, setObject}: any) => {
                                     className="lcEditorInput"
                                     onChange={(e) => {
                                         setNameUrl(e.currentTarget.value)
-                                    }}/>
+                                    }} />
 
                                 <Input
                                     style={{
@@ -423,7 +442,7 @@ const ObjectUrlEditor = ({object, setObject}: any) => {
                                 <Input
                                     style={{
                                         width: '25%',
-                                        marginRight: '10px',
+                                        marginRight: '5px',
                                         borderBottom: '1px solid #eee',
                                         backgroundColor: '#fff'
                                     }}
@@ -432,7 +451,7 @@ const ObjectUrlEditor = ({object, setObject}: any) => {
                                     className="lcEditorInput"
                                     onChange={(e) => {
                                         setNameUrl(e.currentTarget.value)
-                                    }}/>
+                                    }} />
 
                                 <Select
                                     style={{
@@ -457,7 +476,7 @@ const ObjectUrlEditor = ({object, setObject}: any) => {
                                     {
                                         settings[0]?.sys_vars && Object.keys(settings[0]?.sys_vars).map((item: string, index: number) =>
                                             <Select.Option key={index}
-                                                           value={`${item}=${settings[0]?.sys_vars[item]}`}>{item}={settings[0]?.sys_vars[item]}</Select.Option>)
+                                                value={`${item}=${settings[0]?.sys_vars[item]}`}>{item}={settings[0]?.sys_vars[item]}</Select.Option>)
                                     }
                                 </Select>
                             </>
@@ -468,9 +487,9 @@ const ObjectUrlEditor = ({object, setObject}: any) => {
                 <Col flex="10px" style={{marginTop: '20px'}}>
                     <Button
                         type="link"
-                        style={{width: '8%', height: 1, lineHeight: 1}}
+                        style={{width: '20px', height: 1, lineHeight: 1}}
                         onClick={addParam}
-                        icon={<PlusCircleOutlined/>}
+                        icon={<PlusCircleOutlined />}
                     />
                 </Col>
             </Row>

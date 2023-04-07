@@ -1,4 +1,5 @@
 import {IFnc} from "../fnc/fnc.initial";
+import {CSSProperties} from "react";
 
 export interface IColumn {
     modal: "this" | "mutate"
@@ -6,6 +7,7 @@ export interface IColumn {
     link: string
     type: "boolean"
 }
+
 export interface IProject {
     roleUser: any;
     addictions: Array<IAddictions | any>;
@@ -34,7 +36,7 @@ export interface IProjectAll {
 export interface IPageDataSource {
     key: string
     filter: string | null
-    cache: boolean
+    cache?: boolean
 }
 export interface IPageDataSources {
     [key: string]: IPageDataSource
@@ -55,7 +57,7 @@ export interface IAddictions {
     dsKey: string
     id: number | ''
     title: string
-    type: 'availability' | 'failure' | '>' | '<'  | '>=' | '<=' | '=' | '!=' | 'dsLoaded' | 'notDs' | ''
+    type: 'availability' | 'failure' | '>' | '<' | '>=' | '<=' | '=' | '!=' | 'dsLoaded' | 'notDs' | ''
     value: string
     page?: string[]
 }
@@ -114,4 +116,19 @@ export interface INavigation {
     children?: [] | [INavigation] | undefined
     project_roles: [string]
     params?: string
+}
+
+export interface IArrayAddictionResult {
+    result: boolean;
+    addict: IAddictions
+}
+
+export interface IResult {
+    finalResult: boolean;
+    arrayAddictionResult: IArrayAddictionResult[]
+}
+
+export interface IAddictionStyleArray {
+    id: number;
+    style: CSSProperties
 }

@@ -8,6 +8,7 @@ interface IFunctionPage {
     cmp?: any
     initialValues?: any
     setInitialValues?: any
+    editing?: boolean
 }
 
 const cptStyle = {
@@ -16,7 +17,7 @@ const cptStyle = {
     border: '1px solid #ddd'
 }
 
-export const FunctionPage: React.FC<IFunctionPage> = ({cmp, initialValues, setInitialValues}) => {
+export const FunctionPage: React.FC<IFunctionPage> = ({cmp, initialValues, setInitialValues, editing = true}) => {
     const [clearFuncConst, setClearFuncConst] = useState(false);
     const [funcObject, setFuncObject] = useState<any>({});
     const [errorSelectType, setErrorSelectType] = useState(false);
@@ -122,38 +123,38 @@ export const FunctionPage: React.FC<IFunctionPage> = ({cmp, initialValues, setIn
             {
                 initialValues.fnc.map((fnc: any, index: number) => <Input.Group key={index} compact>
                     <Input style={{borderTop: "none", width: '18%'}}
-                           onChange={onChange}
-                           name={"fnc:" + index + ":key"}
-                           value={fnc.key}/>
+                        onChange={onChange}
+                        name={"fnc:" + index + ":key"}
+                        value={fnc.key} />
                     <Input style={{borderTop: "none", width: '12%'}}
-                           onChange={onChange}
-                           name={"fnc:" + index + ":type"}
-                           value={fnc.type}/>
+                        onChange={onChange}
+                        name={"fnc:" + index + ":type"}
+                        value={fnc.type} />
                     <Input style={{borderTop: "none", width: '10%'}}
-                           onChange={onChange}
-                           name={"fnc:" + index + ":cache"}
-                           value={fnc.cache}/>
+                        onChange={onChange}
+                        name={"fnc:" + index + ":cache"}
+                        value={fnc.cache} />
                     <Input style={{borderTop: "none", width: '29%'}}
-                           onChange={onChange}
-                           name={"fnc:" + index + ":source"}
-                           value={fnc.source}/>
+                        onChange={onChange}
+                        name={"fnc:" + index + ":source"}
+                        value={fnc.source} />
                     <Input style={{borderTop: "none", width: '23%'}}
-                           onChange={onChange}
-                           name={"fnc:" + index + ":target"}
-                           value={fnc.target}/>
-                    <Popconfirm placement="left" title={`${fnc.key} - Точно удалить?`}
-                                onConfirm={() => deleteFnc(fnc.key)} okText="Yes" cancelText="No">
-                        <Button type="link" style={{width: '8%'}} danger icon={<DeleteOutlined/>}/>
-                    </Popconfirm>
+                        onChange={onChange}
+                        name={"fnc:" + index + ":target"}
+                        value={fnc.target} />
+                    {editing && <Popconfirm placement="left" title={`${fnc.key} - Точно удалить?`}
+                        onConfirm={() => deleteFnc(fnc.key)} okText="Yes" cancelText="No">
+                        <Button type="link" style={{width: '8%'}} danger icon={<DeleteOutlined />} />
+                    </Popconfirm>}
                 </Input.Group>)
             }
 
-            <Input.Group className='selectorFunction' style={{height: '68px'}}>
+            {editing && <Input.Group className='selectorFunction' style={{height: '68px'}}>
                 <Input className={`${errorInputKey ? 'errorSelect' : ''}`} value={newFnc.key} onChange={onChangeNewFnc}
-                       name="key" style={{borderTop: 'none', width: '18%'}}/>
+                    name="key" style={{borderTop: 'none', width: '18%'}} />
 
                 <Select style={{width: '12%', float: 'left'}} className={`${errorSelectType ? 'errorSelect' : ''}`}
-                        value={newFnc.type} onChange={(e) => onChangeNewSelectType(e)}>
+                    value={newFnc.type} onChange={(e) => onChangeNewSelectType(e)}>
                     <Select.Option value={'LoadData'}>LoadData</Select.Option>
                     <Select.Option value={'ExecProc'}>ExecProc</Select.Option>
                     <Select.Option value={'Download'}>Download</Select.Option>
@@ -161,30 +162,30 @@ export const FunctionPage: React.FC<IFunctionPage> = ({cmp, initialValues, setIn
                     <Select.Option value={'Api'}>Api</Select.Option>
                 </Select>
 
-                <Select style={{width: '10%', float: 'left',}} defaultValue={String(newFnc.cache)}
-                        value={String(newFnc.cache)} onChange={(e) => onChangeNewSelectCache(e)}>
+                <Select style={{width: '10%', float: 'left', }} defaultValue={String(newFnc.cache)}
+                    value={String(newFnc.cache)} onChange={(e) => onChangeNewSelectCache(e)}>
                     <Select.Option value={'true'}>true</Select.Option>
                     <Select.Option value={'false'}>false</Select.Option>
                 </Select>
 
                 <div style={{position: 'relative'}}>
                     <Input style={{width: '28.6%', borderTop: 'none', borderLeft: 'none', position: 'relative'}}
-                           defaultValue={funcObject.source} value={newFnc.source} onChange={onChangeNewFnc}
-                           name="source"/>
+                        defaultValue={funcObject.source} value={newFnc.source} onChange={onChangeNewFnc}
+                        name="source" />
                     {
                         !openFuncConst ? (
-                            <DownOutlined className='buttonOpen' onClick={() => setOpenFuncConst(!openFuncConst)}/>
+                            <DownOutlined className='buttonOpen' onClick={() => setOpenFuncConst(!openFuncConst)} />
 
                         ) : (
-                            <CloseOutlined className='buttonOpen' onClick={() => setOpenFuncConst(!openFuncConst)}/>
+                            <CloseOutlined className='buttonOpen' onClick={() => setOpenFuncConst(!openFuncConst)} />
                         )
                     }
                 </div>
 
                 <Input style={{borderTop: "none", width: '22.9%', borderLeft: 'none'}} value={newFnc.target}
-                       onChange={onChangeNewFnc} name="target"/>
+                    onChange={onChangeNewFnc} name="target" />
 
-                <Button type="link" style={{width: '8%'}} onClick={addFnc} icon={<PlusCircleOutlined/>}/>
+                <Button type="link" style={{width: '8%'}} onClick={addFnc} icon={<PlusCircleOutlined />} />
 
                 {
                     openFuncConst && (
@@ -192,13 +193,13 @@ export const FunctionPage: React.FC<IFunctionPage> = ({cmp, initialValues, setIn
                             <Row gutter={24}>
                                 <Col span={24}>
                                     <FuncConstructor cmp={cmp} width='5' flag={clearFuncConst}
-                                                     setFuncObject={setFuncObject}/>
+                                        setFuncObject={setFuncObject} />
                                 </Col>
 
                             </Row>
                         </div>)
                 }
-            </Input.Group>
+            </Input.Group>}
         </Form.Item>
     )
 }

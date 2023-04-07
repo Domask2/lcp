@@ -4,11 +4,12 @@ import DsConstructor from "../../newComponents/dsConstructor";
 import {FunctionPage} from "./FunctionPage";
 
 import {Button, Form, Input, Modal, Popconfirm, Select} from "antd";
-import {DeleteOutlined, PlusCircleOutlined, SettingOutlined} from '@ant-design/icons';
+import {DeleteOutlined, FilterOutlined, PlusCircleOutlined, SettingOutlined} from '@ant-design/icons';
 import Text from "antd/es/typography/Text";
 import {IPage} from "../../../redux/project/project.initial";
 import {RootState} from "../../../redux/redux.store";
 import {getDataSourceLs} from "../../../redux/ds/ds.selector";
+import FilterSettingsModal from "./FilterSettingsModal";
 
 const layout = {
     labelCol: {span: 4},
@@ -20,6 +21,7 @@ const tailLayout = {
 
 type PageSettingsType = {
     page: IPage
+    titleBtn?: string
 }
 
 interface flyInputsGroupsType {
@@ -27,7 +29,7 @@ interface flyInputsGroupsType {
     flyInputsArray: string[]
 }
 
-const PageSettings = ({page}: PageSettingsType) => {
+const PageSettings = ({page, titleBtn='Настройки страницы...'}: PageSettingsType) => {
     const [form] = Form.useForm();
     const {savePage} = useActions()
     const ls: any = useTypedSelector((state: RootState) => getDataSourceLs(state));
@@ -53,9 +55,9 @@ const PageSettings = ({page}: PageSettingsType) => {
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [page])
 
-    let pageLs = page.ls !== undefined && page.ls !== null ? [...page.ls] : []
-    let pageFnc = page.fnc !== undefined && page.fnc !== null ? [...page.fnc] : []
-    let pageFly_inputs_groups: flyInputsGroupsType | {} = page.fly_inputs_groups !== undefined && page.fly_inputs_groups !== null ? {...page.fly_inputs_groups} : {}
+    let pageLs = page?.ls !== undefined && page?.ls !== null ? [...page?.ls] : []
+    let pageFnc = page?.fnc !== undefined && page?.fnc !== null ? [...page?.fnc] : []
+    let pageFly_inputs_groups: flyInputsGroupsType | {} = page?.fly_inputs_groups !== undefined && page?.fly_inputs_groups !== null ? {...page?.fly_inputs_groups} : {}
 
     const [initialValues, setInitialValues] = useState<any>({
         title: page.title,
@@ -65,8 +67,9 @@ const PageSettings = ({page}: PageSettingsType) => {
         fnc: pageFnc,
         fly_inputs_groups: pageFly_inputs_groups
     })
+
     const [newLs, setNewLs] = useState<any>({key: '', value: '', column: '', ds_key: ''})
-    const [newDs, setNewDs] = useState<any>({key: '', filter: '', })
+    const [newDs, setNewDs] = useState<any>({key: '', filter: '',})
     const [flyInputObj, setFlyInputObj] = useState<flyInputsGroupsType>({name: '', flyInputsArray: []})
 
     const showModal = () => {
@@ -183,51 +186,84 @@ const PageSettings = ({page}: PageSettingsType) => {
 
     const modalTitle = <>{"#" + page.id + " - " + page.title} <code>[{page.key}]</code></>
 
+    const [isModalOpenFilter, setIsModalOpenFilter] = useState(false);
+    const [dsKeyModal, setDsKeyModal] = useState('');
+
+    const showModalFilter = (key: string) => {
+        setDsKeyModal(key);
+        setIsModalOpenFilter(true);
+    };
+
+    const handleOkFilter = () => {
+        setIsModalOpenFilter(false);
+    };
+
+    const handleCancelFilter = () => {
+        setIsModalOpenFilter(false);
+    };
+
     return <>
-        <Button type="text" icon={<SettingOutlined />} onClick={showModal}>Настройки страницы...</Button>
+        <Button type="text" icon={<SettingOutlined/>} onClick={showModal}>{titleBtn}</Button>
         <Modal width={1000}
-            style={{top: 0}}
-            bodyStyle={{border: '5px solid #ba5fff', borderWidth: '7px 0 0 0'}}
-            open={isModalSettingsVisible}
-            footer={false}
-            okText="Сохранить" onOk={handleOk} onCancel={handleCancel}>
+               style={{top: 0}}
+               bodyStyle={{border: '5px solid #ba5fff', borderWidth: '7px 0 0 0'}}
+               open={isModalSettingsVisible}
+               footer={false}
+               okText="Сохранить" onOk={handleOk} onCancel={handleCancel}>
 
             <h3>{modalTitle}</h3>
 
             <Form {...layout} form={form} name="control-hooks" onFinish={onFinish} initialValues={initialValues}>
                 <Form.Item name="title" label="Заголовок" rules={[{required: true}]}>
-                    <Input />
+                    <Input/>
                 </Form.Item>
 
                 <Form.Item name="description" label="Описание">
-                    <Input.TextArea />
+                    <Input.TextArea/>
                 </Form.Item>
 
                 <Form.Item label="Источники данных">
                     <Input.Group compact>
-                        <Text style={{...cptStyle, width: '46%'}}>key</Text>
-                        <Text style={{...cptStyle, width: '46%'}}>filter</Text>
+                        <Text style={{...cptStyle, width: '35%'}}>key</Text>
+                        <Text style={{...cptStyle, width: '57%'}}>filter</Text>
                     </Input.Group>
                     {
                         Object.keys(initialValues.datasources).map(key => <Input.Group key={key} compact>
-                            <Input style={{borderTop: "none", width: '46%'}}
-                                name={"datasources:" + key + ":key"}
-                                value={initialValues.datasources[key].key} />
-                            <Input style={{borderTop: "none", width: '46%'}}
-                                onChange={onChange}
-                                name={"datasources:" + key + ":filter"}
-                                value={initialValues.datasources[key].filter} />
+                            <Input style={{borderTop: "none", width: '35%'}}
+                                   name={"datasources:" + key + ":key"}
+                                   value={initialValues.datasources[key].key}/>
+                            <Input style={{borderTop: "none", width: '57%', marginRight: '6px', paddingRight: '40px'}}
+                                   onChange={onChange}
+                                   name={"datasources:" + key + ":filter"}
+                                   value={initialValues.datasources[key].filter}/>
+                            <Button type="link"
+                                    style={{position: 'absolute', right: '70px', width: '20px', zIndex: 1000}}
+                                    icon={<FilterOutlined/>} onClick={() => showModalFilter(key)}/>
                             <Popconfirm placement="left" title={`${key} - Точно удалить?`}
-                                onConfirm={() => deleteDs(key)} okText="Yes" cancelText="No">
-                                <Button type="link" style={{width: '8%'}} danger icon={<DeleteOutlined />} />
+                                        onConfirm={() => deleteDs(key)} okText="Yes" cancelText="No">
+                                <Button type="link" style={{width: '20px'}} danger icon={<DeleteOutlined/>}/>
                             </Popconfirm>
                         </Input.Group>)
                     }
+
+                    <div style={{marginTop: '16px', marginBottom: '10px'}}>Добавить новый источник:</div>
                     <Input.Group compact>
-                        <DsConstructor setItem={setNewDs} values={newDs} />
-                        <Button type="link" style={{width: '8%'}} icon={<PlusCircleOutlined />} onClick={addDs} />
+                        <DsConstructor setItem={setNewDs} values={newDs}/>
+                        <Button type="link" style={{width: '8%'}} icon={<PlusCircleOutlined/>} onClick={addDs}/>
                     </Input.Group>
                 </Form.Item>
+
+                {isModalOpenFilter && (
+                    <FilterSettingsModal
+                        setInitialValues={setInitialValues}
+                        isModalOpenFilter={isModalOpenFilter}
+                        handleOkFilter={handleOkFilter}
+                        onChange={onChange}
+                        handleCancelFilter={handleCancelFilter}
+                        dsKeyModal={dsKeyModal}
+                        initialValues={initialValues}
+                    />
+                )}
 
                 <Form.Item label="Локальные хранилища">
                     <Input.Group compact>
@@ -239,37 +275,37 @@ const PageSettings = ({page}: PageSettingsType) => {
                     {
                         initialValues.ls.map((ls: any, index: number) => <Input.Group key={index} compact>
                             <Input style={{borderTop: "none", width: '23%'}}
-                                onChange={onChange}
-                                name={"ls:" + index + ":key"}
-                                value={ls.key} />
+                                   onChange={onChange}
+                                   name={"ls:" + index + ":key"}
+                                   value={ls.key}/>
                             <Input style={{borderTop: "none", width: '23%'}}
-                                onChange={onChange}
-                                name={"ls:" + index + ":value"}
-                                value={ls.value} />
+                                   onChange={onChange}
+                                   name={"ls:" + index + ":value"}
+                                   value={ls.value}/>
                             <Input style={{borderTop: "none", width: '23%'}}
-                                onChange={onChange}
-                                name={"ls:" + index + ":column"}
-                                value={ls.column} />
+                                   onChange={onChange}
+                                   name={"ls:" + index + ":column"}
+                                   value={ls.column}/>
                             <Input style={{borderTop: "none", width: '23%'}}
-                                onChange={onChange}
-                                name={"ls:" + index + ":ds_key"}
-                                value={ls.ds_key} />
+                                   onChange={onChange}
+                                   name={"ls:" + index + ":ds_key"}
+                                   value={ls.ds_key}/>
                             <Popconfirm placement="left" title={`${ls.key} - Точно удалить?`}
-                                onConfirm={() => deleteLs(ls.key)} okText="Yes" cancelText="No">
-                                <Button type="link" style={{width: '8%'}} danger icon={<DeleteOutlined />} />
+                                        onConfirm={() => deleteLs(ls.key)} okText="Yes" cancelText="No">
+                                <Button type="link" style={{width: '8%'}} danger icon={<DeleteOutlined/>}/>
                             </Popconfirm>
                         </Input.Group>)
                     }
                     <Input.Group compact>
                         <Input value={newLs.key} onChange={onChangeNewLs} name="key"
-                            style={{borderTop: "none", width: '23%'}} />
+                               style={{borderTop: "none", width: '23%'}}/>
                         <Input value={newLs.value} onChange={onChangeNewLs} name="value"
-                            style={{borderTop: "none", width: '23%'}} />
+                               style={{borderTop: "none", width: '23%'}}/>
                         <Input value={newLs.column} onChange={onChangeNewLs} name="column"
-                            style={{borderTop: "none", width: '23%'}} />
+                               style={{borderTop: "none", width: '23%'}}/>
                         <Input value={newLs.ds_key} onChange={onChangeNewLs} name="ds_key"
-                            style={{borderTop: "none", width: '23%'}} />
-                        <Button type="link" style={{width: '8%'}} onClick={addLs} icon={<PlusCircleOutlined />} />
+                               style={{borderTop: "none", width: '23%'}}/>
+                        <Button type="link" style={{width: '8%'}} onClick={addLs} icon={<PlusCircleOutlined/>}/>
                     </Input.Group>
                 </Form.Item>
 
@@ -284,7 +320,7 @@ const PageSettings = ({page}: PageSettingsType) => {
                             return (
                                 <div key={fly}>
                                     <Input value={fly} name={'fly_inputs_groups'} style={{width: '18%'}}
-                                        onChange={(e) => onRenameFlyInputGroupName(e, fly)}
+                                           onChange={(e) => onRenameFlyInputGroupName(e, fly)}
                                     />
 
                                     <Select
@@ -301,8 +337,8 @@ const PageSettings = ({page}: PageSettingsType) => {
                                     </Select>
 
                                     <Popconfirm placement="left" title={`${fly} - Точно удалить?`}
-                                        onConfirm={() => deleteFlyInputObj(fly)} okText="Yes" cancelText="No">
-                                        <Button type="link" style={{width: '8%'}} danger icon={<DeleteOutlined />} />
+                                                onConfirm={() => deleteFlyInputObj(fly)} okText="Yes" cancelText="No">
+                                        <Button type="link" style={{width: '8%'}} danger icon={<DeleteOutlined/>}/>
                                     </Popconfirm>
                                 </div>
                             )
@@ -312,7 +348,7 @@ const PageSettings = ({page}: PageSettingsType) => {
 
                     <Input.Group>
                         <Input value={flyInputObj.name} onChange={(val) => onChangeFlyInputsGroupsName(val)}
-                            name="flyInputGroupName" style={{width: '18%'}} />
+                               name="flyInputGroupName" style={{width: '18%'}}/>
 
                         <Select
                             style={{width: '73.5%'}}
@@ -328,7 +364,7 @@ const PageSettings = ({page}: PageSettingsType) => {
                         </Select>
 
                         <Button type="link" style={{width: '8%'}} onClick={addFlyInputsGroups}
-                            icon={<PlusCircleOutlined />} />
+                                icon={<PlusCircleOutlined/>}/>
                     </Input.Group>
                 </Form.Item>
 

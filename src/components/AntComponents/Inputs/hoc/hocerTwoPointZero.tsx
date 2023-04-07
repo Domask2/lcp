@@ -1,6 +1,10 @@
 import React, {useEffect, useState} from "react";
 import {useActions, useTypedSelector} from "../../../../hooks";
-import {getDataSource, getDataSourceLsVars} from "../../../../redux/ds/ds.selector";
+import {
+    getDataSourceLsVars,
+    getDataSourceLsVarsByKey,
+    getDataSourcesLsVarsByKey
+} from "../../../../redux/ds/ds.selector";
 import useDebounce from "../UseDebounce";
 import {formationValue, InputsType, validateValue} from "../../../../utils";
 import {RootState} from "../../../../redux/redux.store";
@@ -19,19 +23,20 @@ const warningTextStyle = {
     color: 'orange'
 }
 
-const WithInputs = ({WrappedComponent, cmp}: {WrappedComponent: any, cmp: IInputs}) => {
+const WithInputs = ({WrappedComponent, cmp, props}: { WrappedComponent: any, cmp: IInputs, props: any }) => {
 
-    const {setLsVars, setLsPP, setLsBadVars} = useActions()
-    const initDs: any = useTypedSelector((state: RootState) => getDataSource(state, cmp.ds))?.items[cmp.defaultSelect ? +cmp.defaultSelect : 0];
+    const {setLsVars, setLsPP, setLsBadVars} = useActions();
+    const initDs: any = props.dataSource?.items[props.index];
     // const listDs = useTypedSelector((state: RootState) => getDataSource(state, cmp.listDs))?.items[0]
-    const lsVars: any = useTypedSelector((state: RootState) => getDataSourceLsVars(state));
+    // const lsVars: any = useTypedSelector((state: RootState) => getDataSourceLsVars(state));
     const addictionKey = cmp.adKey ? `${cmp.adKey}__${cmp.key}` : undefined
     const addictionKeyTwo = cmp.adKeyTwo ? `${cmp.adKeyTwo}__${cmp.key}` : undefined;
 
-    const vars = addictionKey && lsVars[addictionKey];
+    const vars = useTypedSelector((state: RootState) => getDataSourceLsVarsByKey(state, addictionKey));
+    const initVarsValue = useTypedSelector((state: RootState) => getDataSourceLsVarsByKey(state, cmp.initVarsValue));
 
     const [initValue, setInitValue] = useState<any>(cmp.initValue)
-    // const [initKeyValue, setInitKeyValue] = useState<any>()
+    const [initValueKey, setInitValueKey] = useState<any>(cmp.initValueKey)
     const [initTextValue, setInitTextValue] = useState<any>()
     const [storedValue, setStoredValue] = useState<any>('')
     const [storedValueTwo, setStoredValueTwo] = useState<any>('')
@@ -69,33 +74,63 @@ const WithInputs = ({WrappedComponent, cmp}: {WrappedComponent: any, cmp: IInput
         }
     }, [vars])
 
+    useEffect(() => {
+        if (initVarsValue) {
+            setValue(initVarsValue)
+            setStoredValue(initVarsValue)
+            // setInitValue(initVarsValue)
+        } else {
+            setValue('')
+            setStoredValue('')
+        }
+    }, [initVarsValue])
+
     // проводим инициализацию - записываем данные в redux и отображаем в полях ввода
     useEffect(() => {
-        addictionKey && setLsVars(addictionKey, '');
+        // addictionKey && setLsVars(addictionKey, '');
+        if (initDs) {
+            if (cmp.initValue) {
 
-        if (cmp.initValue) {
-            addictionKey && setLsVars(addictionKey, cmp.numeric ? +cmp.initValue : cmp.initValue);
-            cmp.inputsType === InputsType.CHECKBOX && setValue(cmp.initValue)
-        }
-        if (cmp.ds && initDs) {
-            if (cmp.procName && cmp.procKey) {
-                cmp.initValue && setLsPP(cmp.procName, cmp.procKey, cmp.numeric ? +cmp.initValue : cmp.initValue);
-                cmp.initKey && setLsPP(cmp.procName, cmp.procKey, cmp.numeric ? +initDs[cmp.initKey] : initDs[cmp.initKey]);
-            }
-            if (cmp.initKey) {
-                // setInitKeyValue(initDs[cmp.initKey]);
-                cmp.initTextKeys && setInitTextValue(formationValue(cmp.initTextKeys, initDs))
-                addictionKey && setLsVars(addictionKey, cmp.numeric ? +initDs[cmp.initKey] : initDs[cmp.initKey])
-                addictionKey && setStoredValue(cmp.numeric ? +initDs[cmp.initKey] : initDs[cmp.initKey])
-                if (cmp.procName && cmp.procKey) {
-                    setLsPP(cmp.procName, cmp.procKey, cmp.numeric ? +initDs[cmp.initKey] : initDs[cmp.initKey]);
+                if (cmp.initValueKey) {
+                    addictionKey && setLsVars(addictionKey, +cmp.initValueKey);
+                    cmp.inputsType === InputsType.CHECKBOX && setValue(cmp.initValue)
+                } else {
+                    addictionKey && setLsVars(addictionKey, cmp.numeric ? +cmp.initValue : cmp.initValue);
+                    cmp.inputsType === InputsType.CHECKBOX && setValue(cmp.initValue)
                 }
             }
-            if (cmp.initKeyTwo) {
-                addictionKeyTwo && setLsVars(addictionKeyTwo, cmp.numeric ? +initDs[cmp.initKeyTwo] : initDs[cmp.initKeyTwo])
-                addictionKeyTwo && setStoredValueTwo(cmp.numeric ? +initDs[cmp.initKey] : initDs[cmp.initKey])
+            if (cmp.ds && initDs) {
+                if (cmp.procName && cmp.procKey) {
+                    cmp.initValue && setLsPP(cmp.procName, cmp.procKey, cmp.numeric ? +cmp.initValue : cmp.initValue);
+                    cmp.initKey && setLsPP(cmp.procName, cmp.procKey, cmp.numeric ? +initDs[cmp.initKey] : initDs[cmp.initKey]);
+                }
+                if (cmp.initKey) {
+                    // setInitKeyValue(initDs[cmp.initKey]);
+                    cmp.initTextKeys && setInitTextValue(formationValue(cmp.initTextKeys, initDs))
+                    addictionKey && setLsVars(addictionKey, cmp.numeric ? +initDs[cmp.initKey] : initDs[cmp.initKey])
+                    addictionKey && setStoredValue(cmp.numeric ? +initDs[cmp.initKey] : initDs[cmp.initKey])
+                    if (cmp.procName && cmp.procKey) {
+                        setLsPP(cmp.procName, cmp.procKey, cmp.numeric ? +initDs[cmp.initKey] : initDs[cmp.initKey]);
+                    }
+                }
+                if (cmp.initKeyTwo) {
+                    addictionKeyTwo && setLsVars(addictionKeyTwo, cmp.numeric ? +initDs[cmp.initKeyTwo] : initDs[cmp.initKeyTwo])
+                    addictionKeyTwo && setStoredValueTwo(cmp.numeric ? +initDs[cmp.initKey] : initDs[cmp.initKey])
+                }
+                cmp.initTextKeys?.length ? setValue(formationValue(cmp.initTextKeys, initDs)) : setValue(cmp.initValue)
             }
-            cmp.initTextKeys?.length ? setValue(formationValue(cmp.initTextKeys, initDs)) : setValue(cmp.initValue)
+        } else if (initValue) {
+
+            if (cmp.initValueKey) {
+                addictionKey && setLsVars(addictionKey, +initValueKey);
+                setValue(initValue)
+            } else {
+                addictionKey && setLsVars(addictionKey, cmp.numeric ? +initValue : initValue);
+                setValue(cmp.initValue);
+            }
+
+            // addictionKey && setLsVars(addictionKey, cmp.numeric ? +initValue : initValue);
+            // setValue(cmp.initValue);
         }
 
         return () => {
@@ -105,16 +140,18 @@ const WithInputs = ({WrappedComponent, cmp}: {WrappedComponent: any, cmp: IInput
     }, [initDs])
 
     useEffect(() => {
-        if (storedValue) {
-            if (cmp.procName && cmp.procKey) {
-                setLsPP(cmp.procName, cmp.procKey, storedValue);
-            }
-            if (addictionKey) {
-                if (addictionKeyTwo) {
-                    setLsVars(addictionKey, storedValue)
-                    setLsVars(addictionKeyTwo, storedValueTwo)
-                } else {
-                    setLsVars(addictionKey, storedValue)
+        if (!cmp.disabled || cmp.inputsType === 'HiddenInput') {
+            if (storedValue) {
+                if (cmp.procName && cmp.procKey) {
+                    setLsPP(cmp.procName, cmp.procKey, storedValue);
+                }
+                if (addictionKey) {
+                    if (addictionKeyTwo) {
+                        setLsVars(addictionKey, storedValue)
+                        setLsVars(addictionKeyTwo, storedValueTwo)
+                    } else {
+                        setLsVars(addictionKey, storedValue)
+                    }
                 }
             }
         }
@@ -122,21 +159,23 @@ const WithInputs = ({WrappedComponent, cmp}: {WrappedComponent: any, cmp: IInput
     }, [debouncedStoredValue])
 
     useEffect(() => {
-        if (addictionKey) {
-            setValidate(validateValue(cmp, value ? value : initValue))
-            if (cmp.required) {
-                if (addictionKeyTwo) {
-                    setLsBadVars(addictionKey, validateValue(cmp, storedValue ? storedValue : value))
-                    setLsBadVars(addictionKeyTwo, validateValue(cmp, storedValueTwo ? storedValueTwo : value))
-                } else {
-                    setLsBadVars(addictionKey, validateValue(cmp, value ? value : initValue))
+        if (!cmp.disabled || cmp.inputsType === 'HiddenInput') {
+            if (addictionKey) {
+                setValidate(validateValue(cmp, value ? value : initValue))
+                if (cmp.required) {
+                    if (addictionKeyTwo) {
+                        setLsBadVars(addictionKey, validateValue(cmp, storedValue ? storedValue : value))
+                        setLsBadVars(addictionKeyTwo, validateValue(cmp, storedValueTwo ? storedValueTwo : value))
+                    } else {
+                        setLsBadVars(addictionKey, validateValue(cmp, value ? value : initValue))
+                    }
                 }
             }
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [debouncedValue])
 
-    const props = {
+    const propsObj = {
         addictionKey,
         value,
         initValue,
@@ -168,11 +207,10 @@ const WithInputs = ({WrappedComponent, cmp}: {WrappedComponent: any, cmp: IInput
             setStoredValueTwo('')
             addictionKey && setLsVars(addictionKey, '__no_name__')
             addictionKeyTwo && setLsVars(addictionKeyTwo, '__no_name__')
-
         }
     }
 
-    return <WrappedComponent cmp={cmp} props={props} />;
+    return <WrappedComponent cmp={cmp} props={propsObj}/>;
 };
 
 export default WithInputs

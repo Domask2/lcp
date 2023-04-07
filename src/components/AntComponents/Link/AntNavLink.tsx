@@ -8,6 +8,7 @@ import {getMappedText} from "../../../redux/ds/ds.selector";
 
 import {INavLink} from "../Page/templates";
 import {RootState} from "../../../redux/redux.store";
+import {Button} from 'antd';
 
 type AntNavLinkType = {
     cmp: INavLink
@@ -33,10 +34,10 @@ const AntNavLink: React.FC<AntNavLinkType> = ({cmp}) => {
             return <>
                 {/* eslint-disable-next-line jsx-a11y/anchor-is-valid */}
                 <Editor cmp={cmp} />
-                <a
+                <Button
+                    type='link'
                     style={styles}
-                    href="#"
-                    onClick={handleClickGoToTop}> <Mapped text={text} /> </a>
+                    onClick={handleClickGoToTop}> <Mapped text={text} /> </Button>
                 &nbsp;
                 {cmp.lineBreak ? <br /> : ''}
             </>

@@ -8,9 +8,9 @@ import {DeleteOutlined} from '@ant-design/icons';
 import {INavigation, IProject} from "../../../redux/project/project.initial";
 import {RootState} from "../../../redux/redux.store";
 import {baseUrl} from "../../../saga/api/api";
-const layout = {labelCol: {span: 6}, wrapperCol: {span: 18},};
+const layout = {labelCol: {span: 6}, wrapperCol: {span: 18}, };
 
-export const AdminProjectForm = ({project}: { project: IProject }) => {
+export const AdminProjectForm = ({project}: {project: IProject}) => {
     const {loadProject, saveProjectFormData, deleteProject} = useActions();
     const pages = useTypedSelector((state: RootState) => getPagesKeys(state, project))
 
@@ -65,7 +65,7 @@ export const AdminProjectForm = ({project}: { project: IProject }) => {
         formData.append('startpage', JSON.stringify(startpage));
         formData.append('addictions', JSON.stringify(data.addictions));
         formData.append('banner', JSON.stringify(values.project.banner));
-        if(deleteImg) {
+        if (deleteImg) {
             formData.append('logo', 'delete');
         } else {
             if (typeof file !== 'string') {
@@ -115,24 +115,24 @@ export const AdminProjectForm = ({project}: { project: IProject }) => {
                 </Form.Item>
 
                 <Form.Item name={['project', 'title']} label="Название проекта">
-                    <Input/>
+                    <Input />
                 </Form.Item>
 
                 <Form.Item name={['project', 'key']} label="Ключ">
-                    <Input/>
+                    <Input />
                 </Form.Item>
 
                 <Form.Item label="Опубликованный">
                     <Select defaultValue={project.is_published === null ? 'true' : String(project.is_published)}
-                            onChange={(e) => setIsPublished(JSON.parse(e))}>
+                        onChange={(e) => setIsPublished(JSON.parse(e))}>
                         <Select.Option value={'true'}>true</Select.Option>
                         <Select.Option value={'false'}>false</Select.Option>
                     </Select>
                 </Form.Item>
 
-                <Form.Item label="Открытый/Закрытый">
-                    <Select defaultValue={project.is_open === null ? 'true' : String(project.is_open)}
-                            onChange={(e) => setIsOpen(JSON.parse(e))}>
+                <Form.Item label="Открытый">
+                    <Select defaultValue={project.is_open === null ? 'false' : String(project.is_open)}
+                        onChange={(e) => setIsOpen(JSON.parse(e))}>
                         <Select.Option value={'true'}>true</Select.Option>
                         <Select.Option value={'false'}>false</Select.Option>
                     </Select>
@@ -140,7 +140,7 @@ export const AdminProjectForm = ({project}: { project: IProject }) => {
 
                 <Form.Item label="Стартовая страница">
                     <Select defaultValue={project.startpage === '' ? '--не выбрано--' : project.startpage}
-                            onChange={(e) => setStartpage(e)}>
+                        onChange={(e) => setStartpage(e)}>
 
                         <Select.Option key={'01010101'} value={''}>
                             {'--не выбрано--'}
@@ -155,29 +155,29 @@ export const AdminProjectForm = ({project}: { project: IProject }) => {
                 </Form.Item>
 
                 <Form.Item name={['project', 'description']} label="Краткое описание">
-                    <Input.TextArea/>
+                    <Input.TextArea />
                 </Form.Item>
 
                 <Form.Item name={['project', 'banner']} label="Заголовок">
                     <Input value={title} onChange={(e) => {
                         setTitle(e.currentTarget.value)
-                    }}/>
+                    }} />
                 </Form.Item>
 
                 <Card style={{marginBottom: '15px'}}>
                     <div style={{display: 'flex', alignItems: 'center', marginBottom: '20px'}}>
                         {
-                            project.loading ? (<Skeleton.Avatar active={true} size={180}/>) :
+                            project.loading ? (<Skeleton.Avatar active={true} size={180} />) :
                                 project.logo ?
-                                    deleteImg ? (<img src={'/noLogo.png'} width={180} height={180} alt={'logo'}/>) :
+                                    deleteImg ? (<img src={'/noLogo.png'} width={180} height={180} alt={'logo'} />) :
                                         (<Image
-                                        preview={false}
-                                        src={`${baseUrl}/${project.logo}?${new Date().getTime()}`}
-                                        width={180}
-                                        height={180}
-                                        alt={'logo'}
-                                    />) :
-                                    (<img src={'/noLogo.png'} width={180} height={180} alt={'logo'}/>)
+                                            preview={false}
+                                            src={`${baseUrl}/${project.logo}?${new Date().getTime()}`}
+                                            width={180}
+                                            height={180}
+                                            alt={'logo'}
+                                        />) :
+                                    (<img src={'/noLogo.png'} width={180} height={180} alt={'logo'} />)
                         }
                         <div style={{marginLeft: '20px', fontSize: '20px'}}>{title}</div>
                     </div>
@@ -207,7 +207,7 @@ export const AdminProjectForm = ({project}: { project: IProject }) => {
                     </div>
                 </Card>
 
-                <AdminProjectRoles project={project} roleUser={roleUser} setRoleUser={setRoleUser}/>
+                <AdminProjectRoles project={project} roleUser={roleUser} setRoleUser={setRoleUser} />
 
                 <List
                     size="small"
@@ -220,7 +220,7 @@ export const AdminProjectForm = ({project}: { project: IProject }) => {
                     </List.Item>}
                 />
                 <Form.Item>
-                    <br/>
+                    <br />
                     <Popconfirm
                         title="Вы действительно хотите удалить проект?"
                         onConfirm={deleteConfirm}
@@ -230,7 +230,7 @@ export const AdminProjectForm = ({project}: { project: IProject }) => {
                         cancelText="Нет"
                     >
                         <Button type="link" danger htmlType="submit">
-                            <DeleteOutlined/> Удалить проект
+                            <DeleteOutlined /> Удалить проект
                         </Button>
                     </Popconfirm>
                 </Form.Item>

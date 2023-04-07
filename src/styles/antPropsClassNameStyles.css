@@ -1,0 +1,9 @@
+.new_menu_tested_className ul {
+    max-height: 500px;
+    /* overflow-x: scroll; */
+    overflow-y: auto;
+}
+
+body {
+    scrollbar-gutter: stable;
+}

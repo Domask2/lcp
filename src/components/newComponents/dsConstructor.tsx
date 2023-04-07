@@ -63,7 +63,7 @@ const DsConstructor: React.FC<IDsConstructor> = ({ setItem, values }) => {
     <>
      <Select
       showSearch
-      placeholder="DS"
+      placeholder="DataBase"
       value={filtredOne}
       onChange={setFiltredOne}
       style={{borderTop: "none", width: '23%'}}
@@ -79,7 +79,7 @@ const DsConstructor: React.FC<IDsConstructor> = ({ setItem, values }) => {
     </Select>
     <Select
       showSearch
-      placeholder="key"
+      placeholder="DataSource"
       value={filtredTwo}
       onChange={setFiltredTwo}
       style={{borderTop: "none", width: '23%'}}
@@ -95,7 +95,7 @@ const DsConstructor: React.FC<IDsConstructor> = ({ setItem, values }) => {
     </Select>
     <Select
       showSearch
-      placeholder="filter"
+      placeholder="Filter"
       value={filtredThree}
       onChange={setFiltredThree}
       style={{borderTop: "none", width: '46%'}}

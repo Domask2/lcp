@@ -60,7 +60,7 @@ const Authorization: React.FC = () => {
                     {auth.authenticated ? (
                         <LogoutOutlined style={{marginRight: '5px'}} />
                     ) : (
-                        <LoginOutlined style={{marginRight: '5px'}} />
+                        <>Login <LoginOutlined style={{marginRight: '5px', marginTop: '5px'}} /></>
                     )}
                 </li>
             </ul>

@@ -32,6 +32,7 @@ export const FileSystemTable: FC<FileSystemTableType> = ({page, strPage, modeLoc
                     setLoading(false);
                 })
         }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [page, location, loading]);
 
     const onFinish = (values: IFormValues) => {

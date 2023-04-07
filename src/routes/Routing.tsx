@@ -49,15 +49,17 @@ const Routing: React.FC = () => {
 
     function renderRoute(parent: IRoutingChild, url: string) {
 
-        // if (checkRole && checkRole(parent?.project_roles, auth.projects_roles?.[url?.split("/")[0]]) && parent.active_page) {
-        return (
-            <>
-                {parent.params && <Route key={`${url}_${parent.key}_with_params`} path={getPath(url, parent)}
-                    element={<AntPage />} />}
-                <Route key={`${url}_${parent.key}`} path={`/${url}/${parent.key}`} element={<AntPage />} />
-            </>
-        );
-        // }
+        if (editMode || checkRole(parent?.project_roles, auth.projects_roles?.[url?.split("/")[0]]) && parent.active_page) {
+            return (
+                <>
+                    {parent.params && <Route key={`${url}_${parent.key}_with_params`} path={getPath(url, parent)}
+                        element={<AntPage />} />}
+                    <Route key={`${url}_${parent.key}`} path={`/${url}/${parent.key}`} element={<AntPage />} />
+                </>
+            );
+        } else {
+            return <></>
+        }
     }
 
     return (
@@ -66,9 +68,9 @@ const Routing: React.FC = () => {
             {projectAllArr.map((item: IProject) => {
                 // eslint-disable-next-line array-callback-return
                 return item.navigation.map((nav1: any) => {
-                    if (editMode || checkRole(nav1?.project_roles, auth.projects_roles?.[item.key])) {
-                        return renderRoutes(nav1, item.key);
-                    }
+                    // if (editMode || checkRole(nav1?.project_roles, auth.projects_roles?.[item.key])) {
+                    return renderRoutes(nav1, item.key);
+                    // }
                 });
             })}
 

@@ -11,13 +11,13 @@ import {IDataSource} from "../../../redux/ds/ds.initial";
 import {albumType, CardRemoteSettingsType, categoriesTypes, ObjetType, popover} from "./type";
 
 const CardRemoteSettings: FC<CardRemoteSettingsType> = ({
-                                                            dateBase,
-                                                            setDateBase,
-                                                            dsKey,
-                                                            setDsKey,
-                                                            sortFiles,
-                                                            setSortFiles
-                                                        }) => {
+    dateBase,
+    setDateBase,
+    dsKey,
+    setDsKey,
+    sortFiles,
+    setSortFiles
+}) => {
     const dBArray = useTypedSelector((state: RootState) => getAppDb(state));
     const [albumsFilter, setAlbumsFilter] = useState<albumType[]>([]);
 
@@ -38,14 +38,17 @@ const CardRemoteSettings: FC<CardRemoteSettingsType> = ({
 
     useEffect(() => {
         setDateBase({dbRemote, reloadDS})
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [dbRemote, reloadDS])
 
     useEffect(() => {
         setDsKey({dsKeyObjectType, dsKeyCategories, dsKeyAlbums})
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [dsKeyObjectType, dsKeyCategories, dsKeyAlbums])
 
     useEffect(() => {
         setSortFiles({objectType, category, album})
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [objectType, category, album])
 
     useEffect(() => {
@@ -61,6 +64,7 @@ const CardRemoteSettings: FC<CardRemoteSettingsType> = ({
         }
 
         setAlbumsFilter(result);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [objectType, category]);
 
     return (
@@ -95,7 +99,7 @@ const CardRemoteSettings: FC<CardRemoteSettingsType> = ({
                 </Col>
 
                 <Col flex={'auto'}>
-                    <AntDownloadDB dBArray={dBArray} item={reloadDS} setItem={setReloadDS}/>
+                    <AntDownloadDB dBArray={dBArray} item={reloadDS} setItem={setReloadDS} />
                 </Col>
             </Row>
 
@@ -108,7 +112,7 @@ const CardRemoteSettings: FC<CardRemoteSettingsType> = ({
                 </Col>
 
                 <Col flex={'auto'}>
-                    <AntDownloadDB dBArray={dBArray} item={dsKeyObjectType} setItem={setDsKeyObjectType}/>
+                    <AntDownloadDB dBArray={dBArray} item={dsKeyObjectType} setItem={setDsKeyObjectType} />
                 </Col>
             </Row>
 
@@ -121,7 +125,7 @@ const CardRemoteSettings: FC<CardRemoteSettingsType> = ({
                 </Col>
 
                 <Col flex={'auto'}>
-                    <AntDownloadDB dBArray={dBArray} item={dsKeyCategories} setItem={setDsKeyCategories}/>
+                    <AntDownloadDB dBArray={dBArray} item={dsKeyCategories} setItem={setDsKeyCategories} />
                 </Col>
             </Row>
 
@@ -134,7 +138,7 @@ const CardRemoteSettings: FC<CardRemoteSettingsType> = ({
                 </Col>
 
                 <Col flex={'auto'}>
-                    <AntDownloadDB dBArray={dBArray} item={dsKeyAlbums} setItem={setDsKeyAlbums}/>
+                    <AntDownloadDB dBArray={dBArray} item={dsKeyAlbums} setItem={setDsKeyAlbums} />
                 </Col>
             </Row>
 
@@ -151,7 +155,7 @@ const CardRemoteSettings: FC<CardRemoteSettingsType> = ({
                             object_type && object_type?.items && object_type.items.map((item: ObjetType) => {
                                 return (
                                     <Select.Option key={item.key}
-                                                   value={item.object_name}>{item.object_name}</Select.Option>
+                                        value={item.object_name}>{item.object_name}</Select.Option>
                                 )
                             })
                         }

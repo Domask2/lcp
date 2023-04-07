@@ -1,7 +1,7 @@
 import {DescriptionsProps, DrawerProps} from "antd";
 import {IProps as IQRProps} from 'react-qrcode-logo';
-import React from "react";
-import {MapProps, YMapsProps} from "react-yandex-maps";
+import React, {CSSProperties} from "react";
+// import {MapProps, YMapsProps} from "@pbe/react-yandex-maps";
 import {NotificationType} from "../../../notification/types";
 
 export type AndEditType = {
@@ -23,9 +23,15 @@ export interface BaseComponentInterface {
         title: string
         children: Array<ComponentInterface>
     }>
+    footerChildren?: Array<ComponentInterface> | Array<{
+        key: string
+        title: string
+        children: Array<ComponentInterface>
+    }>
     acl?: string[]
     visible?: boolean
     addiction?: any
+    addictionStyleArray? : { id: number, style: CSSProperties }[]
     anchor?: string
     ext?: string | boolean
     caption?: string
@@ -87,6 +93,7 @@ export interface ICol extends BaseComponentInterface {
 }
 
 export interface ICard extends BaseComponentInterface {
+    footerStyle?: CSSProperties | undefined;
     caption?: string;
     bodyStyle?: {[p: string]: string}
     headStyle?: {[p: string]: string}
@@ -94,6 +101,8 @@ export interface ICard extends BaseComponentInterface {
     props: CardPropsInterface
     children: Array<ComponentInterface>
     height100?: boolean
+    footerChildren: Array<ComponentInterface>;
+    addictionStyleArray?: any
 }
 
 export interface IDivider extends BaseComponentInterface {
@@ -115,10 +124,19 @@ export interface IButton extends BaseComponentInterface {
     ds?: string | any
     className?: string
     actions?: Array<IActionsType> | any
-    getUrl?: {baseUrl: string, params: {string: string}[], random: boolean, download: boolean}
+    getUrl?: {baseUrl: string, params: {[key: string]: {name: string, type: string}}[], random: boolean, download: boolean, ajax: boolean}
     acl?: any
     // addiction?: any
     anchor?: any
+    onGetUrlFunc?: boolean
+    danger?: boolean
+    confirm?: boolean
+    confirmStyle?: React.CSSProperties
+    tooltip?: boolean
+    tooltipColor?: string
+    tooltipPlacement?: 'top' | 'left' | 'right' | 'bottom' | 'topLeft' | 'topRight' | 'bottomLeft' | 'bottomRight' | 'leftTop' | 'leftBottom' | 'rightTop' | 'rightBottom'
+    tooltipTitle?: string
+    tooltipOverlayInnerStyle?: React.CSSProperties
 }
 
 export interface ITableColumns {
@@ -128,6 +146,7 @@ export interface ITableColumns {
         modal?: "this" | "mutate"
         mutate?: string
         link?: string
+        url?: string
         empty_value?: string
         type?: string
         fnc?: any
@@ -205,7 +224,8 @@ export interface ITable extends BaseComponentInterface {
     ds: ICmpDsTable,
     columns: ITableColumns,
     menu: Array<ITableMenuItem>,
-    title: string
+    title: string,
+    filtredKey?: string
 }
 
 export interface ITableTree extends BaseComponentInterface {
@@ -235,9 +255,16 @@ export interface IModal extends BaseComponentInterface {
     adKey?: string
     bodyStyle?: React.CSSProperties
     maskStyle?: React.CSSProperties
+    buttonStyle?: React.CSSProperties
     caption: string
     children: Array<IRow | ICol | ICard | IDivider | IButton | ITable | IText | IModal | ITabs |
         IDetails | IBreadcrumb | IForm | INavLink>
+    danger?: boolean
+    tooltip?: boolean
+    tooltipColor?: string
+    tooltipPlacement?: 'top' | 'left' | 'right' | 'bottom' | 'topLeft' | 'topRight' | 'bottomLeft' | 'bottomRight' | 'leftTop' | 'leftBottom' | 'rightTop' | 'rightBottom'
+    tooltipTitle?: string
+    tooltipOverlayInnerStyle?: React.CSSProperties
 }
 
 export interface ITabs extends BaseComponentInterface {
@@ -262,6 +289,26 @@ export interface ITags extends BaseComponentInterface {
     contentStyle?: React.CSSProperties
     highLevelKey?: string
 }
+export interface IFilterTags extends BaseComponentInterface {
+    adKey?: string
+    title: any
+    ds1?: string
+    dsKey?: any;
+    dsKey1?: string
+    dsKeyValues1?: string
+    button: any
+    buttonVisible: boolean
+    list?: string
+    listValues?: string
+    iterations?: boolean
+    listTitle?: string
+    titleStyle?: React.CSSProperties
+    labelStyle?: React.CSSProperties
+    contentStyle?: React.CSSProperties
+    buttonSize?: any;
+    buttonStyle?: React.CSSProperties
+    highLevelKey?: string
+}
 
 export interface IDetails extends BaseComponentInterface {
     ds: {
@@ -274,6 +321,7 @@ export interface IDetails extends BaseComponentInterface {
 }
 
 export interface IBreadcrumb extends BaseComponentInterface {
+    contentStyle?: React.CSSProperties;
     items: Array<{
         route: string,
         title: string
@@ -401,7 +449,7 @@ export interface IInputs extends BaseComponentInterface {
     userFilter?: string
     actions?: any
     numeric?: any
-    extComponent?: any
+    extComponent?: any // BaseComponentInterface
     filtredValue?: any
     filterKey?: any
     filtredDsKey?: any
@@ -413,17 +461,18 @@ export interface IInputs extends BaseComponentInterface {
     prefix?: boolean
     direction?: "horizontal" | "vertical" | undefined
     dictionaryDs?: string
-    dictionaryDsKey?: string | [];
+    dictionaryDsKey?: string | []
     adKey?: string
-    adKeyTwo?: string;
-    listKeyTwo: string;
-    initKeyTwo: string;
+    adKeyTwo?: string
+    listKeyTwo: string
+    initKeyTwo: string
     caption?: any
     procName?: any
     procKey?: any
     add?: any
     ds?: any
     initValue?: string
+    initValueKey?: string
     initKey?: any
     initTextKeys?: any
     initDs?: string
@@ -436,12 +485,13 @@ export interface IInputs extends BaseComponentInterface {
     disabled?: boolean
     dateConditionArray?: dateConditionType[]
     menu: any
-    inputWidth: number;
-    inputsStyle: React.CSSProperties;
-    zeroOption: boolean;
-    maxValue?: string;
-    minValue?: string;
-    inputDescription?: string;
+    inputWidth: number
+    inputsStyle: React.CSSProperties
+    zeroOption: boolean
+    maxValue?: string
+    minValue?: string
+    inputDescription?: string
+    initVarsValue?: string
 }
 
 export interface IChartProps {
@@ -514,6 +564,8 @@ export interface IDescriptions extends BaseComponentInterface {
     isBtnAction?: boolean
     actions?: any
     btnTitle: string
+    iteratorDs?: string
+    filtredKey?: string
 }
 
 export interface IBidirectionalBar extends BaseComponentInterface {
@@ -584,15 +636,78 @@ export interface ISearchComponent extends BaseComponentInterface {
 }
 
 
-export interface IYMaps extends BaseComponentInterface {
-    YMapsProps: YMapsProps
-    MapProps: MapProps
+export interface IYaMaps extends BaseComponentInterface {
+    // YMapsProps?: YMapsProps
+    // MapProps?: MapProps
+    apiKey: string
+    mapCenterGeo: Array<Number>
+    mapCenterGeoAddress: string
+    mapCenterLatitude: Number
+    mapCenterLongitude: Number
+    placemarkGeo: Array<Number>
+    placemarkGeoAddress: string
+    placemarkLatitude: Number
+    placemarkLongitude: Number
+    placemarkColor: string
+    placemarkIcon: string
+    placemarkType: string
+    zoom: number
+    scrollZoom: boolean
+    text?: string
+}
+
+export interface ISlider extends BaseComponentInterface {
+    arrows: boolean
+    autoplay: boolean
+    autoplaySpeed: number
+    effect: string
+    dots: boolean
+    timeMode: boolean
+}
+
+export interface IIterator extends BaseComponentInterface {
+    iteratorDs: any
+    children: Array<ComponentInterface>
+}
+
+export interface ICascade extends BaseComponentInterface {
+    ds1?: string
+    ds2?: string
+    ds3?: string
+    ds4?: string
+    ds5?: string
+    dsKey1?: string
+    dsKey2?: string
+    dsKey3?: string
+    dsKey4?: string
+    dsKey5?: string
+    dsKeyValues1?: Array<string>
+    dsKeyValues2?: Array<string>
+    dsKeyValues3?: Array<string>
+    dsKeyValues4?: Array<string>
+    dsKeyValues5?: Array<string>
+    url?: string
+    varsKey?: string
+    varsValue?: string
+    tableSize: string
+    buttonSize: string
+    visible: boolean
+    button: boolean
+    popover: boolean
+}
+
+export interface IMenu extends BaseComponentInterface {
+    ds: any
+    listTitle?: string
+    listValues?: string
+    url?: string
 }
 
 export interface IPagination extends BaseComponentInterface {
-    ds: CmpIDataSource
-    cur_page: number
+    ds?: CmpIDataSource
+    cur_page?: number
     per_page?: number
+    filtredKey?: string
 }
 
 export interface IExt extends BaseComponentInterface {
@@ -618,9 +733,8 @@ export interface IDownLoad extends BaseComponentInterface {
 }
 
 export type ComponentInterface = IRow | ICol | ICard | IDivider | IButton | ITable | IText | IModal | ITabs |
-    IDetails | IBreadcrumb | IForm | IImage | IChartPie | IChartBar | IChartColumn | IDrawer | IDescriptions |
-    ITableTree | IBidirectionalBar | IDropdown | INavLink | ISelect | IBarCode | IQRCode | IYMaps | IPagination |
-    ISearchComponent | IExt | IInputs | IDownLoad
+    IDetails | IBreadcrumb | IForm | IImage | IChartPie | IChartBar | IChartColumn | IDrawer | IDescriptions | IBidirectionalBar | IDropdown | INavLink | IBarCode | IQRCode | IYaMaps | IPagination |
+    ISearchComponent | IExt | IInputs | IDownLoad | ISlider | IIterator | IMenu | ICascade
 
 type TemplatesType = {
     Row: IRow
@@ -629,14 +743,11 @@ type TemplatesType = {
     Divider: IDivider
     Button: IButton
     Table: ITable
-    TableTree: ITableTree
     Text: IText
     Modal: IModal
     Tabs: ITabs
-    // Details: IDetails
     Breadcrumb: IBreadcrumb
     Form: IForm
-    Select: ISelect
     Image: IImage
     ChartBar: IChartBar
     ChartPie: IChartPie
@@ -644,16 +755,23 @@ type TemplatesType = {
     Drawer: IDrawer
     Descriptions: IDescriptions
     BidirectionalBar: IBidirectionalBar
-    // Dropdown: IDropdown
     NavLink: INavLink
     [p: string]: ComponentInterface
     BarCode: IBarCode
     QRCode: IQRCode
-    YMaps: IYMaps
+    YaMaps: IYaMaps
     Pagination: IPagination
     Search: ISearchComponent
     Ext: IExt
     DownLoad: IDownLoad
+    Slider: ISlider
+    Iterator: IIterator
+    Menu: IMenu
+    Cascade: ICascade
+    // Dropdown: IDropdown
+    // Select: ISelect
+    // Details: IDetails
+    // TableTree: ITableTree
 }
 
 export const templates: TemplatesType = {
@@ -662,6 +780,12 @@ export const templates: TemplatesType = {
         "type": "Row",
         "props": {
             "gutter": [16, 16]
+        },
+        style: {
+            justifyContent: 'center',
+            padding: '16px',
+            marginRight: '0px',
+            marginLeft: '0px',
         },
         children: []
     },
@@ -679,7 +803,11 @@ export const templates: TemplatesType = {
         "props": {
             "size": "small"
         },
-        children: []
+        bodyStyle: {
+            padding: '12px'
+        },
+        children: [],
+        footerChildren: [],
     },
     Divider: {
         key: "divider_01",
@@ -703,7 +831,7 @@ export const templates: TemplatesType = {
         "style": {"marginLeft": "10px"},
         "actions": [],
         "caption": "Button 01",
-        "getUrl": {baseUrl: '', params: [], random: false, download: false}
+        "getUrl": {baseUrl: '', params: [], random: false, download: false, ajax: false}
     },
     Table: {
         "key": "table_01",
@@ -772,14 +900,14 @@ export const templates: TemplatesType = {
         ],
         "title": "default"
     },
-    TableTree: {
-        ds: {
-            key: 'bulls/v_bull_genealogy3'
-        },
-        key: 'table_tree_rod',
-        type: 'TableTree',
-        hide: []
-    },
+    // TableTree: {
+    //     ds: {
+    //         key: 'bulls/v_bull_genealogy3'
+    //     },
+    //     key: 'table_tree_rod',
+    //     type: 'TableTree',
+    //     hide: []
+    // },
     Text: {
         "type": "Text",
         "key": "text_01",
@@ -871,9 +999,25 @@ export const templates: TemplatesType = {
             }
         ],
     },
+    Slider: {
+        key: "tabs_01",
+        type: "Slider",
+        children: [],
+        arrows: true,
+        autoplay: false,
+        autoplaySpeed: 3000,
+        effect: 'scrollx',
+        dots: true,
+        timeMode: false,
+    },
     Tags: {
         key: "tags_01",
         type: "Tags",
+    },
+    FilterTags: {
+        key: "filter_tags_01",
+        type: "FilterTags",
+        button: true,
     },
     Breadcrumb: {
         "key": "breadcrumb_01",
@@ -978,18 +1122,18 @@ export const templates: TemplatesType = {
             "title": "Очистить"
         }
     },
-    Select: {
-        key: "select-01",
-        type: "Select",
-        ds: {key: "ds_key"},
-        isClear: false,
-        textClear: {key: 'clear'},
-        item: {
-            key: "string",
-            val: "string",
-            actions: ''
-        }
-    },
+    // Select: {
+    //     key: "select-01",
+    //     type: "Select",
+    //     ds: {key: "ds_key"},
+    //     isClear: false,
+    //     textClear: {key: 'clear'},
+    //     item: {
+    //         key: "string",
+    //         val: "string",
+    //         actions: ''
+    //     }
+    // },
     Image: {
         key: "image1",
         type: "Image",
@@ -1038,7 +1182,7 @@ export const templates: TemplatesType = {
         }
     },
     ChartLine: {
-        ds: {
+        iteratorDs: {
             key: 'ds'
         },
         key: 'chart_line_01',
@@ -1055,7 +1199,7 @@ export const templates: TemplatesType = {
         initDictionary: {0: '1', 1: '5', 2: '6', 3: '5', 4: '2', 5: '5', 6: '6', 7: '5', 8: '1'}
     },
     ChartMultiLine: {
-        ds: {
+        iteratorDs: {
             key: 'выбрать DS'
         },
         key: 'chart_multi_line_01',
@@ -1068,7 +1212,7 @@ export const templates: TemplatesType = {
         yFieldNumeric: false,
     },
     ChartScatter: {
-        ds: {
+        iteratorDs: {
             key: 'выбрать DS'
         },
         key: 'chart_scatter_01',
@@ -1077,14 +1221,14 @@ export const templates: TemplatesType = {
         yFieldNumeric: false,
     },
     ChartRadarPlot: {
-        ds: {
+        iteratorDs: {
             key: 'ds'
         },
         key: 'chart_radar_plot_01',
         type: 'ChartRadarPlot',
     },
     ChartHistogram: {
-        ds: {
+        iteratorDs: {
             key: 'ds'
         },
         key: 'chart_histogram_01',
@@ -1252,21 +1396,40 @@ export const templates: TemplatesType = {
             style: {},
         }
     },
-    YMaps: {
-        type: 'YMaps',
-        key: 'ymaps_01',
-        YMapsProps: {
-            query: {
-                apikey: '5fcad956-3d28-4b70-b26c-796973d8976f',
-                lang: "ru_RU",
-            }
-        },
-        MapProps: {
-            state: {
-                zoom: 8,
-                center: [59.711770, 30.441685],
-            }
+    YaMaps: {
+        type: 'YaMaps',
+        key: 'yamaps_01',
+        zoom: 10,
+        scrollZoom: true,
+        apiKey: '5fcad956-3d28-4b70-b26c-796973d8976f',
+        mapCenterGeoAddress: '',
+        mapCenterGeo: [59.944307, 30.33935],
+        mapCenterLatitude: 59.944307,
+        mapCenterLongitude: 30.33935,
+        placemarkGeoAddress: '',
+        placemarkGeo: [59.884307, 30.38935],
+        placemarkLatitude: 59.884307,
+        placemarkLongitude: 30.38935,
+        placemarkColor: 'blue',
+        placemarkIcon: '',
+        placemarkType: 'Icon',
+        // YMapsProps: {
+        //     query: {
+        //         apikey: '5fcad956-3d28-4b70-b26c-796973d8976f',
+        //         lang: "ru_RU",
+        //     }
+        // },
+        // MapProps: {
+        //     state: {
+        //         zoom: 8,
+        //         center: [59.711770, 30.441685],
+        //     }
+        // }
+        style: {
+            width: '100%',
+            height: '300px'
         }
+
     },
     Pagination: {
         type: 'Pagination',
@@ -1302,11 +1465,6 @@ export const templates: TemplatesType = {
         key: 'ext_01',
         cmp_key: ''
     },
-    Test: {
-        type: 'Test',
-        key: 'Test_01',
-        caption: 'Test',
-    },
     DownLoad: {
         type: 'DownLoad',
         key: 'DownLoad',
@@ -1317,5 +1475,25 @@ export const templates: TemplatesType = {
         dsKey: {dsKeyObjectType: '/', dsKeyCategories: '/', dsKeyAlbums: '/'},
         dateBase: {reloadDS: '/', dbRemote: ''}
 
+    },
+    Iterator: {
+        type: 'Iterator',
+        key: 'iterator_01',
+        iteratorDs: '',
+        children: [],
+    },
+    Menu: {
+        type: 'Menu',
+        key: 'menu_01',
+        ds: '',
+    },
+    Cascade: {
+        type: 'Cascade',
+        key: 'cascade_01',
+        tableSize: 'small',
+        buttonSize: 'small',
+        visible: true,
+        button: true,
+        popover: false,
     },
 }

@@ -12,6 +12,7 @@ export enum ProjectActionsEnum {
     SAVE_PAGE_SUCCESS = 'SAVE_PAGE_SUCCESS',
     SAVE_PAGE_FAILED = 'SAVE_PAGE_FAILED',
     CREATE_PAGE = 'CREATE_PAGE',
+    CREATE_PAGE_TEMPLATES = 'CREATE_PAGE_TEMPLATES',
     CREATE_PAGE_SUCCESS = 'CREATE_PAGE_SUCCESS',
     CREATE_PAGE_FAILED = 'CREATE_PAGE_FAILED',
     CREATE_PROJECT = 'CREATE_PROJECT',
@@ -32,6 +33,7 @@ export enum ProjectActionsEnum {
     CMP_MOVE = 'CMP_MOVE',
     CMP_DELETE = 'CMP_DELETE',
     CMP_ADD = 'CMP_ADD',
+    CMP_ADD_TO_FOOTER = 'CMP_ADD_TO_FOOTER',
     CMP_ADD_ROW = 'CMP_ADD_ROW',
     CMP_UPDATE = 'CMP_UPDATE',
     CMP_COPY = 'CMP_COPY',
@@ -51,6 +53,7 @@ export type SavePageType = {type: typeof ProjectActionsEnum.SAVE_PAGE, page: IPa
 export type SavePageSuccess = {type: typeof ProjectActionsEnum.SAVE_PAGE_SUCCESS, pages: IPages}
 export type SavePageFailed = {type: typeof ProjectActionsEnum.SAVE_PAGE_FAILED, message: string}
 export type CreatePage = {type: typeof ProjectActionsEnum.CREATE_PAGE, project: any, key: string}
+export type CreatePageTamplates = {type: typeof ProjectActionsEnum.CREATE_PAGE_TEMPLATES, project: any, key: string, tamplateKey: string}
 export type CreatePageSuccess = {type: typeof ProjectActionsEnum.CREATE_PAGE_SUCCESS, page: any}
 export type CreatePageFailed = {type: typeof ProjectActionsEnum.CREATE_PAGE_FAILED, message: string}
 export type CreateProject = {type: typeof ProjectActionsEnum.CREATE_PROJECT}
@@ -63,14 +66,15 @@ export type LoadProjectType = {type: typeof ProjectActionsEnum.LOAD_PROJECT, pro
 export type LoadProjectSuccessType = {type: typeof ProjectActionsEnum.LOAD_PROJECT_SUCCESS, pages: any}
 export type LoadProjectFailedType = {type: typeof ProjectActionsEnum.LOAD_PROJECT_FAILED, message: string}
 export type SaveProject = {type: typeof ProjectActionsEnum.SAVE_PROJECT, project: IProject}
-export type SaveProjectSuccess = {type: typeof ProjectActionsEnum.SAVE_PROJECT_SUCCESS, project: IProject, message:any}
-export type SaveProjectFailed = {type: typeof ProjectActionsEnum.SAVE_PROJECT_FAILED, project:IProject, message: any}
-export type SaveProjectFormData = {type: typeof ProjectActionsEnum.SAVE_PROJECT_FORM_DATA, form_data:FormData, project: IProject}
+export type SaveProjectSuccess = {type: typeof ProjectActionsEnum.SAVE_PROJECT_SUCCESS, project: IProject, message: any}
+export type SaveProjectFailed = {type: typeof ProjectActionsEnum.SAVE_PROJECT_FAILED, project: IProject, message: any}
+export type SaveProjectFormData = {type: typeof ProjectActionsEnum.SAVE_PROJECT_FORM_DATA, form_data: FormData, project: IProject}
 export type SetCurrentCmpType = {type: typeof ProjectActionsEnum.SET_CURRENT_CMP, cmp: any}
 export type SetCutCmpType = {type: typeof ProjectActionsEnum.SET_CUT_CMP, flag: boolean}
 export type CmpMoveType = {type: typeof ProjectActionsEnum.CMP_MOVE, cmp: any, direction: string}
 export type CmpDeleteType = {type: typeof ProjectActionsEnum.CMP_DELETE, cmp: ComponentInterface, currentPage: IPage}
 export type CmpAddType = {type: typeof ProjectActionsEnum.CMP_ADD, parent: ComponentInterface, cmp: ComponentInterface, currentPage: IPage}
+export type CmpAddToFooterType = {type: typeof ProjectActionsEnum.CMP_ADD_TO_FOOTER, parent: ComponentInterface, cmp: ComponentInterface, currentPage: IPage}
 export type CmpAddRowType = {type: typeof ProjectActionsEnum.CMP_ADD_ROW, parent: IPage, cmp: ComponentInterface}
 export type CmpUpdateType = {type: typeof ProjectActionsEnum.CMP_UPDATE, cmp: ComponentInterface}
 export type CmpCopyType = {type: typeof ProjectActionsEnum.CMP_COPY, cmp: ComponentInterface}
@@ -108,6 +112,7 @@ export type ProjectActionCreatorsType =
     | SaveProjectFormData
 
     | CreatePage
+    | CreatePageTamplates
     | CreatePageSuccess
     | CreatePageFailed
 
@@ -118,6 +123,7 @@ export type ProjectActionCreatorsType =
     | CmpMoveType
     | CmpDeleteType
     | CmpAddType
+    | CmpAddToFooterType
     | CmpAddRowType
     | CmpUpdateType
     | CmpCopyType

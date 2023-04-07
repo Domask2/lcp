@@ -27,6 +27,7 @@ const AntMoreTagsBlock: FC<AntOneTagsBlockType> = ({title, tags, checkedTags, co
                 [projectKey]: checkedTags
             })
         }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [ds])
 
     const handleChange = (tag: string, checked: boolean) => {
@@ -45,16 +46,20 @@ const AntMoreTagsBlock: FC<AntOneTagsBlockType> = ({title, tags, checkedTags, co
     return (
         <div style={{marginBottom: '10px'}}>
             <span style={{minWidth: '100px', display: 'inline-block', ...labelStyle}}>{title}:</span>
-            {tags?.map((tag: any, index: number) => (
-                <CheckableTag
-                    style={contentStyle}
-                    key={`${title}_${tag}_${index}_${ds.items[0]?.user_id}`}
-                    checked={selectedTags[projectKey]?.indexOf(tag) > -1}
-                    onChange={checked => handleChange(tag, checked)}
-                >
-                    {tag}
-                </CheckableTag>
-            ))}
+            {Array.isArray(tags) ? (
+                tags?.map((tag: any, index: number) => (
+                    <CheckableTag
+                        style={contentStyle}
+                        key={`${title}_${tag}_${index}_${ds.items[0]?.user_id}`}
+                        checked={selectedTags[projectKey]?.indexOf(tag) > -1}
+                        onChange={checked => handleChange(tag, checked)}
+                    >
+                        {tag}
+                    </CheckableTag>
+                ))
+            ) : (
+                'неподходящий формат источника данных'
+            )}
         </div>
     );
 };

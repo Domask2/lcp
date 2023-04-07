@@ -146,7 +146,7 @@ const ArrayEditor: React.FC<ArrayObjectsEditorType> = ({cmp, list, setList, sele
                         okText="Yes" cancelText="No">
                         <Button
                             type="link"
-                            style={{width: '8%', height: 1, lineHeight: 1}}
+                            style={{width: '100%', height: 1, lineHeight: 1}}
                             danger
                             icon={<DeleteOutlined />}
                         />
@@ -240,6 +240,7 @@ const ArrayEditor: React.FC<ArrayObjectsEditorType> = ({cmp, list, setList, sele
             <FunctionForm
                 cmp={cmp}
                 handleCancel={handleCancel}
+                editing={false}
             />
 
             <ActionsConstructor

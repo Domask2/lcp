@@ -1,28 +1,24 @@
 import React, {FC} from 'react';
-import {useTypedSelector} from "../../../hooks";
-import {getDataSource, getMutators} from "../../../redux/ds/ds.selector";
 import Editor from "../Editor/Editor";
 import ScrollableAnchor from 'react-scrollable-anchor';
 
 import {Button, Descriptions, Empty} from "antd";
 import serviceTable from "../../../services/serviceTable";
-import {RootState} from "../../../redux/redux.store";
 import {IDescriptions} from "../Page/templates";
 import {IColumn} from "../../../redux/ds/ds.initial";
 
 type AntDescriptionsType = {
     cmp: IDescriptions
+    props: {[p: string]: any}
 }
-const AntDescriptions: FC<AntDescriptionsType> = ({cmp}) => {
-    /** Получим источники для мутаций */
-    const ds_mutators = useTypedSelector((state: RootState) => getMutators(state, cmp.columns))
-    const dataSource = useTypedSelector((state: RootState) => getDataSource(state, cmp.ds?.key));
+const AntDescriptions: FC<AntDescriptionsType> = ({cmp, props}) => {
+
     const arrShow: any = Array.isArray(cmp.show) ? cmp.show.join().split(',') : cmp.show?.split(',')
-    const arrHide = Array.isArray(cmp.hide) ? cmp.hide.join().split(',') : cmp.hide?.split(',')
+    const arrHide = Array.isArray(cmp.hide) ? cmp.hide.join().split(',') : cmp.hide?.split(',');
 
     let list: Array<any> = []
-    if (dataSource !== undefined && dataSource.items.length > 0)
-        dataSource.columns.forEach((item: IColumn) => {
+    if (props.dataSource !== undefined && props.dataSource?.items.length > 0)
+        props.dataSource.columns.forEach((item: IColumn) => {
             let flg = true
             if (item.visible || true) {
                 if (arrShow)
@@ -65,12 +61,12 @@ const AntDescriptions: FC<AntDescriptionsType> = ({cmp}) => {
 
                 if (flg) {
                     let text = fTitle.split(']').length === 2 ? item.title.split(']')[1] : fTitle
-                    let value = dataSource.items[0][item.key]
+                    let value = props.dataSource?.items[props.index] ? props.dataSource?.items[props.index][item.key] : null
                     value = value ? value : '- не указано -'
 
-                    let val = serviceTable.mutateValue(value, item.key, cmp.columns, ds_mutators, {
-                        row: dataSource.items[0],
-                        columns: dataSource.columns
+                    let val = serviceTable.mutateValue(value, item.key, cmp.columns, props.ds_mutators, {
+                        row: props.dataSource?.items[props.index],
+                        columns: props.dataSource.columns
                     })
 
                     if (typeof value !== 'object' || value === null)
@@ -84,7 +80,7 @@ const AntDescriptions: FC<AntDescriptionsType> = ({cmp}) => {
             }
         })
 
-    if (dataSource === undefined || dataSource.items.length === 0)
+    if (props.dataSource === undefined || props.dataSource?.items.length === 0)
         return <>
             <Editor cmp={cmp} />
             {/*<Skeleton active paragraph={{rows: 5}}/>*/}
@@ -93,7 +89,7 @@ const AntDescriptions: FC<AntDescriptionsType> = ({cmp}) => {
 
     return <>
         {cmp.anchor && <ScrollableAnchor id={`${cmp.anchor}`}>
-            <span>''</span>
+            <span></span>
         </ScrollableAnchor>}
         <Editor cmp={cmp} />
         <Descriptions style={cmp.style} labelStyle={cmp.labelStyle} contentStyle={cmp.contentStyle} {...cmp?.props}>

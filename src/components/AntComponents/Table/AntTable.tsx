@@ -5,15 +5,12 @@ import Mapped from "../Mapped";
 import {useAction, useActions, useTypedSelector} from "../../../hooks";
 import {useSearchParams} from "react-router-dom";
 
-import {checkAddiction, checkRole, checkTableStyleAddiction} from "../../../utils";
+import {checkAddiction, checkRole} from "../../../utils";
 import {getCurrentProject} from "../../../redux/project/project.selector";
 import {
-    getDataSource,
-    getDataSourceLs,
-    getDataSourcesAll,
     getDataSourceSelectedRowKeys,
     getMappedText,
-    getMutators
+    getMutators,
 } from "../../../redux/ds/ds.selector";
 import {getAuth, getEditMode} from "../../../redux/app/app.selector";
 
@@ -27,7 +24,8 @@ import {IActionsType, ITable, ITableMenuItem, ITableRow} from "../Page/templates
 import {RootState} from "../../../redux/redux.store";
 import ScrollableAnchor from "react-scrollable-anchor";
 import AntModal from "../Modal/AntModal";
-import {NavLink} from "react-router-dom";
+import useCheckAddictions from "../../../hooks/useCheckAddictions";
+import {shallowEqual} from "react-redux";
 
 const {Text} = Typography;
 
@@ -37,8 +35,10 @@ type AntTableType = {
 };
 
 const AntTable = ({cmp, props}: AntTableType) => {
+
+    const {dataSource} = props;
     const [realDsKey, setRealDsKey] = useState<string>("");
-    const {dataSourceSelectMulti} = useActions();
+    const {dataSourceSelectMulti, clearDs} = useActions();
 
     const [searchParams] = useSearchParams();
     const mappedCaption = useTypedSelector((state: RootState) => getMappedText(state, cmp.caption ? cmp.caption : ''))
@@ -47,28 +47,45 @@ const AntTable = ({cmp, props}: AntTableType) => {
     const currentProject = useTypedSelector((state: RootState) =>
         getCurrentProject(state)
     );
-    const ls = useTypedSelector((state: RootState) => getDataSourceLs(state))
-    const allDs = useTypedSelector((state: RootState) => getDataSourcesAll(state))
+    // const ls = useTypedSelector((state: RootState) => getDataSourceLs(state))
+    // const allDs = useTypedSelector((state: RootState) => getDataSourcesAll(state))
 
-    /** получим DS для этой таблицы */
-    const dataSource = useTypedSelector((state: RootState) =>
-        getDataSource(state, realDsKey)
+    const visibleMenuItems = cmp.menu?.filter(
+        (item: any) => item.visible !== false
     );
-
-    /** Источник с данными для зависимости. SelectedRows */
-    // const ds_master = useTypedSelector((state: RootState) =>
-    //     getMaster(state, cmp.ds.dependency)
-    // );
-
-    /** Получим источники для мутаций */
-    const ds_mutators = useTypedSelector((state: RootState) =>
-        getMutators(state, cmp.columns)
-    );
+    let addictionId: any = []
+    const currentAddiction: any = [];
+    visibleMenuItems?.map((item, index) => {
+        addictionId = Array.isArray(item.addiction) ? item.addiction : [item.addiction]
+        currentProject?.addictions && addictionId?.forEach((addictId: number) => {
+            let res = currentProject?.addictions.filter((item: any) => item.id === addictId)[0]
+            res && currentAddiction.push(res)
+        })
+    })
+    const {checkRowAddiction} = useCheckAddictions(currentAddiction);
 
     /** Получим ключи выделенных строк таблицы, если они есть */
     const selectedRowKeys = useTypedSelector((state: RootState) =>
         getDataSourceSelectedRowKeys(state, realDsKey)
     );
+
+    // Удаляем ds с префиксом при размонтировании
+    useEffect(() => {
+        return () => {
+            if (selectedRowKeys.length) {
+                dataSourceSelectMulti(realDsKey, [], [])
+                clearDs(`selected-${realDsKey}`)
+            }
+        }
+    }, [realDsKey, selectedRowKeys])
+
+    /** Получим источники для мутаций */
+    const dsMutators = useTypedSelector((state: RootState) => getMutators(state, cmp.columns), shallowEqual)
+
+    /** Источник с данными для зависимости. SelectedRows */
+    // const ds_master = useTypedSelector((state: RootState) =>
+    //     getMaster(state, cmp.ds.dependency)
+    // );
 
     /**
      * ============= тут какая то магия ================
@@ -110,7 +127,7 @@ const AntTable = ({cmp, props}: AntTableType) => {
             </>
         );
 
-    const tableData = dataSource.items?.map((i) => {
+    const tableData = dataSource.items?.map((i: any) => {
         if (i.children !== undefined && typeof i.children !== "object")
             i.children = JSON.parse(i.children);
 
@@ -128,7 +145,7 @@ const AntTable = ({cmp, props}: AntTableType) => {
         dataSource.columns.forEach(function (item: any) {
             if (!item.visible) return;
 
-            const cell = cmp.columns[item.key]
+            // const cell = cmp.columns[item.key]
 
             let search_mutator: any = {};
             // if (cmp.columns === undefined || cmp.columns[item.key] === undefined || cmp.columns[item.key].mutate === undefined) {
@@ -149,7 +166,7 @@ const AntTable = ({cmp, props}: AntTableType) => {
                         text,
                         item.key,
                         cmp.columns,
-                        ds_mutators,
+                        dsMutators,
                         {
                             row: row,
                             columns: dataSource.columns,
@@ -302,61 +319,73 @@ const AntTable = ({cmp, props}: AntTableType) => {
      * FIXME: тест плагина
      */
 
-    if (cmp.menu !== undefined && cmp.menu.length > 0)
-        tableColumns.push({
-            title: "",
-            dataIndex: "tbl_menu",
-            key: "tbl_menu",
-            render: (q, row: any) => {
-
-                const visibleMenuItems = cmp.menu?.filter(
-                    (item: any) => item.visible !== false
-                );
-
-                const menu = (
-                    <Menu>
-                        {visibleMenuItems?.map((item, index) => {
-                            const addictionId = Array.isArray(item.addiction) ? item.addiction : [item.addiction]
-                            const currentAddiction: any = [];
-                            currentProject?.addictions && addictionId?.forEach((addictId: number) => {
-                                let res = currentProject?.addictions.filter((item: any) => item.id === addictId)[0]
-                                res && currentAddiction.push(res)
-                            })
-
-                            if (!editMode) {
-                                if (item.addiction) {
-                                    if (!row) {
-                                        return null
-                                    }
-                                    if (!checkAddiction(row, currentAddiction, allDs, ls)) {
-                                        return null
-                                    }
-                                }
-                                if (!(auth.projects_roles ? checkRole(cmp?.acl, currentProject && auth.projects_roles[currentProject?.key]) : checkRole(cmp?.acl, undefined))) {
-                                    return null
-                                }
-                            }
-
-                            return <TableMenuItemHoc
-                                key={index}
-                                index={index}
-                                item={item}
-                                row={row}
-                            />
-
-                        })}
-                    </Menu>
-                );
-
-                return (
-                    <Dropdown overlay={menu} trigger={["click"]}>
-                        <Button type="text">
-                            <EllipsisOutlined />
-                        </Button>
-                    </Dropdown>
-                );
-            },
+    if (cmp.menu !== undefined && cmp.menu.length > 0) {
+        const arr: any[] = [];
+        const visibleMenuItems = cmp.menu?.filter(
+            (item: any) => item.visible !== false
+        );
+        // проверяем пункты меню на ограничение по ролям, чтобы не отображать колонку меню, если в ней нет пунктов для отображения
+        visibleMenuItems?.map((item: any) => {
+            if ((auth.projects_roles ? checkRole(item.acl, currentProject && auth.projects_roles[currentProject?.key]) : checkRole(item.acl, undefined))) {
+                arr.push(item)
+            }
         });
+
+        if (arr.length) {
+            tableColumns.push({
+                title: "",
+                dataIndex: "tbl_menu",
+                key: "tbl_menu",
+                width: '2%',
+                render: (q, row: any) => {
+                    const menu = (
+                        <Menu>
+                            {visibleMenuItems?.map((item, index) => {
+                                const addictionId = Array.isArray(item.addiction) ? item.addiction : [item.addiction]
+                                const currentAddiction: any = [];
+                                currentProject?.addictions && addictionId?.forEach((addictId: number) => {
+                                    let res = currentProject?.addictions.filter((item: any) => item.id === addictId)[0]
+                                    res && currentAddiction.push(res)
+                                })
+
+                                if (!editMode) {
+                                    if (item.addiction) {
+                                        if (!row) {
+                                            return null
+                                        }
+                                        if (!checkRowAddiction(row, currentAddiction)) {
+                                            return null
+                                        }
+                                    }
+
+                                    if (!(auth.projects_roles ? checkRole(item.acl, currentProject && auth.projects_roles[currentProject?.key]) : checkRole(item.acl, undefined))) {
+                                        return null
+                                    }
+                                }
+
+                                return <TableMenuItemHoc
+                                    key={index}
+                                    index={index}
+                                    item={item}
+                                    row={row}
+                                />
+
+                            })}
+                        </Menu>
+                    );
+
+                    return (
+                        <Dropdown overlay={menu} trigger={["click"]}>
+                            <Button type="text">
+                                <EllipsisOutlined />
+                            </Button>
+                        </Dropdown>
+                    );
+                },
+            });
+        }
+    }
+
 
     /**
      * Если нужно показать меню
@@ -379,9 +408,9 @@ const AntTable = ({cmp, props}: AntTableType) => {
             </Popconfirm>
         ) : (
             item.modal && item.modal.isModal && item.modal.cmpModal ?
-                <Menu.Item eventKey={item.modal.cmpModal.key + index} style={{padding: 0}}
+                <Menu.Item eventKey={item.modal.cmpModal.key + index} style={{margin: 0, padding: 0}}
                     key={item.modal.cmpModal.key + index}>
-                    <span>
+                    <span style={{margin: 0, padding: 0}}>
                         <AntModal key={item.modal.cmpModal.key + index} cmp={item.modal.cmpModal} props={{row: row}}
                             maskClosable={false} open={true} />
                     </span>
@@ -421,14 +450,12 @@ const AntTable = ({cmp, props}: AntTableType) => {
         return title;
     };
 
-    // console.log(tableColumns);
-
     return (
-        <div>
+        <div style={editMode ? {position: 'relative'}: {}}>
             {cmp.anchor && <ScrollableAnchor id={`${cmp.anchor}`}>
                 <span></span>
             </ScrollableAnchor>}
-            <Editor cmp={cmp} />
+            <Editor style={{top:'3px'}} cmp={cmp} direction='left' testEditorStyle={true} height='25px'/>
             <Table
                 {...cmp.props}
                 {...rowSelection}

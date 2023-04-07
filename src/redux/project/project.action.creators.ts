@@ -2,6 +2,7 @@ import {IPage, IPages, IProject} from "./project.initial";
 import {ComponentInterface} from "../../components/AntComponents/Page/templates";
 import {
     CmpAddRowType,
+    CmpAddToFooterType,
     CmpAddType,
     CmpCopyType,
     CmpCutType,
@@ -12,6 +13,7 @@ import {
     CreatePage,
     CreatePageFailed,
     CreatePageSuccess,
+    CreatePageTamplates,
     CreateProject,
     CreateProjectFailed,
     CreateProjectSuccess,
@@ -53,6 +55,7 @@ export const projectActionCreators = {
     savePageSuccess: (pages: IPages): SavePageSuccess => ({type: ProjectActionsEnum.SAVE_PAGE_SUCCESS, pages}),
     savePageFailed: (message: string): SavePageFailed => ({type: ProjectActionsEnum.SAVE_PAGE_FAILED, message}),
     createPage: (project: any, key: string): CreatePage => ({type: ProjectActionsEnum.CREATE_PAGE, project, key}),
+    createPageTamplates: (project: any, key: string, tamplateKey: string): CreatePageTamplates => ({type: ProjectActionsEnum.CREATE_PAGE_TEMPLATES, project, key, tamplateKey}),
     createPageSuccess: (page: IPage): CreatePageSuccess => ({
         type: ProjectActionsEnum.CREATE_PAGE_SUCCESS,
         page
@@ -113,6 +116,12 @@ export const projectActionCreators = {
     }),
     cmpAdd: (parent: ComponentInterface, cmp: ComponentInterface, currentPage: IPage): CmpAddType => ({
         type: ProjectActionsEnum.CMP_ADD,
+        parent,
+        cmp,
+        currentPage
+    }),
+    cmpAddToFooter: (parent: ComponentInterface, cmp: ComponentInterface, currentPage: IPage): CmpAddToFooterType => ({
+        type: ProjectActionsEnum.CMP_ADD_TO_FOOTER,
         parent,
         cmp,
         currentPage

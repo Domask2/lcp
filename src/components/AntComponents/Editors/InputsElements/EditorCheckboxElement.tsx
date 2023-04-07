@@ -10,7 +10,7 @@ type EditorCheckboxType = {
 
 const EditorCheckboxElement: React.FC<EditorCheckboxType> = ({props, setValue, value}) => {
 
-    return <div style={{...props.containerStyle}}>
+    return <div style={{height: '32px', ...props.containerStyle}}>
         {
             props.hoverText ? (
                 <AntPopover

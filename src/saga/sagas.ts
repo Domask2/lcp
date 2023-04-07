@@ -130,6 +130,15 @@ const createPageSaga = function* (action: any): any {
     }
 }
 
+const createPageTemplatesSaga = function* (action: any): any {
+    try {
+        const page = yield call(ApiProject.createTemplatesPage, action.project, action.key, action.tamplateKey)
+        yield put(projectActionCreators.createPageSuccess(page))
+    } catch (e: any) {
+        yield put(projectActionCreators.createPageFailed(e.message))
+    }
+}
+
 const createProjectSaga = function* (): any {
     try {
         const project = yield call(ApiProject.createProject);
@@ -255,6 +264,15 @@ const executeDbProcedure = function* (action: any): any {
     }
 }
 
+const createResponse = function* (action: any): any {
+    try {
+        const response = yield call(ApiDs.response, action.href);
+        yield put(dsActionCreators.responseSuccess(action.key, response.data))
+    } catch (e: any) {
+        yield put(dsActionCreators.responseSuccess(action.key, e.response.data))
+    }
+}
+
 
 const loginRemote = function* (action: any): any {
     try {
@@ -362,6 +380,7 @@ function* mySaga() {
     yield takeLatest(ProjectActionsEnum.LOAD_PROJECT, loadProject)
     yield takeLatest(ProjectActionsEnum.SAVE_PAGE, savePageSaga)
     yield takeLatest(ProjectActionsEnum.CREATE_PAGE, createPageSaga)
+    yield takeLatest(ProjectActionsEnum.CREATE_PAGE_TEMPLATES, createPageTemplatesSaga)
     yield takeLatest(ProjectActionsEnum.CREATE_PROJECT, createProjectSaga)
     yield takeLatest(ProjectActionsEnum.DELETE_PROJECT, deleteProjectSaga)
     yield takeLatest(ProjectActionsEnum.SAVE_PROJECT, saveProjectSaga)
@@ -374,6 +393,7 @@ function* mySaga() {
     yield takeEvery(DsActionsEnum.EDIT_RECORD, editRecord)
     yield takeEvery(DsActionsEnum.DELETE_RECORD, deleteRecord)
     yield takeEvery(DsActionsEnum.EXECUTE_DB_PROCEDURE, executeDbProcedure)
+    yield takeEvery(DsActionsEnum.CREATE_RESPONSE, createResponse)
     /** ----- DataSource ----- */
 
     /** ----- Remote ------*/

@@ -34,7 +34,7 @@ export const ComponentsSettingsTemplate: any = {
             Card: false
         },
         StandartSettingsColTwo: {
-            Arr: [StandartSettings.Br, PreviewSettings.Size, PreviewSettings.Caption, PreviewSettings.ClassName, StandartSettings.Br, StandartSettings.Br, StyleSettings.Style, StandartSettings.Br, StyleSettings.HeadStyle, StandartSettings.Br, StyleSettings.BodyStyle],
+            Arr: [StandartSettings.Br, PreviewSettings.Size, PreviewSettings.Caption, PreviewSettings.ClassName, StandartSettings.Br, StandartSettings.Br, StyleSettings.Style, StandartSettings.Br, StyleSettings.HeadStyle, StandartSettings.Br, StyleSettings.BodyStyle, StandartSettings.Br, StyleSettings.FooterStyle],
             Card: false
         },
     },
@@ -48,31 +48,55 @@ export const ComponentsSettingsTemplate: any = {
             Card: false
         },
     },
+    Breadcrumb: {
+        StandartSettingsRow: {
+            Arr: [PreviewSettings.Preview],
+            Card: false
+        },
+        StandartSettings: {
+            Arr: [PreviewSettings.Title, StandartSettings.Br, ...Object.values(StandartSettings)],
+            Card: false
+        },
+        StandartSettingsColTwo: {
+            Arr: [UniqSettings.Breadcrumb, StyleSettings.Style, StandartSettings.Br, StyleSettings.ContentStyle],
+            Card: true
+        },
+    },
+    BarCode: {
+        StandartSettings: {
+            Arr: [PreviewSettings.Preview, ...Object.values(StandartSettings), StyleSettings.Style],
+            Card: true
+        },
+        StandartSettingsColTwo: {
+            Arr: [PropsSettings.Value, PropsSettings.DisplayValue, PropsSettings.TextAlign, PropsSettings.TextPosition, StandartSettings.Br, PropsSettings.Options],
+            Card: false
+        },
+    },
     Button: {
         StandartSettings: {
             Arr: [PreviewSettings.Preview, StandartSettings.Br, ...Object.values(StandartSettings)],
             Card: false
         },
         StandartSettingsColTwo: {
-            Arr: [StandartSettings.Br, PreviewSettings.Caption, PreviewSettings.ClassName, PreviewSettings.PropsType, StandartSettings.Br, StyleSettings.Style],
+            Arr: [StandartSettings.Br, PreviewSettings.Caption, PreviewSettings.ClassName, PreviewSettings.PropsType, PreviewSettings.DangerButton, PreviewSettings.ConfirmButton, StandartSettings.Br, StyleSettings.Style, StyleSettings.ConfirmStyle,StandartSettings.Br, PreviewSettings.Tooltip, PreviewSettings.TooltipTitle, PreviewSettings.TooltipPlacement, PreviewSettings.TooltipColor, StyleSettings.TooltipOverlayInnerStyle],
             Card: false
         },
         DsSettings: {
-            Arr: [ComplexInteractionSettings.Actions, DsInteractionSettings.Ds, DsInteractionSettings.ResetInputs, DsInteractionSettings.CloseModal, DsInteractionSettings.ReduxElements],
+            Arr: [ComplexInteractionSettings.Actions, DsInteractionSettings.DsSelected, DsInteractionSettings.ResetInputs, DsInteractionSettings.CloseModal, DsInteractionSettings.ReduxElements, DsInteractionSettings.ReduxElementsHiddenInput],
             Card: false
         },
         ComplexInteractionSettings: {
-            Arr: [ComplexInteractionSettings.GetUrl],
+            Arr: [DsInteractionSettings.OnLinkFunc, ComplexInteractionSettings.GetUrl],
             Card: true
         },
     },
     Table: {
         StandartSettings: {
-            Arr: [...Object.values(StandartSettings), StandartSettings.Br, DsInteractionSettings.TableDs],
+            Arr: [...Object.values(StandartSettings), StandartSettings.Br, StyleSettings.Style],
             Card: false
         },
         StandartSettingsColTwo: {
-            Arr: [PreviewSettings.Caption, PreviewSettings.Size, PreviewSettings.Selectable, PreviewSettings.SelectType, PropsSettings.Pagination, PropsSettings.Scroll, StandartSettings.Br, StyleSettings.Style],
+            Arr: [PreviewSettings.Caption, DsInteractionSettings.IteratorDs, DsInteractionSettings.FiltredKey, StandartSettings.Br, DsInteractionSettings.TableDs, PreviewSettings.Size, PreviewSettings.Selectable, PreviewSettings.SelectType, PropsSettings.Pagination, PropsSettings.Scroll, StandartSettings.Br],
             Card: false
         },
     },
@@ -105,7 +129,7 @@ export const ComponentsSettingsTemplate: any = {
             Card: false
         },
         StandartSettingsColTwo: {
-            Arr: [PreviewSettings.Caption, PreviewSettings.ButtonTitle, PreviewSettings.ButtonClassName, PreviewSettings.ButtonType, StandartSettings.Br, StyleSettings.MaskStyle, StandartSettings.Br, StyleSettings.Style, StandartSettings.Br, StyleSettings.BodyStyle],
+            Arr: [PreviewSettings.Caption, PreviewSettings.ButtonTitle, PreviewSettings.ButtonClassName, PreviewSettings.ButtonType, PreviewSettings.DangerButton, StandartSettings.Br, StyleSettings.MaskStyle, StandartSettings.Br, StyleSettings.Style, StandartSettings.Br, StyleSettings.BodyStyle, StandartSettings.Br, StyleSettings.ButtonStyle, ,StandartSettings.Br, PreviewSettings.Tooltip, PreviewSettings.TooltipTitle, PreviewSettings.TooltipPlacement, PreviewSettings.TooltipColor, StyleSettings.TooltipOverlayInnerStyle],
             Card: false
         },
     },
@@ -128,10 +152,21 @@ export const ComponentsSettingsTemplate: any = {
             Card: false
         },
         StandartSettingsColTwo: {
-            Arr: [DsInteractionSettings.Ds, DsInteractionSettings.ListKey, DsInteractionSettings.ListValues, DsInteractionSettings.ListTitle, DsInteractionSettings.DsIterations, StandartSettings.Br, StyleSettings.Style, StandartSettings.Br, StyleSettings.TitleStyle, StandartSettings.Br, StyleSettings.LabelStyle, StandartSettings.Br, StyleSettings.ContentStyle],
+            Arr: [DsInteractionSettings.DsSelected, DsInteractionSettings.ListKey, DsInteractionSettings.ListValues, DsInteractionSettings.ListTitle, DsInteractionSettings.DsIterations, StandartSettings.Br, StyleSettings.Style, StandartSettings.Br, StyleSettings.TitleStyle, StandartSettings.Br, StyleSettings.LabelStyle, StandartSettings.Br, StyleSettings.ContentStyle],
             Card: false
         },
     },
+    FilterTags: {
+        StandartSettings: {
+            Arr: [...Object.values(StandartSettings), StandartSettings.Br, PreviewSettings.Caption, PreviewSettings.ButtonTitle, PreviewSettings.Button, PreviewSettings.ButtonSize, PreviewSettings.ButtonType],
+            Card: false
+        },
+        StandartSettingsColTwo: {
+            Arr: [DsInteractionSettings.Ds, DsInteractionSettings.KeyDs, StandartSettings.Br, DsInteractionSettings.TagsDs, DsInteractionSettings.TagsKey, DsInteractionSettings.TagsKeyValues, StandartSettings.Br, StyleSettings.Style, StandartSettings.Br, StyleSettings.TitleStyle, StandartSettings.Br, StyleSettings.LabelStyle, StandartSettings.Br, StyleSettings.ContentStyle, StandartSettings.Br, StyleSettings.ButtonStyle],
+            Card: false
+        },
+    },
+
     Details: {
         StandartSettings: {
             Arr: Object.values(StandartSettings),
@@ -140,20 +175,6 @@ export const ComponentsSettingsTemplate: any = {
         StandartSettingsColTwo: {
             Arr: [StyleSettings.Style, StandartSettings.Br, StyleSettings.HeadStyle, StandartSettings.Br, StyleSettings.BodyStyle],
             Card: false
-        },
-    },
-    Breadcrumb: {
-        StandartSettingsRow: {
-            Arr: [PreviewSettings.Preview],
-            Card: false
-        },
-        StandartSettings: {
-            Arr: [PreviewSettings.Title, StandartSettings.Br, ...Object.values(StandartSettings)],
-            Card: false
-        },
-        StandartSettingsColTwo: {
-            Arr: [UniqSettings.Breadcrumb, StyleSettings.Style],
-            Card: true
         },
     },
     Form: {
@@ -192,7 +213,7 @@ export const ComponentsSettingsTemplate: any = {
             Card: false
         },
         StandartSettingsColTwo: {
-            Arr: [...Object.values(StandartSettings), StandartSettings.Br, PropsSettings.Src, StandartSettings.Br, PreviewSettings.BaseUrl, DsInteractionSettings.Ds, DsInteractionSettings.ImageKey, PropsSettings.Width, PropsSettings.Height, StandartSettings.Br, StyleSettings.Style, StandartSettings.Br, StyleSettings.ImageStyle],
+            Arr: [...Object.values(StandartSettings), StandartSettings.Br, PropsSettings.Src, StandartSettings.Br, PreviewSettings.BaseUrl, DsInteractionSettings.DsSelected, DsInteractionSettings.ImageKey, PropsSettings.Width, PropsSettings.Height, StandartSettings.Br, StyleSettings.Style, StandartSettings.Br, StyleSettings.ImageStyle],
             Card: false
         },
     },
@@ -212,7 +233,7 @@ export const ComponentsSettingsTemplate: any = {
             Card: false
         },
         StandartSettingsColTwo: {
-            Arr: [DsInteractionSettings.DsKey, DsInteractionSettings.Show, DsInteractionSettings.Hide, StandartSettings.Br, DsInteractionSettings.AddButtton, DsInteractionSettings.ActionButttonTitle, ComplexInteractionSettings.Actions],
+            Arr: [DsInteractionSettings.IteratorDs, DsInteractionSettings.FiltredKey, StandartSettings.Br, DsInteractionSettings.DsKey, DsInteractionSettings.Show, DsInteractionSettings.Hide, StandartSettings.Br, DsInteractionSettings.AddButtton, DsInteractionSettings.ActionButttonTitle, ComplexInteractionSettings.Actions],
             Card: false
         },
         Preview: {
@@ -244,19 +265,9 @@ export const ComponentsSettingsTemplate: any = {
             Card: false
         },
     },
-    BarCode: {
-        StandartSettings: {
-            Arr: [PreviewSettings.Preview, ...Object.values(StandartSettings), StyleSettings.Style],
-            Card: true
-        },
-        StandartSettingsColTwo: {
-            Arr: [PropsSettings.Value, PropsSettings.DisplayValue, PropsSettings.TextAlign, PropsSettings.TextPosition, StandartSettings.Br, PropsSettings.Options],
-            Card: false
-        },
-    },
     QRCode: {
         StandartSettings: {
-            Arr: [PreviewSettings.Preview, ...Object.values(StandartSettings), StyleSettings.Style],
+            Arr: [PreviewSettings.Preview, ...Object.values(StandartSettings)],
             Card: true
         },
         StandartSettingsColTwo: {
@@ -270,7 +281,7 @@ export const ComponentsSettingsTemplate: any = {
             Card: false
         },
         StandartSettingsColTwo: {
-            Arr: [DsInteractionSettings.DsKey, StandartSettings.Br, DsInteractionSettings.CurPage, DsInteractionSettings.PerPage, StandartSettings.Br, StyleSettings.Style],
+            Arr: [DsInteractionSettings.DsKey, StandartSettings.Br, DsInteractionSettings.IteratorDs, DsInteractionSettings.FiltredKey, StandartSettings.Br, DsInteractionSettings.CurPage, DsInteractionSettings.PerPage, StandartSettings.Br, StyleSettings.Style],
             Card: false
         },
     },
@@ -280,7 +291,7 @@ export const ComponentsSettingsTemplate: any = {
             Card: false
         },
         StandartSettingsColTwo: {
-            Arr: [PreviewSettings.Caption, StandartSettings.Br, DsInteractionSettings.SearchDs, DsInteractionSettings.SearchDsPrefix, StandartSettings.Br, StyleSettings.Style, StyleSettings.InputsStyle],
+            Arr: [PreviewSettings.Caption, StandartSettings.Br, DsInteractionSettings.SearchDs, DsInteractionSettings.SearchDsPrefix, StandartSettings.Br, DsInteractionSettings.IteratorDs, DsInteractionSettings.FiltredKey, StandartSettings.Br, StyleSettings.Style, StyleSettings.InputsStyle],
             Card: false
         },
     },
@@ -294,7 +305,7 @@ export const ComponentsSettingsTemplate: any = {
             Card: false
         },
         DsSettings: {
-            Arr: [ComplexInteractionSettings.Actions, ComplexInteractionSettings.FlyInputsDsSettings],
+            Arr: [ComplexInteractionSettings.Actions, ComplexInteractionSettings.FlyInputsDsSettings, StandartSettings.Br, DsInteractionSettings.InitVarsValue],
             Card: true
         },
         DsSettingsBottomRow: {
@@ -407,7 +418,6 @@ export const ComponentsSettingsTemplate: any = {
             Arr: Object.values(StandartSettings),
             Card: false
         },
-        DsSettings: {},
         StyleSettings: {
             Arr: [StyleSettings.Style],
             Card: false
@@ -423,4 +433,64 @@ export const ComponentsSettingsTemplate: any = {
             Card: false
         },
     },
+    YaMaps: {
+        StandartSettings: {
+            Arr: [...Object.values(StandartSettings), StandartSettings.Br, PreviewSettings.GeoCodeMode, DsInteractionSettings.VarsKey, DsInteractionSettings.VarsValue, StandartSettings.Br, DsInteractionSettings.Ds, DsInteractionSettings.DsKeyValue, DsInteractionSettings.DsIterations, StandartSettings.Br, StandartSettings.Br, StyleSettings.Style, StandartSettings.Br],
+            Card: false
+        },
+        StandartSettingsColTwo: {
+            Arr: [ComplexInteractionSettings.YaMapsMapCenterGeocode, PreviewSettings.MapCenter, PreviewSettings.MapCenterLatitude, PreviewSettings.MapCenterLongitude, PreviewSettings.Zoom, PreviewSettings.ScrollZoom, StandartSettings.Br, PreviewSettings.CommonCenter, ComplexInteractionSettings.YaMapsPlacemarkGeocode, PreviewSettings.PlacemarkGeo, PreviewSettings.PlacemarkLatitude, PreviewSettings.PlacemarkLongitude, StandartSettings.Br, PreviewSettings.Caption, PreviewSettings.Text, PreviewSettings.PlacemarkColor, PreviewSettings.PlacemarkIcon, PreviewSettings.PlacemarkType],
+            Card: false
+        },
+    },
+    Slider: {
+        StandartSettings: {
+            Arr: Object.values(StandartSettings),
+            Card: false
+        },
+        StandartSettingsColTwo: {
+            Arr: [PreviewSettings.SliderEffect, PreviewSettings.SliderArrows, PreviewSettings.SliderDots, PreviewSettings.SliderTime, PreviewSettings.SliderAutoplay, PreviewSettings.SliderAutoplaySpeed, StandartSettings.Br, StyleSettings.Style, StandartSettings.Br],
+            Card: false
+        },
+    },
+    Iterator: {
+        StandartSettings: {
+            Arr: Object.values(StandartSettings),
+            Card: false
+        },
+        StandartSettingsColTwo: {
+            Arr: [DsInteractionSettings.IteratorDs, StandartSettings.Br, StyleSettings.Style, StandartSettings.Br],
+            Card: false
+        },
+    },
+    Menu: {
+        StandartSettings: {
+            Arr: [...Object.values(StandartSettings), StandartSettings.Br, ComplexInteractionSettings.Actions, StandartSettings.Br, ComplexInteractionSettings.FlyInputsInitDictionary],
+            Card: false
+        },
+        StandartSettingsColTwo: {
+            Arr: [DsInteractionSettings.Ds, DsInteractionSettings.ListTitle, DsInteractionSettings.ListValues, PreviewSettings.Url, StandartSettings.Br, PreviewSettings.Open, StandartSettings.Br, StyleSettings.Style, StandartSettings.Br, StyleSettings.LabelStyle, StandartSettings.Br],
+            Card: false
+        },
+    },
+    Cascade: {
+        StandartSettings: {
+            Arr: [...Object.values(StandartSettings), StandartSettings.Br, PreviewSettings.Visible, PreviewSettings.OpenButton, PreviewSettings.Caption, PreviewSettings.Popover],
+            Card: false
+        },
+        StandartSettingsColTwo: {
+            Arr: [PreviewSettings.ButtonSize, PreviewSettings.TableSize, StandartSettings.Br, StyleSettings.Style, StandartSettings.Br, StyleSettings.ButtonStyle, StandartSettings.Br],
+            Card: false
+        },
+        DsSettings: {
+            Arr: [PreviewSettings.Url, StandartSettings.Br, DsInteractionSettings.VarsKey, DsInteractionSettings.VarsValue],
+            Card: false
+        },
+        ComplexInteractionSettings: {
+            Arr: [DsInteractionSettings.Ds1, DsInteractionSettings.KeyDs1, DsInteractionSettings.DsKeyValues1, DsInteractionSettings.Ds2, DsInteractionSettings.KeyDs2, DsInteractionSettings.DsKeyValues2, DsInteractionSettings.Ds3, DsInteractionSettings.KeyDs3, DsInteractionSettings.DsKeyValues3, DsInteractionSettings.Ds4, DsInteractionSettings.KeyDs4, DsInteractionSettings.DsKeyValues4, DsInteractionSettings.Ds5, DsInteractionSettings.KeyDs5, DsInteractionSettings.DsKeyValues5],
+            Card: false
+        },
+    },
+
+
 }

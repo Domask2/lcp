@@ -4,20 +4,20 @@ import {getCurrentProject} from "../../../redux/project/project.selector";
 import {getAuth, getEditMode} from "../../../redux/app/app.selector";
 import {getDataSource, getDataSourceLs, getDataSourcesAll} from "../../../redux/ds/ds.selector";
 
-import AntPagination from "../Pagination/AntPagination";
 import Mapped from "../Mapped";
 import Ext from '../Ext/Ext';
 import Editor from '../Editor/Editor';
 
-import {checkAddiction, checkRole, EnterClick, formationValue, INIT_VALUES} from '../../../utils';
+import {checkAddiction, checkRole, EnterClick, formationValue} from '../../../utils';
 import serviceTable from "../../../services/serviceTable";
 
-import {Button, Col, Divider, Dropdown, Input, Menu, Modal, Popconfirm, Row, Table} from "antd";
+import {Button, Col, Divider, Dropdown, Input, Menu, Modal, Pagination, Popconfirm, Row, Table} from "antd";
 import {SearchOutlined, ClearOutlined, EllipsisOutlined} from '@ant-design/icons';
 
 import {RootState} from "../../../redux/redux.store";
 import {IActionsType, IInputs} from '../Page/templates';
 import ScrollableAnchor from 'react-scrollable-anchor';
+import useDataSourceFiltred from '../../../hooks/useDataSourceFilter';
 
 type AntDetailsPickerType = {
     cmp: IInputs
@@ -25,14 +25,17 @@ type AntDetailsPickerType = {
 }
 
 const AntDetailsPicker: FC<AntDetailsPickerType> = ({cmp, props}) => {
+
+    const dsKey = cmp.listDs ? `${cmp.key}-${cmp.listDs}` : "detailsPickerDs";
+
     const {loadDataSource, dataSourceAddKeyValue} = useActions();
+    const {getDataSourceCount, addSearch, resetFilters, getCurPage, getPerPage, addCurPage} = useDataSourceFiltred(dsKey)
 
     const [isModalVisible, setIsModalVisible] = useState(false);
     const [searchValue, setSearchValue] = useState("");
     const [row, setRow] = useState<any>("");
 
-    const ds = cmp.listDs ? `${cmp.key}-${cmp.listDs}` : "detailsPickerDs";
-    const dataSource = useTypedSelector((state: RootState) => getDataSource(state, ds));
+    const dataSource = useTypedSelector((state: RootState) => getDataSource(state, dsKey));
     const editMode = useTypedSelector((state: RootState) => getEditMode(state));
     const auth = useTypedSelector((state: RootState) => getAuth(state));
     const currentProject = useTypedSelector((state: RootState) => getCurrentProject(state));
@@ -43,17 +46,11 @@ const AntDetailsPicker: FC<AntDetailsPickerType> = ({cmp, props}) => {
     const searchColumns: any = dataSource?.columns.filter((item) => item.search);
     const searchKeys: any = searchColumns?.map((item: any) => item.title.split("]")[1]);
 
-    // из строики вида /__cur_page=1&__per_page=10&/ выделяем значение per_page
-    const dsFilter = useTypedSelector((state: RootState) => getDataSource(state, cmp.listDs))?.filter;
-    const perPageValues = dsFilter && dsFilter.split("__per_page=")[1]?.split("&")[0] ? dsFilter.split("__per_page=")[1]?.split("&")[0] : 10;
-
     useEffect(() => {
         // создание новой ds с префиксом /detailsPickerDs/
-        if (perPageValues) {
-            loadDataSource(ds, `${INIT_VALUES.RESET_VALUE}=${perPageValues}&`, false);
-        }
+        loadDataSource(dsKey, resetFilters(), false);
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [perPageValues]);
+    }, []);
 
     useEffect(() => {
         // установка в поисковой строке значения по клику на строку таблицы
@@ -77,30 +74,16 @@ const AntDetailsPicker: FC<AntDetailsPickerType> = ({cmp, props}) => {
     };
 
     const handleSearch = () => {
-        // формирование строки фильтрации и поиска для запроса на сервер
-        let filter_arr = dataSource.filter.split("&");
-        let filter_ds_filter_arr = [];
-        let search_ds_filter_arr = [];
-
-        filter_ds_filter_arr = filter_arr.filter((item) => {
-            return item.indexOf(INIT_VALUES.CURRENT_PAGE) !== -1;
-        });
-        search_ds_filter_arr = filter_arr.filter((item) => {
-            return item.indexOf(INIT_VALUES.PER_PAGE) !== -1;
-        });
-        let new_ds_filter_arr = [...filter_ds_filter_arr, ...search_ds_filter_arr];
-        new_ds_filter_arr.push(`${INIT_VALUES.SEARCH}=${searchValue}`);
-
-        loadDataSource(ds, new_ds_filter_arr.join("&"), false);
+        loadDataSource(dsKey, addSearch(searchValue), false);
     };
 
     const handleReset = () => {
         setSearchValue("");
-        loadDataSource(ds, `${INIT_VALUES.RESET_VALUE}=${perPageValues}`, false);
+        loadDataSource(dsKey, addSearch(''), false);
     };
 
     const hadleRowClick = (row: any) => {
-        dataSourceAddKeyValue(ds, "selected", row);
+        dataSourceAddKeyValue(dsKey, "selected", row);
         setRow(row);
     };
 
@@ -125,7 +108,7 @@ const AntDetailsPicker: FC<AntDetailsPickerType> = ({cmp, props}) => {
                     key: item.key,
                     render: (t: any, r: any) => {
                         let style = {};
-                        if (r.key === row.key) style = {color: "tomato"};
+                        if (r.key === row.key) style = {color: "#1890ff"};
                         return <div style={{...style, cursor: 'pointer', width: '100%'}}
                             onClick={(e) => {
                                 hadleRowClick(r)
@@ -177,7 +160,7 @@ const AntDetailsPicker: FC<AntDetailsPickerType> = ({cmp, props}) => {
         );
     };
 
-    if (cmp.menu !== undefined && cmp.menu.length > 0)
+    if (cmp.menu !== undefined && cmp.menu.length > 0) {
         tableColumns.push({
             title: "",
             dataIndex: "tbl_menu",
@@ -232,6 +215,11 @@ const AntDetailsPicker: FC<AntDetailsPickerType> = ({cmp, props}) => {
                 );
             },
         });
+    }
+
+    let onChange = (page: number) => {
+        loadDataSource(dsKey, addCurPage(page), true, '')
+    }
 
     return (
         <>
@@ -322,18 +310,17 @@ const AntDetailsPicker: FC<AntDetailsPickerType> = ({cmp, props}) => {
                         </div>
                         <div>
                             <span style={{fontSize: "12px"}}>
-                                Всего записей: {dataSource?.count}
+                                {+getDataSourceCount() ? `Всего записей: ${getDataSourceCount()}` : 'Ничего не найдено'}
                             </span>
                         </div>
                         <Divider />
-                        <AntPagination
-                            cmp={{
-                                key: "pagination-" + dataSource?.key,
-                                type: "Pagination",
-                                ds: {key: dataSource?.key},
-                                cur_page: 1,
-                                per_page: +perPageValues,
-                            }}
+                        <Pagination
+                            size="small"
+                            total={getDataSourceCount()}
+                            showSizeChanger={false}
+                            pageSize={getPerPage()}
+                            current={getCurPage()}
+                            onChange={onChange}
                         />
                         <Table
                             pagination={false}

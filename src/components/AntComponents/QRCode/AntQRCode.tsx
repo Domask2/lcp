@@ -22,7 +22,7 @@ const AntQRCode: React.FC<AntBarcodeType> = ({cmp}) => {
 
     return <>
         {cmp.anchor && <ScrollableAnchor id={`${cmp.anchor}`}>
-            <span>''</span>
+            <span></span>
         </ScrollableAnchor>}
 
         <Editor cmp={cmp} />

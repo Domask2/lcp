@@ -41,8 +41,8 @@ const AntPopover: React.FC<AntPopoverType> = ({title, hoverText, clickText, chil
             style={{width: 500}}
             content={hoverContent}
             trigger="hover"
-            visible={hovered}
-            onVisibleChange={handleHoverChange}
+            open={hovered}
+            onOpenChange={handleHoverChange}
         >
             <Popover
                 content={
@@ -54,8 +54,8 @@ const AntPopover: React.FC<AntPopoverType> = ({title, hoverText, clickText, chil
                 }
                 title="Click title"
                 trigger="click"
-                visible={clicked}
-                onVisibleChange={handleClickChange}
+                open={clicked}
+                onOpenChange={handleClickChange}
             >
                 {children ? children : <Text style={underlineStyle}>{title}</Text>}
 

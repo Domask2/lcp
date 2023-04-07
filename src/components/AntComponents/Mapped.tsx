@@ -9,7 +9,7 @@ import AntIcon from "./Icon/AntIcon";
 type MappedType = {
     text: string
 }
-const Mapped:React.FC<MappedType> = ({text}) => {
+const Mapped: React.FC<MappedType> = ({text}) => {
     let arrTxt = text !== undefined ? text?.split('<<') : ['']
     let result: Array<any> = [<>{arrTxt[0]}</>]
     let value: any = ''
@@ -23,9 +23,13 @@ const Mapped:React.FC<MappedType> = ({text}) => {
 
             switch (arrData[0]) {
                 case 'icon':
-                    let stl = {fontSize: '13px'}
-                    if (arrData[2] !== undefined)
+                    let stl = {fontSize: '13px', color: 'inherit'}
+                    if (arrData[2] !== undefined) {
                         stl.fontSize = arrData[2]
+                    }
+                    if (arrData[3] !== undefined) {
+                        stl.color = arrData[3]
+                    }
 
                     value = <AntIcon name={arrData[1]} style={stl} />
                     break

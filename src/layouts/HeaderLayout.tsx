@@ -2,13 +2,9 @@ import React from 'react';
 import AdminSwitcher from "../page/AdminPage/AdminSwitcher";
 import Logo from "../components/header/logo/Logo"
 import Autorization from "../components/header/authorization/Authorization"
-import Navigation from '../components/header/navigation/Navigation'
-// import {useTypedSelector} from "../hooks";
-// import {getCurrentProject} from "../redux/project/project.selector";
-// import {RootState} from "../redux/redux.store";
+import Nav from "../components/header/navigation/Nav";
 
 const HeaderLayout: React.FC = () => {
-    // const currentProject = useTypedSelector((state: RootState) => getCurrentProject(state));
     return <>
         <header className="lcHeader" style={{
             display: 'flex',
@@ -22,7 +18,8 @@ const HeaderLayout: React.FC = () => {
             top: '0'
         }}>
             <Logo />
-            <Navigation />
+            {/*<Navigation />*/}
+            <Nav />
             <Autorization />
             <AdminSwitcher />
         </header>

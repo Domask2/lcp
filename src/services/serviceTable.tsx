@@ -57,10 +57,7 @@ const serviceTable = {
                     /** нашли колонку которую будем менять, переберем действия что с ней делать. */
                     if (columns[col].style !== undefined) {
                         let check = checkTableStyleAddiction(columns[col]?.addictions, ret)
-                        let style = {}
-                        if (check.res) {
-                            style = check.style
-                        }
+                        let style = check.style
                         ret = serviceTable.__style(ret, style)
                     }
                     /** нашли колонку которую будем менять, переберем действия что с ней делать. */
@@ -69,6 +66,7 @@ const serviceTable = {
                     if (columns[col].link !== undefined) ret = serviceTable.__link(ret, columns, col, item)
                     /** создадим глобальную ссылку */
                     if (columns[col].href !== undefined) ret = serviceTable.__href(ret, columns, col, item)
+                    if (columns[col].url !== undefined) ret = serviceTable.__url(ret, columns, col, item)
                     /** это функция, поставить ссылку и повесить слушатель */
                     if (columns[col].fnc !== undefined) ret = serviceTable.__fnc(ret, columns, col, item, value)
                     if (columns[col].proc !== undefined) ret = serviceTable.__proc(ret, columns, col, item, value)
@@ -84,10 +82,7 @@ const serviceTable = {
                 if (col === dataIndex) {
                     if (columns[col].style !== undefined) {
                         let check = checkTableStyleAddiction(columns[col]?.addictions, ret)
-                        let style = {}
-                        if (check.res) {
-                            style = check.style
-                        }
+                        let style = check.style
                         ret = serviceTable.__style(ret, style)
                     }
                 }
@@ -124,7 +119,6 @@ const serviceTable = {
         return ret
     },
     __link: (ret: any, columns: ITableColumns, col: any, item: any) => {
-
         let arr_cmp_link = columns[col].link?.split(':')
         if (arr_cmp_link !== undefined && arr_cmp_link.length > 1) {
             let to = arr_cmp_link[0] + item.row[arr_cmp_link[1]]
@@ -135,6 +129,12 @@ const serviceTable = {
     __href: (ret: any, columns: ITableColumns, col: any, item: any) => {
         if (columns[col].href !== undefined) {
             ret = <a href={item.row[columns[col].href!]} target='_blank' rel='noopener noreferrer'>{ret}</a>
+        }
+        return ret
+    },
+    __url: (ret: any, columns: ITableColumns, col: any, item: any) => {
+        if (columns[col].url !== undefined) {
+            ret = <a href={columns[col].url + item.row[col]} target='_blank' rel='noopener noreferrer'>{ret}</a>
         }
         return ret
     },

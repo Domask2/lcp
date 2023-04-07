@@ -1,4 +1,3 @@
-import {Tag} from 'antd';
 import React, {FC, useEffect, useState} from 'react';
 import {useActions, useTypedSelector} from '../../../hooks';
 import {getDataSource} from '../../../redux/ds/ds.selector';
@@ -13,7 +12,7 @@ type AntTagsType = {
     props: any
 }
 
-const AntTags: FC<AntTagsType> = ({cmp}) => {
+const AntTags: FC<AntTagsType> = ({cmp, props}) => {
 
     const {setLsVars} = useActions()
     const dataSource = useTypedSelector((state: RootState) => getDataSource(state, cmp.ds));
@@ -25,10 +24,16 @@ const AntTags: FC<AntTagsType> = ({cmp}) => {
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [selectedTags])
 
-    const zeroTagTitle = dataSource?.items?.length && cmp.listTitle ? `${dataSource?.items[0][cmp.listTitle]}` : 'Теги:';
-    const zeroTagsList = dataSource?.items?.length && cmp.list && dataSource?.items[0][cmp.list] && JSON.parse(dataSource?.items[0][cmp.list]);
-    const zeroCheckedTags = dataSource?.items?.length && cmp.listValues && dataSource?.items[0][cmp.listValues] && JSON.parse(dataSource?.items[0][cmp.listValues]);
-    const zeroProjectKey = dataSource?.items?.length && cmp.listTitle ? `${dataSource?.items[0][cmp.listTitle]}` : 'tags';
+    const parsing = (value: any) => {
+        const regexp = /\[/;
+        return regexp.test(value) ? JSON.parse(value) : value
+    }
+
+    const zeroTagTitle = dataSource?.items?.length && cmp.listTitle ? `${dataSource?.items[props.index][cmp.listTitle]}` : 'Теги';
+
+    const zeroTagsList = dataSource?.items?.length && cmp.list && dataSource?.items[props.index][cmp.list] && parsing(dataSource?.items[props.index][cmp.list]);
+    const zeroCheckedTags = dataSource?.items?.length && cmp.listValues && dataSource?.items[props.index][cmp.listValues] && parsing(dataSource?.items[props.index][cmp.listValues]);
+    const zeroProjectKey = dataSource?.items?.length && cmp.listTitle ? `${dataSource?.items[props.index][cmp.listTitle]}` : 'tags';
 
     return (
         <div style={cmp.style}>
@@ -39,12 +44,13 @@ const AntTags: FC<AntTagsType> = ({cmp}) => {
                     {dataSource?.items?.length ? dataSource?.items.map((item: any) => {
 
                         const itemTitle = cmp.listTitle ? `${item[cmp.listTitle]}` : `${cmp.title}: `;
-                        const itemTags = cmp.list && item[cmp.list] && JSON.parse(item[cmp.list]);
-                        const itemCheckedTags = cmp.listValues && item[cmp.listValues] && JSON.parse(item[cmp.listValues]);
+                        const itemTags = cmp.list && item[cmp.list] && parsing(item[cmp.list]);
+                        const itemCheckedTags = cmp.listValues && item[cmp.listValues] && parsing(item[cmp.listValues]);
                         const projectKey = cmp.listTitle ? `${item[cmp.listTitle]}` : 'tags';
 
                         return (
                             <AntMoreTagsBlock
+                                key={item.key}
                                 title={itemTitle}
                                 tags={itemTags}
                                 checkedTags={itemCheckedTags}

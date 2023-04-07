@@ -27,16 +27,16 @@ const AntBreadcrumb: React.FC<antBreadcrumbType> = ({cmp, props}) => {
 
     return <>
         {cmp.anchor && <ScrollableAnchor id={`${cmp.anchor}`}>
-            <span>''</span>
+            <span></span>
         </ScrollableAnchor>}
         <Editor cmp={cmp} />
         <Breadcrumb style={cmp.style}>
             {cmp_details.items.map((item) => <Breadcrumb.Item key={item.route}>
-                <Link to={mappedText(rootState, item.route)}>
+                <Link style={cmp.contentStyle} to={mappedText(rootState, item.route)}>
                     <Mapped text={mappedText(rootState, item.title)} /></Link>
             </Breadcrumb.Item>
             )}
-            <Breadcrumb.Item key='this_page'><Mapped text={mappedText(rootState, cmp.title)} /></Breadcrumb.Item>
+            <Breadcrumb.Item key='this_page'><span style={cmp.contentStyle}><Mapped text={mappedText(rootState, cmp.title)} /></span></Breadcrumb.Item>
         </Breadcrumb>
     </>
 }

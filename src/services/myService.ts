@@ -1,9 +1,9 @@
-import {getDsByKey, getLsByKey} from "../redux/ds/ds.selector";
+import {getDataSourceLsVarsByKey, getDsByKey, getLsByKey} from "../redux/ds/ds.selector";
 import {RootState} from "../redux/redux.store";
 
 export const mappedText = (state: RootState, text: string) => {
     let arrTxt = text !== undefined || text !== null ? text?.split('[[') : []
-    if(arrTxt === undefined) {
+    if (arrTxt === undefined) {
         arrTxt = []
     }
     let result: string = arrTxt[0]
@@ -24,6 +24,10 @@ export const mappedText = (state: RootState, text: string) => {
             const arrData = arrA[0].split(':')
 
             switch (arrData[0]) {
+                case 'lsVars':
+                    source = getDataSourceLsVarsByKey(state, arrData[1])
+                    value = source
+                    break
                 case 'ls':
                     source = getLsByKey(state, arrData[1])
                     value = ''

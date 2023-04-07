@@ -1,29 +1,35 @@
 .lcLabelPurple {
     background: #b743ff;
 }
+
 .lcLabelBlue {
     background: #1890ff;
 }
+
 .lcLabelPink {
     background: #ee0cb3;
 }
+
 .lcLabelGreen {
     background: #20d400;
 }
+
 .lcLabelYellow {
     background: #fff300;
 }
+
 .lcLabelOrange {
     background: #ff6500;
 }
+
 .lcLabelBrown {
     background: #8b3400;
 }
+
 .lcLabel {
     color: #fff;
     padding: 0 5px 2px;
     font-size: 13px;
-    /*min-width: 70px;*/
     text-align: center;
     border-radius: 3px;
 }

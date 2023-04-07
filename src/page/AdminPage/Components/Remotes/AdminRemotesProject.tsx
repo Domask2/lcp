@@ -22,7 +22,7 @@ const mergeDb = (ownDB: any, remoteDB: any) => {
         let element: any = {...item}
         if (remoteDB)
             element.ident = identDbByDs(element, remoteDB)
-            element.ProjectIdent = identDbByDs(element, remoteDB)
+        element.ProjectIdent = identDbByDs(element, remoteDB)
 
         element?.pages?.forEach((page: any) => {
             page.ident = identByPage(element?.key, page, remoteDB)
@@ -71,7 +71,7 @@ const identByPage = (elementKey: any, page: any, db: any) => {
                     objPage2['key'] = page.key
                     objPage2['ls'] = page.ls
                     objPage2['title'] = page.title
-
+                    // eslint-disable-next-line
                     if (JSON.stringify(objPage) == JSON.stringify(objPage2)) {
                         result = true
                     }
@@ -111,7 +111,7 @@ const identDbByDs = (element: any, db: any) => {
             itemObj['project_roles'] = item.project_roles
             itemObj['startpage'] = item.startpage
             itemObj['title'] = item.title
-
+            // eslint-disable-next-line
             if (JSON.stringify(elementObj) == JSON.stringify(itemObj)) {
                 result = true
             }
@@ -211,7 +211,7 @@ const AdminRemotesProject = () => {
                             return <Space>
                                 <Button.Group>
                                     <Button size='small' type='dashed' onClick={
-                                        () => pushProject(row)}><ArrowRightOutlined/>Refact Project</Button>
+                                        () => pushProject(row)}><ArrowRightOutlined />Refact Project</Button>
                                 </Button.Group>
                             </Space>
                         }
@@ -219,7 +219,7 @@ const AdminRemotesProject = () => {
                             return <Space>
                                 <Button.Group>
                                     <Button size='small' type='dashed' onClick={
-                                        () => pushProject(row)}><ArrowRightOutlined/></Button>
+                                        () => pushProject(row)}><ArrowRightOutlined /></Button>
                                 </Button.Group>
                             </Space>
                         }
@@ -254,8 +254,8 @@ const AdminRemotesProject = () => {
                                 return <Text type='warning'>{text}</Text>
                         else
                             return <Text type='secondary'>Проект отсутсвует в БД - <a target={'_blank'}
-                                                                                      rel={'noreferrer'}
-                                                                                      href={authRemote?.url}>{authRemote?.url}</a></Text>
+                                rel={'noreferrer'}
+                                href={authRemote?.url}>{authRemote?.url}</a></Text>
                     }
                 },
             ]
@@ -339,7 +339,7 @@ const AdminRemotesProject = () => {
             },
         ];
 
-        return <Table size='small' bordered={true} columns={columns} dataSource={dataDsArr} pagination={false}/>;
+        return <Table size='small' bordered={true} columns={columns} dataSource={dataDsArr} pagination={false} />;
     };
 
     return (

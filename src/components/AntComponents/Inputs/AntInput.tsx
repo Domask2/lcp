@@ -2,7 +2,7 @@ import React, {useEffect, useState} from "react";
 import {useNavigate} from "react-router-dom";
 import {useActions, useTypedSelector} from "../../../hooks";
 import {getEditMode} from "../../../redux/app/app.selector";
-import {getDataSourceAll, getDataSourceLs} from "../../../redux/ds/ds.selector";
+import {getDataSource, getDataSourceAll, getDataSourceLs} from "../../../redux/ds/ds.selector";
 import Editor from "../Editor/Editor";
 import ScrollableAnchor from "react-scrollable-anchor";
 
@@ -19,11 +19,11 @@ const AntInput: React.FC<AntInputType> = ({cmp, props}) => {
     const {setLsVars} = useActions()
     const navigate = useNavigate();
     const editMode = useTypedSelector((state: RootState) => getEditMode(state));
-    const dataSources = useTypedSelector((state) => getDataSourceAll(state));
-    const ls: {[key: string]: any} = useTypedSelector((state: RootState) => getDataSourceLs(state))
-
+    const dataSources = useTypedSelector((state) => getDataSource(state, cmp.initDs));
     let link = cmp?.link ? cmp.link : "";
     let disabled = cmp?.disabled ? cmp.disabled : false;
+
+    // console.log(cmp.key);
 
     // инициализируем и добавляем prefix Input (< > =)
     const [prefix, setPrefix] = useState('=');
@@ -41,7 +41,7 @@ const AntInput: React.FC<AntInputType> = ({cmp, props}) => {
     const handlePush = () => {
         if (link && cmp.initDs && cmp.link!) {
             let urlLinkArr = cmp.link.split(":");
-            let animalId = dataSources[cmp.initDs]?.items[0][urlLinkArr[1]];
+            let animalId = dataSources?.items[0][urlLinkArr[1]];
             if (animalId === null || animalId === undefined || !animalId) {
                 return null;
             }
@@ -72,23 +72,23 @@ const AntInput: React.FC<AntInputType> = ({cmp, props}) => {
     // }
 
     return (
-        <>
+        <div style={editMode ? {position: 'relative',  display:'inline-flex', width: '100%'}: {}}>
             {cmp?.anchor && (
                 <ScrollableAnchor id={`${cmp?.anchor}`}>
-                    <span>''</span>
+                    <span/>
                 </ScrollableAnchor>
             )}
 
-            <Editor cmp={cmp} inputType={cmp.inputsType} />
+            <Editor cmp={cmp} inputType={cmp.inputsType} testEditorStyle={true} height='73%' />
             <Row
-                style={{alignItems: "center", marginBottom: "10px", ...cmp?.style}}
+                style={{alignItems: "center", marginBottom: "10px", width: '100%', ...cmp?.style}}
             >
                 <Col
                     span={cmp.inputWidth ? 24 - cmp.inputWidth : 10}
                     style={{textAlign: "right", paddingRight: "10px", ...cmp.bodyStyle}}
                 >
                     {(cmp.inputDescription || cmp.minValue || cmp.maxValue || (cmp.helpMessage && !props.validate)) &&
-                        <div style={{height: '20px', }}></div>}
+                        <div style={{height: '20px',}}/>}
                     {`${cmp.caption}: `}
                 </Col>
                 <Col span={cmp.inputWidth ? cmp.inputWidth : 14}>
@@ -98,7 +98,6 @@ const AntInput: React.FC<AntInputType> = ({cmp, props}) => {
                         paddingLeft: '11px'
                     }}>{props.renderHelpMessage()} {cmp.inputDescription}{cmp.minValue ? `Минимальное значение: ${cmp.minValue}.` : ''} {cmp.maxValue ? `Максимальное значение: ${cmp.maxValue}` : ''}</div>
                     <div style={{position: "relative", width: "100%"}}>
-
                         <Input
                             spellCheck={!link}
                             type={cmp.numeric ? "number" : "text"}
@@ -126,7 +125,8 @@ const AntInput: React.FC<AntInputType> = ({cmp, props}) => {
                             value={props.value}
                             addonBefore={
                                 cmp.prefix ? (
-                                    <Select key={cmp.key} value={ls.vars['prefix_' + props.addictionKey]}
+                                    // <Select key={cmp.key} value={ls.vars['prefix_' + props.addictionKey]}
+                                    <Select key={cmp.key} value={prefix}
                                         onChange={(e: any) => setPrefix(e)}
                                         style={{borderTop: "none", width: '80px'}} className="select-before">
                                         <Select.Option value="=">{'='}</Select.Option>
@@ -149,7 +149,7 @@ const AntInput: React.FC<AntInputType> = ({cmp, props}) => {
                     </div>
                 </Col>
             </Row>
-        </>
+        </div>
     );
 };
 

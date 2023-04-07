@@ -9,7 +9,7 @@ interface ContentPageInterface {
 }
 const ContentPage: React.FC<ContentPageInterface> = ({page, props}) => {
     return page.components.map((item: ComponentInterface) => {
-        return <Master cmp={{...item, page_key: page.key}} key={item.key} props={props}/>
+        return <Master cmp={{...item, page_key: page.key}} key={item.key} props={props} />
     });
 };
 

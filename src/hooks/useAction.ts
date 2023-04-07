@@ -38,7 +38,7 @@ export default function useAction(actions: Array<IActionsType>, dsBtnForm?: stri
                     let newDsFilter = getAllReloadDs(allDsProject, action.reloadDS, dsBtnForm);
                     let {objectAction} = setObjectAction(action, formValue, false);
                     combineAction(objectAction, fncAll, actionsHooks, newDsFilter);
-                // table menu
+                    // table menu
                 } else if (itemTableMenu) {
                     let newDsFilter = getAllReloadDs(allDsProject, action.reloadDS, undefined, action?.ds_table);
                     let {objectAction} = setObjectAction(action, itemTableMenu, false);

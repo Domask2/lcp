@@ -1,4 +1,4 @@
-import {Col, Row} from "antd";
+import {Col} from "antd";
 import React, {useState} from "react";
 import Master from "../Master";
 import {ICol, ComponentInterface} from "../Page/templates";
@@ -31,9 +31,10 @@ const AntCol = ({cmp, props}: AntColType) => {
                 <span></span>
             </ScrollableAnchor>}
 
-            <Row>
-                <Editor cmp={cmp} onMouseOut={onMouseOut} onMouseOver={onMouseOver} />
-            </Row>
+            <Editor cmp={cmp}
+                    onMouseOut={onMouseOut}
+                    onMouseOver={onMouseOver}
+            />
             {cmp.children.map((item: ComponentInterface) =>
                 <Master key={item.key} cmp={{...item, page_key: cmp.page_key, ext: cmp.ext}} props={props} />)}
         </Col>

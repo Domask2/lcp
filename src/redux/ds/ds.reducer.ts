@@ -14,7 +14,10 @@ const dsReducer = (state = initialStateDs, action: DsActionCreatorsType): IDataS
             new_state.ds[action.ds_key].selectedRowKeys = action.keys
             new_state.ds[action.ds_key].selectedRows = action.rows
 
-            new_state.ds['selected-' + action.ds_key] = {...new_state.ds[action.ds_key], items: action.rows}
+            new_state.ds['selected-' + action.ds_key] = {
+                ...new_state.ds[action.ds_key],
+                items: action.rows
+            }
 
             return new_state
         case DsActionsEnum.DS_TABLE_ROW_SELECT:
@@ -180,6 +183,10 @@ const dsReducer = (state = initialStateDs, action: DsActionCreatorsType): IDataS
         case DsActionsEnum.CLEAR_SELECT:
             dataSources = {...state.ds}
             delete dataSources[action.sourceDs]
+            return {...state, ds: dataSources}
+        case DsActionsEnum.CREATE_RESPONSE_SUCCESS:
+            dataSources = {...state.ds}
+            dataSources[`ajax-${action.key}`] = action.payload
             return {...state, ds: dataSources}
         default:
             return state

@@ -2,8 +2,14 @@ import React, {useEffect, useState, Suspense} from "react";
 import {useTypedSelector, useActions} from "../../../hooks";
 import useBasePath from '../../../hooks/useBasePath'
 
-import {getCurrentPage, getCurrentProject, getPage, getProjectByPageKey, getUpload} from "../../../redux/project/project.selector";
-import {getAuth, getEditMode} from "../../../redux/app/app.selector";
+import {
+    getCurrentPage,
+    getCurrentProject,
+    getPage,
+    getProjectByPageKey,
+    getUpload
+} from "../../../redux/project/project.selector";
+import {getEditMode} from "../../../redux/app/app.selector";
 
 import HelpPage from "./HelpPage";
 import PageSettings from "./PageSettings";
@@ -21,12 +27,23 @@ import {Button, Card, Tabs} from "antd";
 import {ComponentInterface, templates} from "./templates";
 import {RootState} from "../../../redux/redux.store";
 import {IPage} from "../../../redux/project/project.initial";
+import DefaultTamplates from "../../../saga/api/data/default_values";
+import Toolbar from "./Toolbar";
 
 const LazyJsonPage = React.lazy(() => import("./JsonPage"))
 const {TabPane} = Tabs;
 
 const AntPage = (props: any) => {
-    const {loadProject, savePage, saveProject, createPage, setCurrentPage, cmpAddRow, initLsPP, initLsInputs} = useActions()
+    const {
+        loadProject,
+        savePage,
+        saveProject,
+        createPageTamplates,
+        setCurrentPage,
+        cmpAddRow,
+        initLsPP,
+        initLsInputs
+    } = useActions()
     const pathName = useBasePath();
     // const auth = useTypedSelector((state: RootState) => getAuth(state))
     const page = useTypedSelector((state: RootState) => getPage(state, pathName))
@@ -36,7 +53,8 @@ const AntPage = (props: any) => {
     const [isModalOpen, setIsModalOpen] = useState(false);
     const currentProject = useTypedSelector((state: RootState) => getCurrentProject(state));
 
-    const funcArr = curPage?.fnc?.filter((item: any) => item.type === 'ExecProc') ? curPage?.fnc?.filter((item: any) => item.type === 'ExecProc') : []
+    const funcArr = curPage?.fnc?.filter((item: any) => item.type === 'ExecProc');
+    // const funcArr = curPage?.fnc?.filter((item: any) => item.type === 'ExecProc') ? curPage?.fnc?.filter((item: any) => item.type === 'ExecProc') : [];
 
     // если есть на странице процедуры, запускаем инициализацию pp в ls
     // передем в initLsPP результат работы функции с говорящим названием superFunc (по заветам Николая Владимировича)
@@ -46,7 +64,7 @@ const AntPage = (props: any) => {
     const [isChangedJSON, setIsChangedJSON] = useState<boolean>(false)
 
     useEffect(() => {
-        if (funcArr.length) {
+        if (funcArr?.length) {
             initLsPP(superFunc(funcArr));
             initLsInputs(superFunc(funcArr));
         }
@@ -72,7 +90,7 @@ const AntPage = (props: any) => {
 
     let content
     if (page) {
-        content = <ContentPage page={page} props={props} />
+        content = <ContentPage page={page} props={props}/>
     } else
         content = <div style={{"color": "black"}}>---</div>
 
@@ -108,39 +126,60 @@ const AntPage = (props: any) => {
 
     const tabActionsSave = {
         right: <>
-            <Button type="text" onClick={() => setIsModalOpen(true)} icon={<FileTextOutlined />}>Список файлов</Button>
-            {page && <PageSettings page={page} />}
-            <Button type="text" onClick={onSave} icon={<SaveOutlined />}>Сохранить изменения</Button>
+            <Button type="text" onClick={() => setIsModalOpen(true)} icon={<FileTextOutlined/>}>Список файлов</Button>
+            {page && <PageSettings page={page}/>}
+            <Button type="text" onClick={onSave} icon={<SaveOutlined/>}>Сохранить изменения</Button>
         </>
     }
 
+    const items = [
+        {
+            label: 'Вид',
+            key: '1',
+            children: <div style={{padding: '5px'}}>
+                <Toolbar
+                    page={page}
+                    openModalFileSystem={() => setIsModalOpen(true)}
+                    onSave={onSave}
+                />
+                {page && <ContentPage page={page} props={props}/>}
+            </div>
+        },
+        {
+            label: 'Код JSON',
+            key: '2',
+            children: <Suspense fallback={<></>}>
+                <LazyJsonPage myJson={myJson} onBlurJson={onBlurJson} onEdit={onEdit}/>
+            </Suspense>
+        },
+        {
+            label: 'Подсказки',
+            key: '3',
+            children: <HelpPage part="page"/>
+        },
+    ];
+
     if (editMode) content = <>
-        <Tabs tabBarStyle={
-            {
-                background: '#fff9b5',
+        <Tabs
+            tabBarStyle={{
+                background: '#fff9b560',
                 paddingLeft: '15px',
                 borderRadius: 4,
                 borderTop: '1px solid #fffef4',
                 borderRight: '1px solid #e1ddc2',
                 borderBottom: '1px solid #e1ddc2',
                 borderLeft: '1px solid #fbf9e9',
-                position: 'fixed',
+                position: 'inherit',
                 zIndex: 9,
-                right: '35px',
-            }
-        } defaultActiveKey="1" tabBarExtraContent={tabActionsSave}>
-            <TabPane tab="Вид" key="1" style={{padding: '5px'}}>
-                {page && <ContentPage page={page} props={props} />}
-            </TabPane>
-            <TabPane tab="Код JSON" key="2">
-                <Suspense fallback={<></>}>
-                    <LazyJsonPage myJson={myJson} onBlurJson={onBlurJson} onEdit={onEdit} />
-                </Suspense>
-            </TabPane>
-            <TabPane tab="Подсказки" key="3">
-                <HelpPage part="page" />
-            </TabPane>
-        </Tabs>
+                left: '200px', //
+                backdropFilter: 'blur(2px)',
+                margin:'0'
+            }}
+            defaultActiveKey="1"
+            tabBarExtraContent={tabActionsSave}
+            items={items}
+        />
+
     </>
     /** ----------------- Edit Mode -------------------- */
 
@@ -149,15 +188,20 @@ const AntPage = (props: any) => {
     arr.splice(0, 2);
     let pathNameNew = arr.join('/').trim()
 
-    const createNewPage = () => {
+    const createNewPage = (tamplateKey: string) => {
         /** в качестве ключа передадим только ключ страницы, без ключа проекта. **/
-        createPage(project, pathNameNew)
+        createPageTamplates(project, pathNameNew, tamplateKey);
     }
 
     if (uploadStatus) {
         if (page === undefined) {
             if (editMode) {
-                return <Button className="lcButtonLc" onClick={createNewPage}>Создать страницу</Button>
+                return <>
+                    {Object.keys(DefaultTamplates).map((item: string) => {
+                        return <Button style={{marginBottom: '10px'}} className="lcButtonLc"
+                                       onClick={() => createNewPage(item)}>Создать
+                            страницу. {DefaultTamplates[item].title}.</Button>
+                    })}</>
             } else {
                 return <Card><Text>Такой страницы еще нет.</Text></Card>
             }
@@ -175,11 +219,19 @@ const AntPage = (props: any) => {
      */
 
     return <>
-        {page && <LoaderDataSources page={page} props={props} />}
+        {page && <LoaderDataSources page={page} props={props}/>}
         {content}
+        {/*<>*/}
+        {/*    <Toolbar*/}
+        {/*        page={page}*/}
+        {/*        openModalFileSystem={() => setIsModalOpen(true)}*/}
+        {/*        onSave={onSave}*/}
+        {/*    />*/}
+        {/*    {page && <ContentPage page={page} props={props}/>}*/}
+        {/*</>*/}
         {editMode && page && page.components.length === 0 &&
             <Button onClick={() => onAddCmp(templates['Row'])}>Добавить Row</Button>}
-        <ModalFileSystem page={page} isModalOpen={isModalOpen} setIsModalOpen={setIsModalOpen} />
+        <ModalFileSystem page={page} isModalOpen={isModalOpen} setIsModalOpen={setIsModalOpen}/>
     </>
 }
 

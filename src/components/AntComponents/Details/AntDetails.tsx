@@ -63,7 +63,7 @@ const AntDetails = ({props, cmp}: AntDetailsType) => {
         {cmp.anchor && <ScrollableAnchor id={`${cmp.anchor}`}>
             <span></span>
         </ScrollableAnchor>}
-        <Editor cmp={cmp} />
+        <Editor cmp={cmp} oldComponent={true} />
         <Table size="small" dataSource={getFields(entity)}
             columns={columns} />
     </>

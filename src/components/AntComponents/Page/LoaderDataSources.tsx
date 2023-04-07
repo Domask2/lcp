@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from "react";
-import {useParams, useSearchParams} from "react-router-dom";
+import {useLocation, useParams, useSearchParams} from "react-router-dom";
 
 import {useActions, useTypedSelector, useLoadDataSource} from "../../../hooks";
 import {getDataSourcesAll, getDataSourcesKeys} from "../../../redux/ds/ds.selector";
@@ -19,11 +19,11 @@ type LoaderDataSourceType = {
 const LoaderDataSources: React.FC<LoaderDataSourceType> = ({page, props}) => {
     const params = useParams<any>()
     const [searchParams] = useSearchParams();
+    const {pathname} = useLocation();
     const dataSourcesKeys = useTypedSelector((state: RootState) => getDataSourcesKeys(state));
     const dataSources = useTypedSelector((state: RootState) => getDataSourcesAll(state));
     const [arrDs, setArrDs]: any = useState<IDataSource[]>([])
     const uploadStatus = useTypedSelector((state: RootState) => getUpload(state))
-
     const {setLsBy, registerFnc, uploadDone} = useActions()
     const [loadDataSourceWithCache] = useLoadDataSource()
     /** arrDs нужен чтобы отмечать те ds что уже загружаются и не пытаться их загрузить снова */
@@ -62,8 +62,15 @@ const LoaderDataSources: React.FC<LoaderDataSourceType> = ({page, props}) => {
                             let newFilter = ''
 
                             newFilter = filter !== null ? filter : ''
-                            for (key in params)
-                                newFilter = newFilter?.replace(':' + key, params[key] as string)
+
+                            if (Object.keys(params).length) {
+                                if (filter) {
+                                    newFilter = newFilter?.replace(':' + filter.split('=:')[1], pathname.split('/')[pathname.split('/').length - 1])
+                                }
+                            }
+
+                            // for (key in params)
+                            //     newFilter = newFilter?.replace(':' + key, pathname.split('/')[pathname.split('/').length - 1])
 
                             /** проверим не загружен ли уже такой источник с таким же filterPerm */
                             if (dataSources[obj.key]?.filter !== newFilter) {
@@ -111,13 +118,13 @@ const LoaderDataSources: React.FC<LoaderDataSourceType> = ({page, props}) => {
 
     /** проверим на наличие fnc и зарегистрируем их */
     useEffect(() => {
-            if (page) {
-                if (page.fnc !== undefined) {
-                    page.fnc?.forEach(fnc => {
-                        registerFnc(fnc)
-                    })
-                }
+        if (page) {
+            if (page.fnc !== undefined) {
+                page.fnc?.forEach(fnc => {
+                    registerFnc(fnc)
+                })
             }
+        }
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [page, uploadStatus])
 

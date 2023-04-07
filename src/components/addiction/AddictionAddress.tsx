@@ -1,7 +1,7 @@
 import React, {useEffect, useState} from 'react';
 import {useTypedSelector} from '../../hooks';
 import {getCurrentPage} from '../../redux/project/project.selector';
-import {getDataSourceLs, getDataSourcesAll} from '../../redux/ds/ds.selector'
+import {getDataSourceLs, getDataSourceLsVars, getDataSourcesAll} from '../../redux/ds/ds.selector'
 import {AddictionsChoiceType, TypeAddictions} from '../../utils';
 
 import {Button, Select} from 'antd';
@@ -17,13 +17,13 @@ type AddressInputType = {
 
 const AddressInput: React.FC<AddressInputType> = ({setAddiction, addiction}) => {
 
-    const currentPage = useTypedSelector((state: RootState) => getCurrentPage(state))
-    const ls = useTypedSelector((state: RootState) => getDataSourceLs(state))
-    const varsKeys = Object.keys(ls.vars)
+    // const currentPage = useTypedSelector((state: RootState) => getCurrentPage(state))
+    const varsKeys = useTypedSelector((state: RootState) => getDataSourceLsVars(state))
+    // const varsKeys = Object.keys(ls.vars)
     const [address, setAddress] = useState<string>();
-    const [currentDsArray, setCurrentDsArray] = useState<any>(currentPage && Object.keys(currentPage.datasources));
-    const startedArr = currentPage && Object.keys(currentPage.datasources)
     const allDS = useTypedSelector((state: RootState) => getDataSourcesAll(state));
+    const [currentDsArray, setCurrentDsArray] = useState<any>(allDS && Object.keys(allDS));
+    const startedArr = allDS && Object.keys(allDS)
 
     // обработка события выбора значения из селекта
     // при начальном выборе записывается ds

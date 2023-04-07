@@ -23,7 +23,7 @@ const AntDivider = ({cmp}: AntDividerType): any => {
 
     return <>
         {cmp.anchor && <ScrollableAnchor id={`${cmp.anchor}`}>
-            <span>''</span>
+            <span></span>
         </ScrollableAnchor>}
         <Editor cmp={cmp} />
         <Divider style={cmp.style} children={text} />

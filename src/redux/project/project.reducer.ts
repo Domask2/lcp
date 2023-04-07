@@ -80,9 +80,9 @@ const projectReducer = (state = initialStateProject, action: ProjectActionCreato
             all = {...state.all}
             currentProject = {...state.current}
             if (Object.keys(currentProject).length) {
-                currentProject = {...action.project, message:{}, loading: true, errors: false}
+                currentProject = {...action.project, message: {}, loading: true, errors: false}
             }
-            all[action.project.key] = {...action.project, message:{}, loading: true, errors: false}
+            all[action.project.key] = {...action.project, message: {}, loading: true, errors: false}
             return {...state, all: all, current: currentProject}
 
         case ProjectActionsEnum.SAVE_PROJECT_SUCCESS:
@@ -146,6 +146,15 @@ const projectReducer = (state = initialStateProject, action: ProjectActionCreato
         case ProjectActionsEnum.CMP_ADD:
             page = action.currentPage
             components = componentAdd(page.components, action.parent, action.cmp)
+            pages = {...state.pages}
+
+            page.components = components
+            pages[page.key] = {...page}
+            return {...state, pages: pages}
+
+        case ProjectActionsEnum.CMP_ADD_TO_FOOTER:
+            page = action.currentPage
+            components = componentAddToFooter(page.components, action.parent, action.cmp)
             pages = {...state.pages}
 
             page.components = components
@@ -286,11 +295,30 @@ const componentAdd = (components: Array<any>, parent: ComponentInterface, cmp: a
 
     return arrCmp
 }
+const componentAddToFooter = (components: Array<any>, parent: ComponentInterface, cmp: any): Array<ComponentInterface> => {
+    let arrCmp: Array<ComponentInterface> = []
+    components.forEach((c: ComponentInterface) => {
+        if (c.key === parent.key) {
+            c.footerChildren = []
+            c.footerChildren.push(cmp)
+        } else {
+            c.children = c.children && componentAddToFooter(c.children, parent, cmp)
+        }
+
+        arrCmp.push(c)
+    })
+
+    return arrCmp
+}
 const cmpDelete = (components: Array<any>, cmp: ComponentInterface): Array<ComponentInterface> => {
     let arrCmp: Array<ComponentInterface> = []
     components.forEach((c: ComponentInterface) => {
+
         if (c.children !== undefined)
             c.children = cmpDelete(c.children, cmp)
+
+        if (c.footerChildren !== undefined)
+            c.footerChildren = cmpDelete(c.footerChildren, cmp)
 
         if (c.key !== cmp.key)
             arrCmp.push(c)

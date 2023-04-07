@@ -9,14 +9,14 @@ type EditorCheckboxTwoValuesType = {
 
 const EditorCheckboxTwoValuesElement: React.FC<EditorCheckboxTwoValuesType> = ({props, setValue}) => {
 
-    const [check, setCheck] = useState(props.keyTwoLevel && (props.value[props.key] && props.value[props.key][props.keyTwoLevel] === props.valuesTwo));
+    const [check, setCheck] = useState(props.keyTwoLevel ? (props.value[props.key] && props.value[props.key][props.keyTwoLevel] === props.valuesTwo) : (props.value[props.key] && props.value[props.key] === props.valuesTwo));
 
     const handleChange = (e: any) => {
         setCheck(e);
         e ? setValue(props.valuesTwo) : setValue(props.valuesOne)
     }
 
-    return <div style={{marginBottom: '10px', ...props.containerStyle}}>
+    return <div style={{height: '32px', ...props.containerStyle}}>
         {
             props.hoverText ? (
                 <AntPopover

@@ -73,7 +73,7 @@ const ItemEdit: React.FC<TableColumnItemType> = ({
             </Col>
             {del &&
                 <Col flex="20px">
-                    <Button type="link" style={{width: '8%', height: 1, lineHeight: 1, marginLeft: '5px'}} danger
+                    <Button type="link" style={{width: '30px', height: 1, lineHeight: 1, marginLeft: '5px'}} danger
                         icon={<DeleteOutlined />} onClick={() => setItem(undefined)} />
                 </Col>
             }

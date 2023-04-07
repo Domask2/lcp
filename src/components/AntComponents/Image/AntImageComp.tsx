@@ -12,9 +12,19 @@ const AntImageComp: React.FC<AntImageType> = ({cmp, item}) => {
 
     return (
         <div style={ErrImg ? {display: 'none'} : {display: 'inline-block', ...cmp.imageStyle}}>
-            <Image title={item.title} onError={() => {
-                setErrImg(true)
-            }} src={cmp.imageKey && `${cmp.baseUrl}/${item[cmp.imageKey]}`} width={(cmp.props.width && +cmp.props.width) ? +cmp.props.width : 'auto'} height={(cmp.props.height && +cmp.props.height) ? +cmp.props.height : 'auto'} />
+            <Image
+                title={item.title}
+                onError={() => {
+                    setErrImg(true)
+                }}
+                src={cmp.baseUrl ? (
+                    cmp.imageKey && `${cmp.baseUrl}/${item[cmp.imageKey]}`
+                ) : (
+                    cmp.imageKey && `/${item[cmp.imageKey]}`
+                )}
+                width={(cmp.props.width && +cmp.props.width) ? +cmp.props.width : 'auto'}
+                height={(cmp.props.height && +cmp.props.height) ? +cmp.props.height : 'auto'}
+            />
         </div>
     )
 

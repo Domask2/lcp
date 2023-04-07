@@ -1,17 +1,17 @@
 import React, {FC, useEffect, useState} from 'react';
 import {useTypedSelector, useActions} from "../../../hooks";
 
-import AntPagination from "../Pagination/AntPagination";
 import Ext from '../Ext/Ext';
 
-import {EnterClick, INIT_VALUES} from '../../../utils';
+import {EnterClick} from '../../../utils';
 import {getDataSource} from "../../../redux/ds/ds.selector";
 import serviceTable from "../../../services/serviceTable";
 
-import {Button, Divider, Input, Modal, Table} from "antd";
+import {Button, Divider, Input, Modal, Pagination, Table} from "antd";
 import {SearchOutlined, ClearOutlined} from '@ant-design/icons';
 import {RootState} from "../../../redux/redux.store";
 import {IForm} from '../Page/templates';
+import useDataSourceFiltred from '../../../hooks/useDataSourceFilter';
 
 type DetailsPickerType = {
     item: any
@@ -20,10 +20,14 @@ type DetailsPickerType = {
 }
 const DetailsPicker: FC<DetailsPickerType> = ({item, form, cmp}) => {
 
+    console.log(item.props.name);
+
     // ds к которой подключена форма, нужна для автозаполнения
     const initialDataSource = useTypedSelector((state: RootState) => getDataSource(state, cmp?.source));
 
+    const dsKey = `${item.props.name}-${item?.source}`;
     const {loadDataSource} = useActions();
+    const {getDataSourceCount, getDSAvailablity, addSearch, resetFilters, getCurPage, getPerPage, addCurPage} = useDataSourceFiltred(dsKey, cmp)
 
     const [isModalVisible, setIsModalVisible] = useState(false);
     const [value, setValue] = useState('');
@@ -33,16 +37,14 @@ const DetailsPicker: FC<DetailsPickerType> = ({item, form, cmp}) => {
     // const [antNativeEventElementIndex, setAntNativeEventElementIndex] = useState<any>('');
 
     const styleInput = {color: 'black', width: '100%', borderRadius: '5px', maxWidth: '400px'}
-    const ds = `detailsPickerDs-${item?.source}`;
-    const dataSource = useTypedSelector((state: RootState) => getDataSource(state, ds));
+    const dataSource = useTypedSelector((state: RootState) => getDataSource(state, dsKey));
 
     // поиск в ds-ке поля, по которым возможен поиск - search: true и приводим к массиву удобочитаемых значений
     const searchColumns: any = dataSource?.columns.filter((item) => item.search);
     const searchKeys: any = searchColumns?.map((item: any) => item.title.split(']')[1]);
 
     // из строики вида /__cur_page=1&__per_page=10&/ выделяем значение per_page
-    const dsFilter = useTypedSelector((state: RootState) => getDataSource(state, item?.source))?.filter
-    const perPageValues = dsFilter ? +dsFilter.split('__per_page=')[1]?.split('&')[0] : 10
+    // const dsFilter = useTypedSelector((state: RootState) => getDataSource(state, item?.source))?.filter
 
     useEffect(() => {
         // инициализация поля при загрузке формы, разные данные для отображения в инпуте и для отправки в форме, если не было редактирования
@@ -76,24 +78,14 @@ const DetailsPicker: FC<DetailsPickerType> = ({item, form, cmp}) => {
 
     useEffect(() => {
         // создание новой ds с префиксом /detailsPickerDs/
-        if (perPageValues) {
-            loadDataSource(ds, `${INIT_VALUES.RESET_VALUE}=${perPageValues}&`, false)
-        }
+        loadDataSource(dsKey, resetFilters(), false)
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [perPageValues])
-
-    // useEffect(() => {
-    //     // создание новой ds с префиксом /detailsPickerDs/
-    //     if (isModalVisible && antNativeEventElements.length) {
-    //         antNativeEventElements[antNativeEventElementIndex].classList.remove('ant-table-row')
-    //         antNativeEventElements[antNativeEventElementIndex].style = 'background-color: red'
-    //     }
-    // }, [isModalVisible])
+    }, [])
 
     useEffect(() => {
         // установка в поисковой строке значения по клику на строку таблицы
         let name: string = ''
-        item.keys.forEach((item: any) => {
+        item?.keys?.forEach((item: any) => {
             name = name ? `${name}${row[item] ? `_${row[item]}` : ''}` : row[item]
         })
         setSearchValue(name)
@@ -116,40 +108,16 @@ const DetailsPicker: FC<DetailsPickerType> = ({item, form, cmp}) => {
     };
 
     const handleSearch = () => {
-        // формирование строки фильтрации и поиска для запроса на сервер
-        let filter_arr = dataSource.filter.split('&');
-        let filter_ds_filter_arr = []
-        let search_ds_filter_arr = []
-
-        filter_ds_filter_arr = filter_arr.filter((item) => {
-            return item.indexOf(INIT_VALUES.CURRENT_PAGE) !== -1
-        })
-        search_ds_filter_arr = filter_arr.filter((item) => {
-            return item.indexOf(INIT_VALUES.PER_PAGE) !== -1
-        })
-        let new_ds_filter_arr = [...filter_ds_filter_arr, ...search_ds_filter_arr]
-        new_ds_filter_arr.push(`${INIT_VALUES.SEARCH}=${searchValue}`)
-
-        loadDataSource(ds, new_ds_filter_arr.join('&'), false)
+        loadDataSource(dsKey, addSearch(searchValue), false)
     }
 
     const handleReset = () => {
         setSearchValue('')
-        loadDataSource(ds, `${INIT_VALUES.RESET_VALUE}=${perPageValues}`, false)
+        loadDataSource(dsKey, addSearch(''), false)
     }
 
     const hadleRowClick = (row: any) => {
         setRow(row);
-        // if (antNativeEventElements.length) {
-        //     antNativeEventElements[antNativeEventElementIndex].classList.add('ant-table-row');
-        //     antNativeEventElements[antNativeEventElementIndex].style = ''
-        // }
-        // setAntNativeEventElements(evt.nativeEvent.path[2].querySelectorAll('tr'))
-        // setAntNativeEventElementIndex(index)
-        // evt.nativeEvent.path[2].querySelectorAll('tr')[index].classList.remove('ant-table-row')
-        // evt.nativeEvent.path[2].querySelectorAll('tr')[index].style = 'background-color: red'
-        // console.log(evt.nativeEvent.path[2].querySelectorAll('tr'));
-        // console.log(evt.nativeEvent.path[2], evt, index);
     }
 
     // формирование данных для прередачи в таблицу
@@ -174,12 +142,17 @@ const DetailsPicker: FC<DetailsPickerType> = ({item, form, cmp}) => {
                     render: (t: any, r: any) => {
                         let style = {}
                         if (r.key === row.key)
-                            style = {color: 'tomato'}
+                            style = {color: '#1890ff'}
                         return <span style={style}>{t}</span>
                     }
                 };
                 tableColumns.push(column);
             });
+    }
+
+    // const currentPageNumber = dataSource?.filter ? +dataSource?.filter?.split('__cur_page=')[1]?.split('&')[0] : 1;
+    let onChange = (page: number) => {
+        loadDataSource(dsKey, addCurPage(page), true, '')
     }
 
     return <>
@@ -215,16 +188,17 @@ const DetailsPicker: FC<DetailsPickerType> = ({item, form, cmp}) => {
                     {item.ext && <Ext cmp={{key: item.props.name, type: 'Ext', cmp_key: item.ext}} props={{}} />}
                 </div>
                 <div>
-                    <span style={{fontSize: '12px'}}>Всего записей: {dataSource?.count}</span>
+                    <span style={{fontSize: '12px'}}>{+getDataSourceCount() ? `Всего записей: ${getDataSourceCount()}` : 'Ничего не найдено'}</span>
                 </div>
                 <Divider />
-                <AntPagination cmp={{
-                    key: "pagination-" + dataSource?.key,
-                    type: 'Pagination',
-                    ds: {key: dataSource?.key},
-                    cur_page: 1,
-                    per_page: perPageValues
-                }} />
+                <Pagination
+                    size="small"
+                    total={getDataSourceCount()}
+                    showSizeChanger={false}
+                    pageSize={getPerPage()}
+                    current={getCurPage()}
+                    onChange={onChange}
+                />
                 <Table
                     size={'small'}
                     pagination={false}

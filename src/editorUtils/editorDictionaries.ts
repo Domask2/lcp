@@ -1,4 +1,4 @@
-import {formItems, InputsType} from "../utils"
+import {formItems, InputsType, YaMapsPlacemarkColorsList, YaMapsPlacemarkIconsList, YaMapsPlacemarkTypesList} from "../utils"
 
 export const SettingsType = {
     BR: 'Br',
@@ -24,6 +24,7 @@ export const SettingsType = {
     INPUTS_INIT_DICTIONARY: 'inputsInitDictionary',
     INPUTS_DETAILS_PICKER_MENU: 'inputsDetailPickerMenu',
     INPUTS_DS_SETTINGS: 'inputsDSsETTINGS',
+    GEOCODE: 'geocode',
 }
 export const SelectMode = {
     MULTI: 'multiple',
@@ -48,11 +49,20 @@ const Sizes = {
 const SelectType = {
     CHECKBOX: 'checkbox',
     RADIO: 'radio',
+    SCROLL: 'scrollx',
+    FADE: 'fade',
 }
 
 export const ListKeys = {
     KEYS: 'keys',
+    KEYS_1: 'keys1',
+    KEYS_2: 'keys2',
+    KEYS_3: 'keys3',
+    KEYS_4: 'keys4',
+    KEYS_5: 'keys5',
     ALL_DS: 'allDs',
+    LS_VARS: 'lsVars',
+    ITERATOR_KEYS: 'iteratorKeys',
 }
 
 // const InputType = {
@@ -101,7 +111,7 @@ export const SettingKeys = {
         DISABLED: 'disabled',
         DIRECTION: 'direction',
         EXT_COMPONENT: 'extComponent',
-        EXT: 'ext',
+        CMP_KEY: 'cmp_key',
         FORMAT: 'format',
         TARGET: 'target',
         LINE_BREAK: 'lineBreak',
@@ -148,12 +158,54 @@ export const SettingKeys = {
         COLOR_FIELD: 'colorField',
         TOOLTIP_FIELDS: 'tooltipFields',
         SMOOTH: 'smooth',
-
+        API_KEY: 'apiKey',
+        MAP_CENTER_GEO: 'mapCenterGeo',
+        MAP_CENTER_GEO_ADDRESS: 'mapCenterGeoAddress',
+        MAP_CENTER_LATITUDE: 'mapCenterLatitude',
+        MAP_CENTER_LONGITUDE: 'mapCenterLongitude',
+        PLACEMARK_GEO: 'placemarkGeo',
+        PLACEMARK_GEO_ADDRESS: 'placemarkGeoAddress',
+        PLACEMARK_COLOR: 'placemarkColor',
+        PLACEMARK_ICON: 'placemarkIcon',
+        PLACEMARK_TYPE: 'placemarkType',
+        PLACEMARK_LATITUDE: 'placemarkLatitude',
+        PLACEMARK_LONGITUDE: 'placemarkLongitude',
+        MAP_SETTINGS: 'mapSettings',
+        ZOOM: 'zoom',
+        SCROLL_ZOOM: 'scrollZoom',
+        COMMON_CENTER: 'commonCenter',
+        GEOCODE_MODE: 'geocodeMode',
+        BUTTON_VISIBLE: 'buttonVisible',
+        OPEN: 'open',
+        POPOVER: 'popover',
+        VISIBLE: 'visibleTable',
     },
     Ds: {
         DS: 'ds',
+        DS_1: 'ds1',
+        DS_2: 'ds2',
+        DS_3: 'ds3',
+        DS_4: 'ds4',
+        DS_5: 'ds5',
+        ITERATOR_DS: 'iteratorDs',
+        FILTRED_KEY: 'filtredKey',
         KEY: 'key',
+        KEY_DS: 'dsKey',
+        KEY_DS_1: 'dsKey1',
+        KEY_DS_2: 'dsKey2',
+        KEY_DS_3: 'dsKey3',
+        KEY_DS_4: 'dsKey4',
+        KEY_DS_5: 'dsKey5',
+        DS_KEY_VALUE: 'dsKeyValue',
+        DS_KEY_VALUES_1: 'dsKeyValues1',
+        DS_KEY_VALUES_2: 'dsKeyValues2',
+        DS_KEY_VALUES_3: 'dsKeyValues3',
+        DS_KEY_VALUES_4: 'dsKeyValues4',
+        DS_KEY_VALUES_5: 'dsKeyValues5',
         IMAGE_KEY: 'imageKey',
+        VARS_KEY: 'varsKey',
+        VARS_VALUE: 'varsValue',
+        INIT_VARS_VALUE: 'initVarsValue',
         LIST: 'list',
         LIST_VALUES: 'listValues',
         LIST_TITLE: 'listTitle',
@@ -167,6 +219,7 @@ export const SettingKeys = {
         CHECKED: 'checked',
         PROCEDURE: 'procedure',
         REDUX_ELEMENT: 'reduxElement',
+        REDUX_ELEMENT_HIDDEN_INPUT: 'hiddenElement',
         GET_URL: 'getUrl',
         IS_BUTTON_ACTION: 'isBtnAction',
         BUTTON_TITLE: 'btnTitle',
@@ -176,15 +229,20 @@ export const SettingKeys = {
         HIDE: 'hide',
         INPUTS_TYPE: 'inputsType',
         NUMERIC: 'numeric',
+        ON_GET_URL_FUNC: 'onGetUrlFunc',
     },
     Styles: {
         GUTTER: 'gutter',
+        DANGER: 'danger',
+        CONFIRM: 'confirm',
         CLASS_NAME: 'className',
         SPAN: 'span',
         PREVIEW: 'preview',
         STYLE: 'style',
+        CONFIRM_STYLE: 'confirmStyle',
         BODY_STYLE: 'bodyStyle',
         HEAD_STYLE: 'headStyle',
+        FOOTER_STYLE: 'footerStyle',
         INPUTS_STYLE: 'inputsStyle',
         IMAGE_STYLE: 'imageStyle',
         INPUT_WIDTH: 'inputWidth',
@@ -192,11 +250,25 @@ export const SettingKeys = {
         LABEL_STYLE: 'labelStyle',
         CONTENT_STYLE: 'contentStyle',
         TITLE_STYLE: 'titleStyle',
+        BUTTON_STYLE: 'buttonStyle',
         MAX_VALUE: 'maxValue',
         MIN_VALUE: 'minValue',
         WRAPPER: 'wrapper',
         FLEX_GROW: 'flexGrow',
-        HEIGHT_100: 'height100'
+        HEIGHT_100: 'height100',
+        EFFECT: 'effect',
+        DOTS: 'dots',
+        TIME_MODE: 'timeMode',
+        AUTOPLAY: 'autoplay',
+        AUTOPLAY_SPEED: 'autoplaySpeed',
+        ARROWS: 'arrows',
+        BUTTON_SIZE: 'buttonSize',
+        TABLE_SIZE: 'tableSize',
+        TOOLTIP: 'tooltip',
+        TOOLTIP_TITLE: 'tooltipTitle',
+        TOOLTIP_PLACEMENT: 'tooltipPlacement',
+        TOOLTIP_COLOR: 'tooltipColor',
+        TOOLTIP_OVERLAY_INNER_STYLE: 'tooltipOverlayInnerStyle',
     }
 }
 
@@ -266,7 +338,13 @@ export const UniqSettings = {
         inputsType: {
             type: SettingsType.UNIQ,
         },
-    }
+    },
+    YaMaps: {
+        key: SettingKeys.Props.MAP_SETTINGS,
+        inputsType: {
+            type: SettingsType.UNIQ,
+        },
+    },
 }
 
 export const PreviewSettings = {
@@ -326,6 +404,7 @@ column - название колонки из которой взять знач
         startValue: '',
         inputsType: {
             type: SettingsType.INPUT,
+            mappedTextButton: true,
         }
     },
     ButtonTitle: {
@@ -365,6 +444,55 @@ column - название колонки из которой взять знач
             arr: ['primary', 'ghost', 'dashed', 'link', 'text', 'default'],
         },
     },
+    DangerButton: {
+        title: 'Danger',
+        key: SettingKeys.Styles.DANGER,
+        startValue: false,
+        inputsType: {
+            type: SettingsType.CHECKBOX,
+        },
+    },
+    ConfirmButton: {
+        title: 'Confirm',
+        key: SettingKeys.Styles.CONFIRM,
+        startValue: false,
+        inputsType: {
+            type: SettingsType.CHECKBOX,
+        },
+    },
+    Tooltip: {
+        title: 'Tooltip',
+        key: SettingKeys.Styles.TOOLTIP,
+        startValue: false,
+        inputsType: {
+            type: SettingsType.CHECKBOX,
+        },
+    },
+    TooltipTitle: {
+        title: 'TooltipTitle',
+        key: SettingKeys.Styles.TOOLTIP_TITLE,
+        startValue: '',
+        inputsType: {
+            type: SettingsType.INPUT,
+        },
+    },
+    TooltipPlacement: {
+        title: 'TooltipPlacement',
+        key: SettingKeys.Styles.TOOLTIP_PLACEMENT,
+        startValue: [],
+        inputsType: {
+            type: SettingsType.SELECT,
+            arr: ['topLeft', 'top', 'topRight', 'leftTop', 'left', 'leftBottom', 'rightTop', 'right', 'rightBottom', 'bottomLeft', 'bottom', 'bottomRight'],
+        },
+    },
+    TooltipColor: {
+        title: 'TooltipColor',
+        key: SettingKeys.Styles.TOOLTIP_COLOR,
+        startValue: '',
+        inputsType: {
+            type: SettingsType.INPUT,
+        },
+    },
     SelectType: {
         title: 'Type',
         key: SettingKeys.Props.SELECT,
@@ -389,6 +517,7 @@ column - название колонки из которой взять знач
         title: 'Selectable',
         key: SettingKeys.Props.SELECT,
         keyTwoLevel: SettingKeys.Props.SELECTABLE,
+        startValue: false,
         inputsType: {
             type: SettingsType.CHECKBOX,
         },
@@ -399,6 +528,138 @@ column - название колонки из которой взять знач
         startValue: '',
         inputsType: {
             type: SettingsType.INPUT,
+        },
+    },
+    ApiKey: {
+        title: 'Api Key',
+        hoverText: "Ключ api для запроса",
+        key: SettingKeys.Props.API_KEY,
+        startValue: '',
+        inputsType: {
+            type: SettingsType.INPUT,
+        },
+    },
+    MapCenter: {
+        title: 'Map Center',
+        hoverText: "Центр карты. Координаты",
+        key: SettingKeys.Props.MAP_CENTER_GEO,
+        inputsType: {
+            type: SettingsType.INPUT,
+            infoItem: true,
+        },
+    },
+    MapCenterLatitude: {
+        title: 'Map Center Lat',
+        hoverText: "Центр карты. Широта. Координаты в формате '59,944307'",
+        key: SettingKeys.Props.MAP_CENTER_LATITUDE,
+        startValue: '',
+        inputsType: {
+            type: SettingsType.INPUT,
+            numeric: true,
+        },
+    },
+    MapCenterLongitude: {
+        title: 'Map Center Lng',
+        hoverText: "Центр карты. Долгота. Координаты в формате '30,33935'",
+        key: SettingKeys.Props.MAP_CENTER_LONGITUDE,
+        startValue: '',
+        inputsType: {
+            type: SettingsType.INPUT,
+            numeric: true,
+        },
+    },
+    PlacemarkGeo: {
+        title: 'Placemark center',
+        hoverText: "Метка на карте. Координаты",
+        key: SettingKeys.Props.PLACEMARK_GEO,
+        startValue: '',
+        inputsType: {
+            type: SettingsType.INPUT,
+            infoItem: true,
+        },
+    },
+    PlacemarkLatitude: {
+        title: 'Placemark Lat',
+        hoverText: "Метка на карте. Широта. Координаты в формате '59.884307'. Используется если не указан адрес метки (Placemark Address)",
+        key: SettingKeys.Props.PLACEMARK_LATITUDE,
+        startValue: '',
+        inputsType: {
+            type: SettingsType.INPUT,
+            numeric: true,
+        },
+    },
+    PlacemarkLongitude: {
+        title: 'Placemark Lng',
+        hoverText: "Метка на карте. Долгота. Координаты в формате '30.38935'",
+        key: SettingKeys.Props.PLACEMARK_LONGITUDE,
+        startValue: '',
+        inputsType: {
+            type: SettingsType.INPUT,
+            numeric: true,
+        },
+    },
+    PlacemarkColor: {
+        title: 'Placemark Color',
+        key: SettingKeys.Props.PLACEMARK_COLOR,
+        startValue: '',
+        inputsType: {
+            type: SettingsType.SELECT,
+            arr: YaMapsPlacemarkColorsList,
+        },
+    },
+    PlacemarkIcon: {
+        title: 'Placemark Icon',
+        hoverText: "Иконка метки применяется только для типов метки (Placemark Type) Icon и CircleIcon",
+        key: SettingKeys.Props.PLACEMARK_ICON,
+        startValue: '',
+        inputsType: {
+            type: SettingsType.SELECT,
+            arr: YaMapsPlacemarkIconsList,
+        },
+    },
+    PlacemarkType: {
+        title: 'Placemark Type',
+        key: SettingKeys.Props.PLACEMARK_TYPE,
+        startValue: '',
+        inputsType: {
+            type: SettingsType.SELECT,
+            arr: YaMapsPlacemarkTypesList,
+        },
+    },
+    Zoom: {
+        title: 'Zoom',
+        key: SettingKeys.Props.ZOOM,
+        startValue: '',
+        inputsType: {
+            type: SettingsType.INPUT,
+            numeric: true,
+        },
+    },
+    ScrollZoom: {
+        title: 'Scroll Zoom',
+        hoverText: 'Включение зумирования карты скроллом. При отключении зумирование осуществляется по двойному клику',
+        key: SettingKeys.Props.SCROLL_ZOOM,
+        startValue: false,
+        inputsType: {
+            type: SettingsType.CHECKBOX,
+        },
+    },
+    CommonCenter: {
+        title: 'Общий центр',
+        hoverText: 'Совмещает центр карты и метку',
+        key: SettingKeys.Props.COMMON_CENTER,
+        startValue: false,
+        inputsType: {
+            type: SettingsType.CHECKBOX,
+        },
+    },
+    GeoCodeMode: {
+        title: 'Режим GeoCode',
+        hoverText: 'Включение режима определения координат по адресу',
+        key: SettingKeys.Props.GEOCODE_MODE,
+        startValue: false,
+        inputsType: {
+            type: SettingsType.CHECKBOX,
         },
     },
     BaseUrl: {
@@ -421,6 +682,7 @@ column - название колонки из которой взять знач
     Target: {
         title: 'Target',
         key: SettingKeys.Standart.TARGET,
+        startValue: false,
         inputsType: {
             type: SettingsType.CHECKBOX,
         },
@@ -428,6 +690,7 @@ column - название колонки из которой взять знач
     LineBreak: {
         title: 'LineBreak',
         key: SettingKeys.Standart.LINE_BREAK,
+        startValue: false,
         inputsType: {
             type: SettingsType.CHECKBOX,
         },
@@ -444,6 +707,7 @@ column - название колонки из которой взять знач
     Disabled: {
         title: 'Disabled',
         key: SettingKeys.Standart.DISABLED,
+        startValue: false,
         inputsType: {
             type: SettingsType.CHECKBOX,
             condition: [InputsType.INPUT],
@@ -482,6 +746,7 @@ column - название колонки из которой взять знач
     Prefix: {
         title: 'Prefix',
         key: SettingKeys.Ds.PREFIX,
+        startValue: false,
         inputsType: {
             type: SettingsType.CHECKBOX,
             condition: [InputsType.INPUT, InputsType.HIDDEN_INPUT],
@@ -502,7 +767,7 @@ column - название колонки из которой взять знач
     },
     ExtComponentCmpKey: {
         title: 'CmpKey',
-        key: SettingKeys.Standart.EXT,
+        key: SettingKeys.Standart.CMP_KEY,
         startValue: '',
         inputsType: {
             type: SettingsType.INPUT,
@@ -566,6 +831,7 @@ column - название колонки из которой взять знач
     LineSmooth: {
         title: 'smooth',
         key: SettingKeys.Props.SMOOTH,
+        startValue: false,
         inputsType: {
             type: SettingsType.CHECKBOX,
         },
@@ -577,6 +843,110 @@ column - название колонки из которой взять знач
             type: SettingsType.INPUT,
         },
     },
+    SliderEffect: {
+        title: 'Effect',
+        key: SettingKeys.Styles.EFFECT,
+        valuesOne: SelectType.SCROLL,
+        valuesTwo: SelectType.FADE,
+        inputsType: {
+            type: SettingsType.CHECKBOX_TWO_VALUES,
+        },
+    },
+    SliderArrows: {
+        title: 'Arrows',
+        key: SettingKeys.Styles.ARROWS,
+        startValue: false,
+        inputsType: {
+            type: SettingsType.CHECKBOX,
+        },
+    },
+    SliderDots: {
+        title: 'Dots',
+        key: SettingKeys.Styles.DOTS,
+        startValue: false,
+        inputsType: {
+            type: SettingsType.CHECKBOX,
+        },
+    },
+    SliderTime: {
+        title: 'TimeMode',
+        key: SettingKeys.Styles.TIME_MODE,
+        startValue: false,
+        inputsType: {
+            type: SettingsType.CHECKBOX,
+        },
+    },
+    SliderAutoplay: {
+        title: 'Autoplay',
+        key: SettingKeys.Styles.AUTOPLAY,
+        startValue: false,
+        inputsType: {
+            type: SettingsType.CHECKBOX,
+        },
+    },
+    SliderAutoplaySpeed: {
+        title: 'Autoplay Speed',
+        hoverText: 'Скорость смены слайдов в миллисекундах',
+        key: SettingKeys.Styles.AUTOPLAY_SPEED,
+        inputsType: {
+            type: SettingsType.INPUT,
+            numeric: true,
+        },
+    },
+    OpenButton: {
+        title: 'Кнопка открытия',
+        key: SettingKeys.Props.BUTTON_VISIBLE,
+        inputsType: {
+            type: SettingsType.CHECKBOX,
+        },
+    },
+    Button: {
+        title: 'Кнопка "Применить"',
+        key: SettingKeys.Props.BUTTON_VISIBLE,
+        inputsType: {
+            type: SettingsType.CHECKBOX,
+        },
+    },
+    Open: {
+        title: 'Меню открыто',
+        key: SettingKeys.Props.OPEN,
+        inputsType: {
+            type: SettingsType.CHECKBOX,
+        },
+    },
+    Visible: {
+        title: 'Видимость',
+        key: SettingKeys.Props.VISIBLE,
+        inputsType: {
+            type: SettingsType.CHECKBOX,
+        },
+    },
+    Popover: {
+        title: 'Popover',
+        key: SettingKeys.Props.POPOVER,
+        inputsType: {
+            type: SettingsType.CHECKBOX,
+        },
+    },
+    ButtonSize: {
+        title: 'Размер кнопок',
+        valuesOne: Sizes.DEFAULT,
+        valuesTwo: Sizes.SMALL,
+        key: SettingKeys.Styles.BUTTON_SIZE,
+        inputsType: {
+            type: SettingsType.CHECKBOX_TWO_VALUES,
+        },
+    },
+    TableSize: {
+        title: 'Размер',
+        key: SettingKeys.Styles.TABLE_SIZE,
+        startValue: '',
+        inputsType: {
+            type: SettingsType.SELECT,
+            arr: ['small', 'middle', 'default']
+        },
+    },
+
 }
 
 export const StyleSettings = {
@@ -592,8 +962,20 @@ export const StyleSettings = {
         key: SettingKeys.Styles.STYLE,
         ...InputsTypeStyle,
     },
+    ConfirmStyle: {
+        key: SettingKeys.Styles.CONFIRM_STYLE,
+        ...InputsTypeStyle,
+    },
+    TooltipOverlayInnerStyle: {
+        key: SettingKeys.Styles.TOOLTIP_OVERLAY_INNER_STYLE,
+        ...InputsTypeStyle,
+    },
     HeadStyle: {
         key: SettingKeys.Styles.HEAD_STYLE,
+        ...InputsTypeStyle,
+    },
+    FooterStyle: {
+        key: SettingKeys.Styles.FOOTER_STYLE,
         ...InputsTypeStyle,
     },
     BodyStyle: {
@@ -624,11 +1006,14 @@ export const StyleSettings = {
         key: SettingKeys.Styles.IMAGE_STYLE,
         ...InputsTypeStyle,
     },
-
+    ButtonStyle: {
+        key: SettingKeys.Styles.BUTTON_STYLE,
+        ...InputsTypeStyle,
+    },
 }
 
 export const DsInteractionSettings = {
-    Ds: {
+    DsSelected: {
         title: 'Ds',
         prefix: 'Selected',
         hoverText: 'Источник данных',
@@ -638,6 +1023,260 @@ export const DsInteractionSettings = {
         inputsType: {
             type: SettingsType.DS,
         }
+    },
+    Ds: {
+        title: 'Ds',
+        hoverText: 'Источник данных',
+        key: SettingKeys.Ds.DS,
+        startValue: '',
+        inputsType: {
+            type: SettingsType.SELECT,
+        }
+    },
+    TagsDs: {
+        title: 'Tags Ds',
+        hoverText: 'Источник данных для тегов',
+        key: SettingKeys.Ds.DS_1,
+        startValue: '',
+        inputsType: {
+            type: SettingsType.SELECT,
+            arrKey: ListKeys.ALL_DS,
+        }
+    },
+    Ds1: {
+        title: 'Ds 1',
+        hoverText: 'Источник данных',
+        key: SettingKeys.Ds.DS_1,
+        startValue: '',
+        inputsType: {
+            type: SettingsType.SELECT,
+            arrKey: ListKeys.ALL_DS
+        }
+    },
+    Ds2: {
+        title: 'Ds 2',
+        hoverText: 'Источник данных',
+        key: SettingKeys.Ds.DS_2,
+        startValue: '',
+        inputsType: {
+            type: SettingsType.SELECT,
+            arrKey: ListKeys.ALL_DS
+        }
+    },
+    Ds3: {
+        title: 'Ds 3',
+        hoverText: 'Источник данных',
+        key: SettingKeys.Ds.DS_3,
+        startValue: '',
+        inputsType: {
+            type: SettingsType.SELECT,
+            arrKey: ListKeys.ALL_DS,
+        }
+    },
+    Ds4: {
+        title: 'Ds 4',
+        hoverText: 'Источник данных',
+        key: SettingKeys.Ds.DS_4,
+        startValue: '',
+        inputsType: {
+            type: SettingsType.SELECT,
+            arrKey: ListKeys.ALL_DS,
+        }
+    },
+    Ds5: {
+        title: 'Ds 5',
+        hoverText: 'Источник данных',
+        key: SettingKeys.Ds.DS_5,
+        startValue: '',
+        inputsType: {
+            type: SettingsType.SELECT,
+            arrKey: ListKeys.ALL_DS,
+        }
+    },
+    KeyDs: {
+        title: 'Key Ds',
+        key: SettingKeys.Ds.KEY_DS,
+        startValue: '',
+        inputsType: {
+            type: SettingsType.SELECT,
+            arrKey: ListKeys.KEYS,
+        }
+    },
+    KeyDs1: {
+        title: 'Key Ds 1',
+        key: SettingKeys.Ds.KEY_DS_1,
+        startValue: '',
+        inputsType: {
+            type: SettingsType.SELECT,
+            arrKey: ListKeys.KEYS_1,
+        }
+    },
+    KeyDs2: {
+        title: 'Key Ds 2',
+        key: SettingKeys.Ds.KEY_DS_2,
+        startValue: '',
+        inputsType: {
+            type: SettingsType.SELECT,
+            arrKey: ListKeys.KEYS_2,
+        }
+    },
+    KeyDs3: {
+        title: 'Key Ds 3',
+        key: SettingKeys.Ds.KEY_DS_3,
+        startValue: '',
+        inputsType: {
+            type: SettingsType.SELECT,
+            arrKey: ListKeys.KEYS_3,
+        }
+    },
+    KeyDs4: {
+        title: 'Key Ds 4',
+        key: SettingKeys.Ds.KEY_DS_4,
+        startValue: '',
+        inputsType: {
+            type: SettingsType.SELECT,
+            arrKey: ListKeys.KEYS_4,
+        }
+    },
+    KeyDs5: {
+        title: 'Key Ds 5',
+        key: SettingKeys.Ds.KEY_DS_5,
+        startValue: '',
+        inputsType: {
+            type: SettingsType.SELECT,
+            arrKey: ListKeys.KEYS_5,
+        }
+    },
+    TagsKey: {
+        title: 'Tags Key',
+        hoverText: 'Ключ для фильтрации',
+        key: SettingKeys.Ds.KEY_DS_1,
+        startValue: '',
+        inputsType: {
+            type: SettingsType.SELECT,
+            arrKey: ListKeys.KEYS_1,
+        }
+    },
+    DsKeyValue: {
+        title: 'Ds Key Value',
+        hoverText: 'Ключ для отображения',
+        key: SettingKeys.Ds.DS_KEY_VALUE,
+        startValue: [],
+        inputsType: {
+            type: SettingsType.SELECT,
+            arrKey: ListKeys.KEYS,
+        }
+    },
+    DsKeyValues1: {
+        title: 'Ds Key Values 1',
+        hoverText: 'Ключи для отображения',
+        key: SettingKeys.Ds.DS_KEY_VALUES_1,
+        startValue: [],
+        inputsType: {
+            type: SettingsType.SELECT,
+            mode: SelectMode.MULTI,
+            arrKey: ListKeys.KEYS_1,
+        }
+    },
+    DsKeyValues2: {
+        title: 'Ds Key Values 2',
+        hoverText: 'Ключи для отображения',
+        key: SettingKeys.Ds.DS_KEY_VALUES_2,
+        startValue: [],
+        inputsType: {
+            type: SettingsType.SELECT,
+            mode: SelectMode.MULTI,
+            arrKey: ListKeys.KEYS_2,
+        }
+    },
+    DsKeyValues3: {
+        title: 'Ds Key Values 3',
+        hoverText: 'Ключи для отображения',
+        key: SettingKeys.Ds.DS_KEY_VALUES_3,
+        startValue: [],
+        inputsType: {
+            type: SettingsType.SELECT,
+            mode: SelectMode.MULTI,
+            arrKey: ListKeys.KEYS_3,
+        }
+    },
+    DsKeyValues4: {
+        title: 'Ds Key Values 4',
+        hoverText: 'Ключи для отображения',
+        key: SettingKeys.Ds.DS_KEY_VALUES_4,
+        startValue: [],
+        inputsType: {
+            type: SettingsType.SELECT,
+            mode: SelectMode.MULTI,
+            arrKey: ListKeys.KEYS_4,
+        }
+    },
+    DsKeyValues5: {
+        title: 'Ds Key Values 5',
+        hoverText: 'Ключи для отображения',
+        key: SettingKeys.Ds.DS_KEY_VALUES_5,
+        startValue: [],
+        inputsType: {
+            type: SettingsType.SELECT,
+            mode: SelectMode.MULTI,
+            arrKey: ListKeys.KEYS_5,
+        }
+    },
+    TagsKeyValues: {
+        title: 'Tags Key Values',
+        hoverText: 'Ключи для отображения в тегах',
+        key: SettingKeys.Ds.DS_KEY_VALUES_1,
+        startValue: [],
+        inputsType: {
+            type: SettingsType.SELECT,
+            arrKey: ListKeys.KEYS_1,
+        }
+    },
+    VarsKey: {
+        title: 'Vars Key',
+        key: SettingKeys.Ds.VARS_KEY,
+        startValue: '',
+        inputsType: {
+            type: SettingsType.INPUT,
+        }
+    },
+    VarsValue: {
+        title: 'Vars Value',
+        key: SettingKeys.Ds.VARS_VALUE,
+        startValue: '',
+        inputsType: {
+            type: SettingsType.INPUT,
+        }
+    },
+    InitVarsValue: {
+        title: 'InitVarsValue',
+        hoverText: 'Выбор ключа из state/ds/ls/vars для инициализации',
+        key: SettingKeys.Ds.INIT_VARS_VALUE,
+        startValue: '',
+        inputsType: {
+            type: SettingsType.SELECT,
+            arrKey: ListKeys.LS_VARS,
+        }
+    },
+    IteratorDs: {
+        title: 'Iterators Ds',
+        hoverText: 'Источник данных итератора. Необходим для выбора ключа фильтрации',
+        key: SettingKeys.Ds.ITERATOR_DS,
+        startValue: '',
+        inputsType: {
+            type: SettingsType.SELECT,
+            arrKey: ListKeys.ALL_DS,
+        }
+    },
+    FiltredKey: {
+        title: 'Filtred Key',
+        hoverText: 'Ключ фильтрации. Будут сравниваться значения этого ключа из ds итератора и компонента',
+        key: SettingKeys.Ds.FILTRED_KEY,
+        startValue: '',
+        inputsType: {
+            type: SettingsType.SELECT,
+            arrKey: ListKeys.ITERATOR_KEYS,
+        },
     },
     DsKey: {
         title: 'Ds',
@@ -702,6 +1341,7 @@ export const DsInteractionSettings = {
         title: 'Iterations',
         hoverText: 'Итреироваться по всем items или взять значения только из items[0]',
         key: SettingKeys.Ds.ITERATIONS,
+        startValue: false,
         inputsType: {
             type: SettingsType.CHECKBOX,
         }
@@ -729,6 +1369,7 @@ export const DsInteractionSettings = {
         title: 'Reset Inputs',
         hoverText: 'Сброс по нажатию кнопки значений инпутов, указанных в поле Redux Elements',
         key: SettingKeys.Ds.RESET_INPUTS,
+        startValue: false,
         inputsType: {
             type: SettingsType.CHECKBOX,
         }
@@ -761,6 +1402,15 @@ export const DsInteractionSettings = {
             mode: SelectMode.MULTI
         }
     },
+    ReduxElementsHiddenInput: {
+        title: 'hiddenElement',
+        hoverText: 'Скрытые элементы при отправки',
+        key: SettingKeys.Ds.REDUX_ELEMENT_HIDDEN_INPUT,
+        startValue: [],
+        inputsType: {
+            type: SettingsType.STYLE
+        }
+    },
     TableDs: {
         title: 'Ds',
         hoverText: 'Источник данных',
@@ -778,6 +1428,7 @@ export const DsInteractionSettings = {
         title: 'Добавить кнопку',
         hoverText: 'Добавляет кнопку',
         key: SettingKeys.Ds.IS_BUTTON_ACTION,
+        startValue: false,
         inputsType: {
             type: SettingsType.CHECKBOX,
         }
@@ -827,6 +1478,14 @@ export const DsInteractionSettings = {
             mode: SelectMode.MULTI
         },
     },
+    OnLinkFunc: {
+        title: 'Get URL-функционал',
+        hoverText: 'Активизирует настройки блока Get URL',
+        key: SettingKeys.Ds.ON_GET_URL_FUNC,
+        inputsType: {
+            type: SettingsType.CHECKBOX,
+        }
+    },
 }
 
 export const ComplexInteractionSettings = {
@@ -837,7 +1496,7 @@ export const ComplexInteractionSettings = {
         startValue: '',
         inputsType: {
             type: SettingsType.ACTIONS,
-            condition: [InputsType.SELECT]
+            condition: [InputsType.SELECT, InputsType.SELECT_MULTI]
         }
     },
     GetUrl: {
@@ -849,11 +1508,6 @@ export const ComplexInteractionSettings = {
             type: SettingsType.GET_URL,
         }
     },
-    // FlyInputsType: {
-    //     inputsType: {
-    //         type: SettingsType.INPUTS_TYPE,
-    //     }
-    // },
     FlyInputsValidation: {
         inputsType: {
             type: SettingsType.INPUTS_VALIDATION,
@@ -882,6 +1536,27 @@ export const ComplexInteractionSettings = {
             type: SettingsType.INPUTS_DS_SETTINGS,
         },
     },
+    YaMapsMapCenterGeocode: {
+        title: 'Map Center Address',
+        hoverText: 'Адрес центра карты',
+        key: SettingKeys.Props.MAP_CENTER_GEO_ADDRESS,
+        keyTwo: SettingKeys.Props.MAP_CENTER_GEO,
+        startValue: '',
+        inputsType: {
+            type: SettingsType.GEOCODE,
+        }
+    },
+    YaMapsPlacemarkGeocode: {
+        title: 'Placemark Address',
+        hoverText: 'Адрес метки',
+        key: SettingKeys.Props.PLACEMARK_GEO_ADDRESS,
+        keyTwo: SettingKeys.Props.PLACEMARK_GEO,
+        startValue: '',
+        inputsType: {
+            type: SettingsType.GEOCODE,
+        }
+    },
+
 }
 
 export const PropsSettings = {
@@ -908,6 +1583,7 @@ export const PropsSettings = {
         title: 'Bordered',
         key: SettingKeys.Props.PROPS,
         keyTwoLevel: SettingKeys.Props.BORDERED,
+        startValue: false,
         inputsType: {
             type: SettingsType.CHECKBOX,
         },
@@ -1020,6 +1696,7 @@ export const PropsSettings = {
         title: 'DisplayValue',
         key: SettingKeys.Props.OPTIONS,
         keyTwoLevel: SettingKeys.Props.DISPLAY_VALUE,
+        startValue: false,
         inputsType: {
             type: SettingsType.CHECKBOX,
         },
@@ -1073,6 +1750,7 @@ export const PropsSettings = {
         title: 'enableCORS',
         key: SettingKeys.Props.QR_PROPS,
         keyTwoLevel: SettingKeys.Props.QR_ENABLE_CORS,
+        startValue: false,
         inputsType: {
             type: SettingsType.CHECKBOX,
         },
@@ -1090,6 +1768,7 @@ export const PropsSettings = {
     XFieldNumeric: {
         title: 'xField Numeric',
         key: SettingKeys.Props.X_FIELD_NUMERIC,
+        startValue: false,
         inputsType: {
             type: SettingsType.CHECKBOX,
         },
@@ -1107,6 +1786,7 @@ export const PropsSettings = {
     YFieldNumeric: {
         title: 'yField Numeric',
         key: SettingKeys.Props.Y_FIELD_NUMERIC,
+        startValue: false,
         inputsType: {
             type: SettingsType.CHECKBOX,
         },

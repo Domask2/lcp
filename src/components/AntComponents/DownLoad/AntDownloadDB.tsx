@@ -1,6 +1,6 @@
 import React, {FC, memo, useEffect, useState} from 'react';
 import {Select} from "antd";
-import {IDataSource} from "../../../redux/ds/ds.initial";
+// import {IDataSource} from "../../../redux/ds/ds.initial";
 
 interface AntDownloadDBType {
     item: string
@@ -28,18 +28,18 @@ const AntDownloadDB: FC<AntDownloadDBType> = ({item, setItem, dBArray}) => {
                 borderBottom: '1px solid #eee',
                 backgroundColor: '#fff'
             }}
-                    size={'small'}
-                    value={filteredDB}
-                    onChange={setFilteredDB}
+                size={'small'}
+                value={filteredDB}
+                onChange={setFilteredDB}
             >
                 <Select.Option key={'no'} value={''}>
                     {'не выбрано'}
                 </Select.Option>
                 {dBArray ? dBArray.map((item: any) => (
-                        <Select.Option key={item.key} value={item.key}>
-                            {item.title}
-                        </Select.Option>
-                    ))
+                    <Select.Option key={item.key} value={item.key}>
+                        {item.title}
+                    </Select.Option>
+                ))
                     : (
                         ''
                     )}
@@ -51,18 +51,18 @@ const AntDownloadDB: FC<AntDownloadDBType> = ({item, setItem, dBArray}) => {
                 borderBottom: '1px solid #eee',
                 backgroundColor: '#fff'
             }}
-                    size={'small'}
-                    value={filteredProcedure}
-                    onChange={setFilteredProcedure}
+                size={'small'}
+                value={filteredProcedure}
+                onChange={setFilteredProcedure}
             >
                 <Select.Option key={'no'} value={''}>
                     {'не выбрано'}
                 </Select.Option>
                 {ProcedureArray ? ProcedureArray.map((item: any) => (
-                        <Select.Option key={item.key} value={item.key}>
-                            {item.title}
-                        </Select.Option>
-                    ))
+                    <Select.Option key={item.key} value={item.key}>
+                        {item.title}
+                    </Select.Option>
+                ))
                     : (
                         ''
                     )}

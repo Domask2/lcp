@@ -2,7 +2,7 @@ import React, {Suspense} from 'react';
 const LazyStepBackwardOutlined = React.lazy(() => import("./Icons/AntStepBackwardOutlined"));
 const LazyStepForwardOutlined = React.lazy(() => import("./Icons/AntStepForwardOutlined"));
 const LazyArrowUpOutlined = React.lazy(() => import("./Icons/AntArrowUpOutlined"));
-const LazyArrowDownOutlined= React.lazy(() => import("./Icons/AntArrowDownOutlined"));
+const LazyArrowDownOutlined = React.lazy(() => import("./Icons/AntArrowDownOutlined"));
 const LazyArrowLeftOutlined = React.lazy(() => import("./Icons/AntArrowLeftOutlined"));
 const LazyArrowRightOutlined = React.lazy(() => import("./Icons/AntArrowRightOutlined"));
 const LazyPrinterOutlined = React.lazy(() => import("./Icons/AntPrinterOutlined"));
@@ -25,12 +25,15 @@ const LazyCheckCircleOutlined = React.lazy(() => import("./Icons/AntCheckCircleO
 const LazyCheckSquareOutlined = React.lazy(() => import("./Icons/AntCheckSquareOutlined"));
 const LazySearchOutlined = React.lazy(() => import("./Icons/AntSearchOutlined"));
 const LazyGoogleOutlined = React.lazy(() => import("./Icons/AntGoogleOutlined"));
+const LazyAntDeleteOutlined = React.lazy(() => import("./Icons/AntDeleteOutlined"));
+const LazyAntStopOutlined = React.lazy(() => import("./Icons/AntStopOutlined"));
+const LazyAntSaveOutlined = React.lazy(() => import("./Icons/AntSaveOutlined"));
 
 type AntIconType = {
     name: string
     style?: React.CSSProperties
 }
-const AntIcon:React.FC<AntIconType> = ({name, style}) => {
+const AntIcon: React.FC<AntIconType> = ({name, style}) => {
 
     switch (name) {
         case "StepBackwardOutlined":
@@ -85,6 +88,12 @@ const AntIcon:React.FC<AntIconType> = ({name, style}) => {
             return <Suspense fallback={<></>}><LazySearchOutlined style={style} /></Suspense>
         case "GoogleOutlined":
             return <Suspense fallback={<></>}><LazyGoogleOutlined style={style} /></Suspense>
+        case "AntDeleteOutlined":
+            return <Suspense fallback={<></>}><LazyAntDeleteOutlined style={style} /></Suspense>
+        case "AntStopOutlined":
+            return <Suspense fallback={<></>}><LazyAntStopOutlined style={style} /></Suspense>
+        case "AntSaveOutlined":
+            return <Suspense fallback={<></>}><LazyAntSaveOutlined style={style} /></Suspense>
 
         default:
             return <></>

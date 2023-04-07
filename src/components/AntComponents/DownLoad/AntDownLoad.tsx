@@ -40,7 +40,9 @@ const AntDownLoad: FC<AntDownloadType> = ({cmp}) => {
 
     const onFinish = (values: IFormValues) => {
         if (currentPage && currentProject && location) {
-            let object_id = location?.pathname?.slice(-1) ?? '';
+            let object_id = location?.pathname.split('/')[location?.pathname.split('/').length - 1] ?? '';
+
+            console.log(object_id)
 
             const formData = new FormData();
             formData.append('url', url ?? '');

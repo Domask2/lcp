@@ -27,7 +27,11 @@ const MainLayout: React.FC = () => {
             ) : (
 
                 <Layout>
-                    <Layout style={{padding: '16px 16px', minHeight: 'calc(100vh - 70px)'}}>
+                    <Layout style={{minHeight: 'calc(100vh - 70px)'}}>
+                        {/* <Layout style={{padding: '16px 16px', minHeight: 'calc(100vh - 70px)', display: 'flex', flexDirection: 'row'}}>
+                        <div style={{width: '200px'}}>
+                            <h1>SideBar</h1>
+                        </div> */}
                         <Content
                             className="site-layout-background"
                             style={{

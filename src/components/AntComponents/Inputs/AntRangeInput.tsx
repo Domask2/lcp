@@ -29,7 +29,7 @@ const AntRangeInput: React.FC<AntRangeInputType> = ({cmp, props}) => {
 
     return <>
         {cmp.anchor && <ScrollableAnchor id={`${cmp.anchor}`}>
-            <span>''</span>
+            <span></span>
         </ScrollableAnchor>}
 
         <Editor cmp={cmp} inputType={cmp.inputsType} />

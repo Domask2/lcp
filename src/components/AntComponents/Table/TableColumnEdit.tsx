@@ -8,6 +8,7 @@ import {useTypedSelector} from '../../../hooks';
 import {getDataSource} from '../../../redux/ds/ds.selector';
 import {RootState} from '../../../redux/redux.store';
 import TableCellStyleAddictions from './TableCellStyleAddictions';
+import {getSysVarsSettings} from "../../../redux/app/app.selector";
 
 
 type TableColumnEditType = {
@@ -20,6 +21,7 @@ type TableColumnEditType = {
 
 const TableColumnEdit: React.FC<TableColumnEditType> = ({col, object, setObject, deleteCol, cmp}) => {
 
+    const sysVars = useTypedSelector((state: RootState) => getSysVarsSettings(state));
     const dataSource = useTypedSelector((state: RootState) =>
         getDataSource(state, cmp.ds?.key)
     );
@@ -34,6 +36,7 @@ const TableColumnEdit: React.FC<TableColumnEditType> = ({col, object, setObject,
     const [className, setClassName] = useState(object.className)
     const [multipleKey, setMultipleKey] = useState(object.multiple?.key)
     const [groupColumn, setGroupColumn] = useState(object.groupColumn)
+    const [url, setUrl] = useState(object.url)
 
     const [multipleStyle, setMultipleStyle] = useState({...object.multiple?.style})
 
@@ -58,6 +61,9 @@ const TableColumnEdit: React.FC<TableColumnEditType> = ({col, object, setObject,
         if (href !== undefined && href !== null) object.href = href
         else delete object.href
 
+        if (url !== undefined && url !== null) object.url = url
+        else delete object.url
+
         if (className !== undefined && className !== null) object.className = className
         else delete object.className
 
@@ -75,7 +81,7 @@ const TableColumnEdit: React.FC<TableColumnEditType> = ({col, object, setObject,
 
         setObject({...object})
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [modal, style, title, mutate, link, className, multipleKey, multipleStyle, groupColumn, href, addictions])
+    }, [modal, style, title, mutate, link, className, multipleKey, multipleStyle, groupColumn, href, url, addictions])
 
     const addItem = (typ: string) => {
         switch (typ) {
@@ -106,68 +112,79 @@ const TableColumnEdit: React.FC<TableColumnEditType> = ({col, object, setObject,
             case 'groupColumn':
                 setGroupColumn('')
                 break
+            case 'url':
+                setUrl('')
+                break
         }
     }
 
     const menu = (
         <Menu>
             {(modal === undefined || modal === null) &&
-                <Menu.Item key="1" onClick={() => addItem('modal')}><PlusOutlined /> modal [string]</Menu.Item>}
+                <Menu.Item key="1" onClick={() => addItem('modal')}><PlusOutlined/> modal [string]</Menu.Item>}
 
             {(title === undefined || title === null) &&
-                <Menu.Item key="2" onClick={() => addItem('title')}><PlusOutlined /> title [string]</Menu.Item>}
+                <Menu.Item key="2" onClick={() => addItem('title')}><PlusOutlined/> title [string]</Menu.Item>}
 
             {(mutate === undefined || mutate === null) &&
-                <Menu.Item key="3" onClick={() => addItem('mutate')}><PlusOutlined /> mutate [string]</Menu.Item>}
+                <Menu.Item key="3" onClick={() => addItem('mutate')}><PlusOutlined/> mutate [string]</Menu.Item>}
 
             {((link === undefined || link === null) && (href === undefined || href === null)) &&
-                <Menu.Item key="4" onClick={() => addItem('link')}><PlusOutlined /> link [string]</Menu.Item>}
+                <Menu.Item key="4" onClick={() => addItem('link')}><PlusOutlined/> link [string]</Menu.Item>}
 
             {((link === undefined || link === null) && (href === undefined || href === null)) &&
-                <Menu.Item key="5" onClick={() => addItem('href')}><PlusOutlined /> href [string]</Menu.Item>}
+                <Menu.Item key="5" onClick={() => addItem('href')}><PlusOutlined/> href [string]</Menu.Item>}
 
             {(className === undefined || className === null) &&
-                <Menu.Item key="6" onClick={() => addItem('className')}><PlusOutlined /> className [string]</Menu.Item>}
+                <Menu.Item key="6" onClick={() => addItem('className')}><PlusOutlined/> className [string]</Menu.Item>}
 
             {(multipleKey === undefined || multipleKey === null) &&
-                <Menu.Item key="7" onClick={() => addItem('multipleKey')}><PlusOutlined /> multipleKey [string]</Menu.Item>}
+                <Menu.Item key="7" onClick={() => addItem('multipleKey')}><PlusOutlined/> multipleKey
+                    [string]</Menu.Item>}
 
             {(groupColumn === undefined || groupColumn === null) &&
-                <Menu.Item key="8" onClick={() => addItem('groupColumn')}><PlusOutlined /> groupColumn [string]</Menu.Item>}
+                <Menu.Item key="8" onClick={() => addItem('groupColumn')}><PlusOutlined/> groupColumn
+                    [string]</Menu.Item>}
 
-            <Menu.Divider />
+            {((url === undefined || url === null) && (url === undefined || url === null)) &&
+                <Menu.Item key="5" onClick={() => addItem('url')}><PlusOutlined/> url [string]</Menu.Item>}
+
+            <Menu.Divider/>
 
             <Menu.Item key="100" danger>
                 <Popconfirm placement="right" title='Точно удалить?' onConfirm={() => deleteCol(col)}
-                    okText="Yes" cancelText="No">
-                    <DeleteOutlined /> Удалить
+                            okText="Yes" cancelText="No">
+                    <DeleteOutlined/> Удалить
                 </Popconfirm>
             </Menu.Item>
         </Menu>
     );
 
+    console.log(cmp)
+
     return <Card size="small" title={col}
-        style={{marginBottom: '16px', backgroundColor: '#f7f7f7'}}
-        extra={<Dropdown overlay={menu}><DashOutlined /></Dropdown>}>
+                 style={{marginBottom: '16px', backgroundColor: '#f7f7f7'}}
+                 extra={<Dropdown overlay={menu}><DashOutlined/></Dropdown>}>
 
         <Card size="small" style={{marginBottom: '8px'}}>
-            <ObjectEditor object={style} setObject={setStyle} />
+            <ObjectEditor object={style} setObject={setStyle}/>
         </Card>
 
-        <TableCellStyleAddictions addictions={addictions} setAddictions={setAddictions} />
+        <TableCellStyleAddictions addictions={addictions} setAddictions={setAddictions}/>
 
-        <ItemEdit label={'modal'} item={modal} setItem={setModal} />
-        <ItemEdit label={'title'} item={title} setItem={setTitle} />
-        <ItemEdit label={'mutate'} item={mutate} setItem={setMutate} />
-        <ItemEdit selectItems={dataSource?.columns?.map((item) => item.key)} type={'select'} label={'href'} item={href} setItem={setHref} />
-        <LinkTree item={link} setItem={setLink} />
-        <ItemEdit label={'className'} item={className} setItem={setClassName} />
-        <ItemEdit label={'multipleKey'} item={multipleKey} setItem={setMultipleKey} />
-        <ItemEdit label={'groupCol'} item={groupColumn} setItem={setGroupColumn} />
+        <ItemEdit label={'modal'} item={modal} setItem={setModal}/>
+        <ItemEdit label={'title'} item={title} setItem={setTitle}/>
+        <ItemEdit label={'mutate'} item={mutate} setItem={setMutate}/>
+        <ItemEdit selectItems={dataSource?.columns?.map((item) => item.key)} type={'select'} label={'href'} item={href} setItem={setHref}/>
+        <ItemEdit selectItems={Object.values(sysVars)} type={'select'} label={'url'} item={url} setItem={setUrl}/>
+        <LinkTree item={link} setItem={setLink}/>
+        <ItemEdit label={'className'} item={className} setItem={setClassName}/>
+        <ItemEdit label={'multipleKey'} item={multipleKey} setItem={setMultipleKey}/>
+        <ItemEdit label={'groupCol'} item={groupColumn} setItem={setGroupColumn}/>
 
         {multipleKey !== undefined && multipleKey !== null &&
             <Card size="small" style={{marginTop: '8px'}}>
-                <ObjectEditor object={multipleStyle} setObject={setMultipleStyle} />
+                <ObjectEditor object={multipleStyle} setObject={setMultipleStyle}/>
             </Card>
         }
     </Card>

@@ -116,7 +116,7 @@ deploy_to_prod:
         echo "Containers $CI_PROJECT_NAME not running"
       fi
     - sed -i "s/admin.lcp.plinor.team/admin.lcp.plinor.ru/g" docker/docker-stack.yml
-    - docker stack deploy -c docker/docker-stack.yml --with-registry-auth $CI_PROJECT_NAME
+    - docker stack deploy -c docker/docker-stack.yml --with-registry-auth lcp-$CI_PROJECT_NAME
     - rm -rf $DOCKER_CERT_PATH
   rules:
     - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH || $CI_PIPELINE_SOURCE == "merge_request_event"

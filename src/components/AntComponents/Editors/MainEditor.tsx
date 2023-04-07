@@ -43,9 +43,7 @@ const MainEdit: React.FC<MainEditType> = ({
     let projectRoles = currentProject?.project_roles ? currentProject?.project_roles : []
     const {cmpUpdate} = useActions();
 
-    const allDs = useTypedSelector((state: RootState) =>
-        getDataSourcesAll(state)
-    );
+    const allDs = useTypedSelector((state: RootState) => getDataSourcesAll(state));
     const ls: any = useTypedSelector((state: RootState) => getDataSourceLs(state));
 
     const [model, setModel] = useState<any>({...cmp});
@@ -110,11 +108,39 @@ const MainEdit: React.FC<MainEditType> = ({
             case SettingKeys.Ds.HIDE:
                 list = allDs[model.ds.key]?.items[0] && Object.keys(allDs[model.ds.key].items[0])
                 break;
+            case ListKeys.ALL_DS:
+                list = Object.keys(allDs)
+                break;
+            case ListKeys.LS_VARS:
+                list = Object.keys(ls.vars)
+                break;
             case ListKeys.KEYS:
                 if (model?.ds?.key) {
                     list = allDs[model.ds.key] && allDs[model.ds.key].items[0] && Object.keys(allDs[model.ds.key].items[0])
                 } else {
                     list = allDs[model?.ds] && allDs[model.ds].items[0] && Object.keys(allDs[model.ds].items[0])
+                }
+                break
+            case ListKeys.KEYS_1:
+                list = allDs[model?.ds1] && allDs[model.ds1].items[0] && Object.keys(allDs[model.ds1].items[0])
+                break
+            case ListKeys.KEYS_2:
+                list = allDs[model?.ds2] && allDs[model.ds2].items[0] && Object.keys(allDs[model.ds2].items[0])
+                break
+            case ListKeys.KEYS_3:
+                list = allDs[model?.ds3] && allDs[model.ds3].items[0] && Object.keys(allDs[model.ds3].items[0])
+                break
+            case ListKeys.KEYS_4:
+                list = allDs[model?.ds4] && allDs[model.ds4].items[0] && Object.keys(allDs[model.ds4].items[0])
+                break
+            case ListKeys.KEYS_5:
+                list = allDs[model?.ds5] && allDs[model.ds5].items[0] && Object.keys(allDs[model.ds5].items[0])
+                break
+            case ListKeys.ITERATOR_KEYS:
+                if (model?.iteratorDs?.filtredKey) {
+                    list = allDs[model.iteratorDs?.filtredKey] && allDs[model.iteratorDs?.filtredKey].items[0] && Object.keys(allDs[model.iteratorDs?.filtredKey].items[0])
+                } else {
+                    list = allDs[model?.iteratorDs] && allDs[model.iteratorDs].items[0] && Object.keys(allDs[model.iteratorDs].items[0])
                 }
                 break;
 
@@ -148,12 +174,12 @@ const MainEdit: React.FC<MainEditType> = ({
     };
 
     const renderSettingsList = (obj: any) => {
-        return obj?.Card ? (obj?.Arr?.map((item: any) => {
+        return obj?.Card ? (obj?.Arr?.map((item: any, index: any) => {
 
             if (item.inputsType.type === SettingsType.BR) return <></>
             if (model.inputsType && item.inputsType.condition && !item.inputsType.condition.includes(model.inputsType)) return <></>
 
-            return <Card size="small" className="cardEdit">
+            return <Card size="small" className="cardEdit" key={`${cmp.key}_card_${index}`}>
                 <EditorInputsSwitch
                     props={{
                         ...item,
@@ -167,11 +193,11 @@ const MainEdit: React.FC<MainEditType> = ({
         })
         ) : (
             <Card size="small" className="cardEdit">
-                {obj?.Arr?.map((item: any) => {
+                {obj?.Arr?.map((item: any, index: any) => {
 
                     if (model.inputsType && item.inputsType.condition && !item.inputsType.condition.includes(model.inputsType)) return <></>
 
-                    return <EditorInputsSwitch
+                    return <EditorInputsSwitch key={`${cmp.key}_switch_${index}`}
                         props={{
                             ...item,
                             setValue: setModel,

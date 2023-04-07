@@ -23,15 +23,15 @@ const AntText = ({cmp}: AntTextType): any => {
     //     }
     // }
 
-    return <>
+    return <div style={{position:'relative'}}>
         {cmp.anchor && <ScrollableAnchor id={`${cmp.anchor}`}>
             <span></span>
         </ScrollableAnchor>}
-        <Editor cmp={cmp} />
+        <Editor cmp={cmp} direction='left' testEditorStyle={true} height='25px' />
         {/*<div className="preview" style={cmp.style} dangerouslySetInnerHTML={createMarkup(mappedText)} />*/}
         <div style={cmp.style} className="preview ck-content" dangerouslySetInnerHTML={{__html: mappedText}} />
 
-    </>
+    </div>
 
 }
 

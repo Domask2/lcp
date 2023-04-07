@@ -20,7 +20,7 @@ const AntSelect: React.FC<AntSelectType> = ({cmp}) => {
 
     return (
         <>
-            <Editor cmp={cmp} />
+            <Editor cmp={cmp} oldComponent={true} />
             <Select size={"small"} defaultValue="Выберие источник данных" style={cmp.style}
                 onChange={(e) => action.onClick(e)}>
 

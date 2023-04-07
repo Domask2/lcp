@@ -14,7 +14,6 @@ import Text from "antd/es/typography/Text";
 //     {label: 'Users', key: 'remote-3', children: 'Content of Tab Pane 3'},
 // ];
 
-const {TabPane} = Tabs;
 
 const AdminRemotes = () => {
     const authRemote = useTypedSelector((state: RootState) => getAuthRemote(state));
@@ -26,6 +25,12 @@ const AdminRemotes = () => {
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [authRemote])
+
+    const items = [
+        {label: 'DateSources', key: '1', children: <AdminRemotesDs />},
+        {label: 'Projects', key: '2', children: <AdminRemotesProject />},
+        {label: 'Users', key: '3', children: <div>Content of Tab Pane 3</div>},
+    ]
 
     return <>
         {authRemote === undefined &&
@@ -47,18 +52,7 @@ const AdminRemotes = () => {
 
         <hr />
 
-        <Tabs defaultActiveKey="1">
-            <TabPane tab="DateSources" key="1">
-                <AdminRemotesDs />
-            </TabPane>
-            <TabPane tab="Projects" key="2">
-                <AdminRemotesProject />
-            </TabPane>
-            <TabPane tab="Users" key="3">
-                Content of Tab Pane 3
-            </TabPane>
-        </Tabs>
-
+        <Tabs defaultActiveKey="1" items={items} />
         {/* <Tabs defaultActiveKey="1" items={items}/> */}
     </>
 };

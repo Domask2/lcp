@@ -16,6 +16,7 @@ import {Button, Card, Col, Input, Row, Select, Switch} from "antd";
 import {RootState} from "../../../redux/redux.store";
 import {IButton} from "../Page/templates";
 import ReduxElement from "./ReduxElement";
+import {getCurrentProject} from "../../../redux/project/project.selector";
 
 type AntButtonEditType = {
     cmp: IButton,
@@ -42,7 +43,7 @@ const AntButtonEdit: React.FC<AntButtonEditType> = ({
     const [resetInputs, setResetInputs] = useState<any>(model.resetInputs ? model.resetInputs : false)
     const [procedure, setProcedure] = useState(model.procedure)
     const [reduxElement, setReduxElement] = useState(model.reduxElement)
-    const [getUrl, setGetUrl] = useState(model.getUrl ? model.getUrl : {baseUrl: '', params: [], random: false, download: false})
+    const [getUrl, setGetUrl] = useState(model.getUrl ? model.getUrl : {baseUrl: '', params: [], random: false, download: false, ajax:false})
 
     const mappedCaption = useTypedSelector((state: RootState) => getMappedText(state, caption))
     const dsArr = useTypedSelector((state: RootState) => getDataSourcesAll(state));

@@ -122,7 +122,19 @@ const ApiDs = {
             return instance.get('/api/project/mc' + source)
                 .then(response => response.data)
         }
+    },
+
+    response(source:string):any {
+        const token = window.localStorage.getItem('user-token');
+        if (token === null)
+            return instance.get('/api/free/mc/' + source)
+                .then(response => response)
+        else {
+            instance.defaults.headers.authorization = 'Bearer ' + token;
+            return instance.get('/api/mc/' + source)
+                .then(response => response)
+        }
     }
-}
+ }
 
 export default ApiDs

@@ -1,5 +1,6 @@
 import {IDataSourceAll} from "./redux/ds/ds.initial";
-import {IAction, IAddictions} from "./redux/project/project.initial";
+import {IAction, IAddictions, IResult} from "./redux/project/project.initial";
+import {CSSProperties} from "react";
 
 export const AppRoute = {
     ADMIN: '/admin',
@@ -21,14 +22,16 @@ export const KeyCode = {
     ESC: 'Esc',
     ESCAPE: 'Escape',
     NUM_ENTER: 'NumpadEnter',
-    DELETE: 'Delete',
+    DELETE: 46,
     NUM_DELETE: 'NumpadDecimal',
+    CTRL: 17
 };
 
 
 export const ComponentTypes = {
     INPUT: 'Input',
-    ROW: 'Row'
+    ROW: 'Row',
+    FILTER_TAGS: 'FilterTags',
 }
 
 export const marks = {
@@ -58,27 +61,21 @@ export const marks = {
     24: '24',
 }
 
+export const YaMapsPlacemarkColorsList = ['blue', 'red', 'darkOrange', 'night', 'darkBlue', 'pink', 'gray', 'brown', 'darkGreen', 'violet', 'black', 'yellow', 'green', 'orange', 'lightBlue', 'olive']
+
+export const YaMapsPlacemarkIconsList = ['Attention', 'Airport', 'Auto', 'Bar', 'Dog', 'Factory', 'Heart', 'Home', 'Pocket', 'RapidTransit', 'Sport', 'Toilet', 'Vegetation', 'Waste', 'Christian', 'Waterway']
+
+export const YaMapsPlacemarkTypesList = ['Icon', 'StretchyIcon', 'DotIcon', 'CircleIcon', 'CircleDotIcon']
+
+const Icons = {
+    ICON: 'Icon',
+    CIRCLE_ICON: 'CircleIcon',
+    STRETCHY_ICON: 'StretchyIcon'
+}
+
 // const CoutnryCodeString = 'AU AT AZ AX AL DZ UM VI AS AI AO AD AQ AG AR AM AW AF BS BD BB BH BZ BY BE BJ BM BG BO BA BW BR IO VG BN BF BI VU VA GB HU VE TL VN GA HT GY GP GT GN GW DE GI HN HK GD GL GR GE GU DK CD DJ DM DO EU EG ZM EH ZW IL IN ID JO IQ IR IE IS ES IT YE KP CV KZ KY KH CM CA QA KE CY KG KI CN CC CO KM CR CI CU KW LA LV LS LR LB LY LT LI LU MU MR MG YT MO MK MW MY ML MV MT MA MQ MH MX MZ MD MC MN MS MM NA NR NP NE NG AN NL NI NU NC NZ NO AE OM CX CK HM PK PW PS PA PG PY PE PN PL PT PR CG RE RU RW RO US SV WS SM ST SA SZ SJ MP SC SN VC KN LC PM RS CS SG SY SK SI SB SO SD SR SL SU TJ TH TW TZ TG TK TO TT TV TN TM TR UG UZ UA UY FO FM FJ PH FI FK FR GF PF TF HR CF TD ME CZ CL CH SE LK EC GQ ER EE ET ZA KR GS JM JP BV NF SH TC WF';
 
 export const CoutnryCode = ["AU", "AT", "AZ", "AX", "AL", "DZ", "UM", "VI", "AS", "AI", "AO", "AD", "AQ", "AG", "AR", "AM", "AW", "AF", "BS", "BD", "BB", "BH", "BZ", "BY", "BE", "BJ", "BM", "BG", "BO", "BA", "BW", "BR", "IO", "VG", "BN", "BF", "BI", "VU", "VA", "GB", "HU", "VE", "TL", "VN", "GA", "HT", "GY", "GP", "GT", "GN", "GW", "DE", "GI", "HN", "HK", "GD", "GL", "GR", "GE", "GU", "DK", "CD", "DJ", "DM", "DO", "EU", "EG", "ZM", "EH", "ZW", "IL", "IN", "ID", "JO", "IQ", "IR", "IE", "IS", "ES", "IT", "YE", "KP", "CV", "KZ", "KY", "KH", "CM", "CA", "QA", "KE", "CY", "KG", "KI", "CN", "CC", "CO", "KM", "CR", "CI", "CU", "KW", "LA", "LV", "LS", "LR", "LB", "LY", "LT", "LI", "LU", "MU", "MR", "MG", "YT", "MO", "MK", "MW", "MY", "ML", "MV", "MT", "MA", "MQ", "MH", "MX", "MZ", "MD", "MC", "MN", "MS", "MM", "NA", "NR", "NP", "NE", "NG", "AN", "NL", "NI", "NU", "NC", "NZ", "NO", "AE", "OM", "CX", "CK", "HM", "PK", "PW", "PS", "PA", "PG", "PY", "PE", "PN", "PL", "PT", "PR", "CG", "RE", "RU", "RW", "RO", "US", "SV", "WS", "SM", "ST", "SA", "SZ", "SJ", "MP", "SC", "SN", "VC", "KN", "LC", "PM", "RS", "CS", "SG", "SY", "SK", "SI", "SB", "SO", "SD", "SR", "SL", "SU", "TJ", "TH", "TW", "TZ", "TG", "TK", "TO", "TT", "TV", "TN", "TM", "TR", "UG", "UZ", "UA", "UY", "FO", "FM", "FJ", "PH", "FI", "FK", "FR", "GF", "PF", "TF", "HR", "CF", "TD", "ME", "CZ", "CL", "CH", "SE", "LK", "EC", "GQ", "ER", "EE", "ET", "ZA", "KR", "GS", "JM", "JP", "BV", "NF", "SH", "TC", "WF"];
-
-export const validateCountryCode = (value: string) => {
-    return CoutnryCode.includes(value)
-}
-
-export const validateValue = (cmp: any, storedValue: any) => {
-
-    const value = storedValue === null ? '' : storedValue;
-
-    if (cmp.regexp) {
-        let regexp = new RegExp(`${cmp.regexp}`);
-        return regexp.test(value)
-    } else if (cmp.required) {
-        return !!value?.length || !!value
-    } else {
-        return true
-    }
-}
 
 export const extensions = ['png', 'jpg', 'jpeg', 'webp', 'svg', 'gif', 'tiff', 'tif', 'bmp']
 
@@ -222,6 +219,50 @@ export const actionTemplate: IAction = {
     sep: ';'
 }
 
+export const IconsArray = ['StepBackwardOutlined', 'StepForwardOutlined', 'ArrowUpOutlined', 'ArrowDownOutlined', 'ArrowLeftOutlined', 'ArrowRightOutlined', 'PrinterOutlined', 'BarChartOutlined', 'PieChartOutlined', 'LineChartOutlined', 'DotChartOutlined', 'AreaChartOutlined', 'FilterOutlined', 'CloudDownloadOutlined', 'CloudUploadOutlined', 'IdcardOutlined', 'PlusOutlined', 'PlusCircleOutlined', 'EditOutlined', 'OrderedListOutlined', 'UnorderedListOutlined', 'CheckOutlined', 'CheckCircleOutlined', 'CheckSquareOutlined', 'SearchOutlined', 'GoogleOutlined', 'AntDeleteOutlined', 'AntStopOutlined', 'AntSaveOutlined'];
+
+export const checkPlacemarkIcon = (icon: string, type: string) => {
+    if (icon) {
+        if (type === Icons.ICON || type === Icons.CIRCLE_ICON) {
+            return icon
+        } else {
+            return ''
+        }
+    } else {
+        return ''
+    }
+}
+
+export const checkIconContent = (caption: string, type: string) => {
+    if (caption) {
+        if (type === Icons.STRETCHY_ICON) {
+            return caption
+        } else {
+            return caption.substr(0, 2)
+        }
+    } else {
+        return ''
+    }
+}
+
+export const validateCountryCode = (value: string) => {
+    return CoutnryCode.includes(value)
+}
+
+export const validateValue = (cmp: any, storedValue: any) => {
+
+    const value = storedValue === null ? '' : storedValue;
+
+    if (cmp.regexp) {
+        let regexp = new RegExp(`${cmp.regexp}`);
+        return regexp.test(value)
+    } else if (cmp.required) {
+        return !!value?.length || !!value
+    } else {
+        return true
+    }
+}
+
 export function verification(auth: any) {
     if (auth.authenticated === true)
         return (auth.role === AccessControlLayout.MAGE || auth.role === AccessControlLayout.ADMIN)
@@ -288,7 +329,7 @@ export function searchParams(pagesArray: any, pagesKeys: any, ind: any): any {
         return pagesArray[0]?.params
     }
 
-    return pagesKeys.length > ind + 1 && result[0].children.length ? searchParams(result[0].children, pagesKeys, ind + 1) : result[0].params;
+    return pagesKeys.length > ind + 1 && result[0].children?.length ? searchParams(result[0].children, pagesKeys, ind + 1) : result[0].params;
 }
 
 export function changeKey(obj: any, key: any) {
@@ -318,7 +359,6 @@ export function checkTableStyleAddiction(addictionsArr: [any], condition: any) {
     if (!addictionsArr) return result
 
     addictionsArr.forEach((addict: any) => {
-
         switch (addict.type) {
             case TypeAddictions.AVAILABILITY.value:
                 result.res = !!condition;
@@ -348,8 +388,9 @@ export function checkTableStyleAddiction(addictionsArr: [any], condition: any) {
                 console.log('No-no-no!');
                 result.res = false;
         }
-        result.style = result.res ? addict.style : {}
+        result.style = result.res ? addict.style : result.style
     })
+
 
     return result
 
@@ -585,11 +626,30 @@ export const checkRequiredFields = (cmp: any) => {
         }
     } else {
         switch (cmp.type) {
-            case ComponentTypes.ROW:
+            case ComponentTypes.FILTER_TAGS:
+                result.reply = (cmp.ds && cmp.dsKey && cmp.ds1 && cmp.dsKey1 && cmp.dsKeyValues1);
+                result.message = `Не заполнены обязательные поля: ${cmp.ds ? '' : 'Ds,'} ${cmp.dsKey ? '' : 'Key Ds,'} ${cmp.ds1 ? '' : 'Tags Ds,'} ${cmp.dsKey1 ? '' : 'Tags Key,'} ${cmp.dsKeyValues1 ? '' : 'Tags Key Values.'}`;
                 break;
             default:
                 return result;
         }
     }
     return result
+}
+
+export const getAddictionStyle = (resultCheckAddiction: IResult | boolean, cmp: any): CSSProperties => {
+    let addictionStyle: CSSProperties = {}
+    if (typeof resultCheckAddiction !== "boolean" && typeof resultCheckAddiction?.arrayAddictionResult === 'object') {
+        resultCheckAddiction?.arrayAddictionResult && resultCheckAddiction?.arrayAddictionResult.map((addict: { result: boolean, addict: IAddictions }) => {
+            if (addict.result) {
+                cmp?.addictionStyleArray && cmp?.addictionStyleArray.map((addictStyle: { id: number, style: CSSProperties }) => {
+                    if (addict.addict.id === addictStyle.id) {
+                        addictionStyle = addictStyle.style
+                    }
+                })
+            }
+        })
+    }
+
+    return addictionStyle;
 }

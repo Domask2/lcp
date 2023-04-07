@@ -12,7 +12,7 @@ type AntInputType = {
 // const EditorSelectElement: React.FC<AntInputType> = ({props, setValue, value}) => {
 const EditorSelectElement: React.FC<AntInputType> = ({props, setValue}) => {
 
-    const arr = props.inputsType.arr ? props.inputsType.arr : props.list;
+    const arr = props?.inputsType?.arr ? props.inputsType.arr : props.list;
 
     return <>
         <div style={props.containerStyle}>
@@ -28,7 +28,7 @@ const EditorSelectElement: React.FC<AntInputType> = ({props, setValue}) => {
             }
             <Select
                 showSearch
-                mode={props.inputsType.mode}
+                mode={props?.inputsType?.mode}
                 style={{
                     minWidth: "60%",
                     width: "60%",

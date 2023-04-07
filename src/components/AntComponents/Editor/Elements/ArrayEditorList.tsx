@@ -13,8 +13,7 @@ interface ArrayEditorListType {
 const ArrayEditorList: React.FC<ArrayEditorListType> = ({index, obj, onConfirm, onRemoveName, onCheckbox}) => {
     return (
         <Row key={index} style={{marginBottom:'2px'}}>
-            <Col flex="90px">
-                {/*{Object.keys(obj)}*/}
+            <Col flex="80px">
                 <Input value={Object.keys(obj)} style={{borderLeft: '1px dashed #ddd', fontSize:'14px', backgroundColor:'#f7f7f7'}}
                        className="lcEditorInput"
                        name={obj + '##val##' + index}
@@ -34,10 +33,10 @@ const ArrayEditorList: React.FC<ArrayEditorListType> = ({index, obj, onConfirm, 
                 </Col>
             }
 
-            <Col flex="20px">
+            <Col flex="30px">
                 <Popconfirm placement="right" title='Точно удалить?' onConfirm={onConfirm}
                             okText="Yes" cancelText="No">
-                    <Button type="link" style={{width: '8%', height: 1, lineHeight: 1}} danger
+                    <Button type="link" style={{width: '20px', height: 1, lineHeight: 1}} danger
                             icon={<DeleteOutlined/>}/>
                 </Popconfirm>
             </Col>

@@ -8,6 +8,7 @@ import "./styles/App.css";
 import "./styles/Print.css";
 import "./styles/my_ant.css";
 import "./styles/labels.css";
+import "./styles/antPropsClassNameStyles.css";
 
 // import { createRoot } from 'react-dom/client';
 // const root = createRoot(document.getElementById("root") as HTMLDivElement);

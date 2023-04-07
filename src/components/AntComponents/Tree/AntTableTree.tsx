@@ -61,13 +61,18 @@ const AntTableTree: FC<AntTableTreeType> = ({cmp}) => {
         })
     }
 
-    return <Table
-        size="small"
-        defaultExpandAllRows
-        columns={columns}
-        dataSource={rows}
-        title={() => <Editor cmp={cmp}/>}
-    />;
+    return (
+        <div>
+            <Editor cmp={cmp} oldComponent={true} />
+            <Table
+                size="small"
+                defaultExpandAllRows
+                columns={columns}
+                dataSource={rows}
+            />
+        </div>
+
+    )
 };
 
 export default AntTableTree;

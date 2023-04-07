@@ -1,7 +1,7 @@
 import React, {useEffect} from "react";
 import Editor from "../Editor/Editor";
 
-import {getDataSource, getDataSourceLs} from "../../../redux/ds/ds.selector";
+import {getDataSource, getDataSourceLs, getDataSourceLsRequiredVars, getLsVarsByArrObj} from "../../../redux/ds/ds.selector";
 import {useAction, useTypedSelector} from "../../../hooks";
 
 import {Col, Row, Select} from "antd";
@@ -11,6 +11,7 @@ import {IActionsType, IInputs} from "../Page/templates";
 import ScrollableAnchor from "react-scrollable-anchor";
 import {formationValue} from "../../../utils";
 import {getCurrentPage} from "../../../redux/project/project.selector";
+import {shallowEqual} from "react-redux";
 
 type AntSelectType = {
     cmp: IInputs;
@@ -18,7 +19,9 @@ type AntSelectType = {
 };
 
 const AntSelect: React.FC<AntSelectType> = ({cmp, props}) => {
-    const ls: {[key: string]: any} = useTypedSelector((state: RootState) => getDataSourceLs(state))
+    console.log(cmp)
+
+    // const ls: {[key: string]: any} = useTypedSelector((state: RootState) => getDataSourceLs(state))
     const currentPage = useTypedSelector((state: RootState) => getCurrentPage(state));
     const action = useAction(cmp.actions!);
     const filterKey = cmp.filterKey;
@@ -26,8 +29,17 @@ const AntSelect: React.FC<AntSelectType> = ({cmp, props}) => {
     const listDs = useTypedSelector((state: RootState) => getDataSource(state, cmp.listDs));
     // const filterDs: any = useTypedSelector((state: RootState) => getDataSource(state, cmp.filtredDs))
 
+    let reduxInputArray: any = [];
+    cmp.actions && cmp.actions.forEach((act: IActionsType) => {
+        if (act.type === 'flyInput') {
+            reduxInputArray = currentPage?.fly_inputs_groups?.[act.reduxElement.toString()] ? currentPage?.fly_inputs_groups?.[act.reduxElement.toString()] : []
+        }
+    })
+    const lsRequiredVars = useTypedSelector((state: RootState) => getDataSourceLsRequiredVars(state), shallowEqual);
+    const lsVars = useTypedSelector((state: RootState) => getLsVarsByArrObj(state, reduxInputArray), shallowEqual);
+
     const filtredValueUser = cmp.userFilter && cmp.userFilter.split(",");
-    const filtredValueDs = initDs && initDs[cmp.filtredDsKey];
+    const filtredValueDs = initDs && cmp.filtredDsKey && initDs[cmp.filtredDsKey];
 
     const filtredDs =
         listDs &&
@@ -46,6 +58,7 @@ const AntSelect: React.FC<AntSelectType> = ({cmp, props}) => {
                     case "<=":
                         return item[filterKey] <= filtredValueUser[1];
                     case "=":
+                        // eslint-disable-next-line
                         return item[filterKey] == filtredValueUser[1];
                 }
             } else {
@@ -53,11 +66,11 @@ const AntSelect: React.FC<AntSelectType> = ({cmp, props}) => {
             }
         });
 
-    const onChangeSelect = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    const onChangeSelect = (e: string | number) => {
         props.onChange(e)
-
-        // выполнить action c задержкой для возможности отправки актуального значения Select из Redux
-        setTimeout(() => {
+        if (cmp?.actions) {
+            // выполнить action c задержкой для возможности отправки актуального значения Select из Redux
+            // setTimeout(() => {
             cmp?.actions?.forEach((act: IActionsType) => {
                 switch (act.type) {
                     case 'flyInput':
@@ -67,22 +80,31 @@ const AntSelect: React.FC<AntSelectType> = ({cmp, props}) => {
                                 // в currentPage?.fly_inputs_groups храниться массив Redux Element
                                 if (currentPage?.fly_inputs_groups) {
                                     // сопоставляем имя act.reduxElement с массивом объектом из currentPage?.fly_inputs_groups - получаем массив ReduxElement
-                                    let reduxInputArray = currentPage?.fly_inputs_groups?.[act.reduxElement.toString()] ? currentPage?.fly_inputs_groups?.[act.reduxElement.toString()] : []
+                                    // let reduxInputArray = currentPage?.fly_inputs_groups?.[act.reduxElement.toString()] ? currentPage?.fly_inputs_groups?.[act.reduxElement.toString()] : []
                                     let reduxElementObj: {[key: string]: string | number | undefined | null} | undefined = {}
 
                                     // перебираем массив reduxElement и вытаскиваем значение каждого элемента из Redux
                                     reduxInputArray && Array.isArray(reduxInputArray) && reduxInputArray.forEach((item: string) => {
-                                        if (ls.requiredVars[item] === false) {
+
+                                        if (lsRequiredVars[item] === false) {
                                             reduxElementObj = undefined
                                         }
-                                        if (reduxElementObj && ls.vars && ls.vars.hasOwnProperty(item)) {
-                                            if (ls.vars[item] && ls.vars[item] !== '__no_name__') {
-                                                reduxElementObj[item.split('__')[0]] = ls.vars[item]
+                                        if (reduxElementObj && lsVars && lsVars.hasOwnProperty(item)) {
+                                            if (lsVars[item] && lsVars[item] !== '__no_name__') {
+                                                reduxElementObj[item.split('__')[0]] = lsVars[item];
+                                            }
+                                        }
+                                        if (reduxElementObj && cmp.adKey === item.split('__')[0]) {
+                                            if (e !== '__no_name__') {
+                                                reduxElementObj[cmp.adKey] = e;
+                                            } else {
+                                                delete reduxElementObj[cmp.adKey]
                                             }
                                         }
                                     })
 
                                     if (reduxElementObj) {
+
                                         action.onClick(undefined, undefined, reduxElementObj)
                                     }
                                 }
@@ -90,26 +112,28 @@ const AntSelect: React.FC<AntSelectType> = ({cmp, props}) => {
                         }
                         break
                     default:
-                        console.log('неизветсный action')
+                        console.log(`неизветсный action: ${act.type}`)
                 }
             })
-        }, 500)
+            // }, 500)
+        }
     }
-
 
     useEffect(() => {
         if (props.storedValue) {
             // props.onChange("");
             // при инициализаций select необходимо выполнить action fnc при наличии
-            cmp?.actions?.forEach((act: IActionsType) => {
-                switch (act.type) {
-                    case 'fnc':
-                        action.onClick(props.storedValue);
-                        break
-                    default:
-                    // console.log('неизветсный action')
-                }
-            })
+            if (cmp?.actions?.length > 0) {
+                cmp?.actions?.forEach((act: IActionsType) => {
+                    switch (act.type) {
+                        case 'fnc':
+                            action.onClick(props.storedValue);
+                            break
+                        default:
+                        // console.log('неизветсный action')
+                    }
+                })
+            }
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [props.storedValue]);

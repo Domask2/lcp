@@ -21,7 +21,7 @@ const AddictionContainer: React.FC<AddictionsSelectType> = ({cmp, setState, addi
     const currentProject = useTypedSelector((state: RootState) => getCurrentProject(state));
     const projectAddictions: any = currentProject?.addictions ? currentProject.addictions : []
     const [isModalVisible, setIsModalVisible] = useState(false);
-    const [currentAddictions, setCurrentAddictions] = useState<any>(addictionId);
+    const [currentAddictions, setCurrentAddictions] = useState<any>(addictionId ? addictionId : []);
 
     // в addiction компонента записывается массив id зависимости
     // в дальнейшем при изменении зависимости в конструкторе,
@@ -29,6 +29,7 @@ const AddictionContainer: React.FC<AddictionsSelectType> = ({cmp, setState, addi
     // к которым данная зависимость подключена
     const handleSelectMultiple = (value: any) => {
         const indexArr = value.map((num: any) => {
+            // eslint-disable-next-line
             return projectAddictions.findIndex((item: any) => item.id == num)
         })
 

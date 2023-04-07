@@ -13,15 +13,65 @@ export const getDataSourceAll = createSelector(
 
 export const getDataSource = (state: RootState, ds_key: any): IDataSource => state.ds.ds[ds_key];
 
+export const getDataSourceFilter = (state: RootState, ds_key: any): String => state.ds.ds[ds_key]?.filter;
+
 export const getDataSourceKeys = (state: RootState): IDataSourceAll => state.ds.ds
 
-export const getDataSourceLs = (state: RootState): IDataSourceAll => state.ds.ls
+export const getDataSourceLs = (state: RootState): any => state.ds.ls
 
-export const getDataSourceLsVars = (state: RootState): IDataSourceAll => state.ds.ls.vars
+export const getDataSourceLsVars = (state: RootState): any => state.ds.ls.vars
+
+export const getDataSourceLsRequiredVars = (state: RootState): any => state.ds.ls.requiredVars
+
+export const getDataSourceLsVarsByKey = (state: RootState, lsVarsKey: string | undefined): any => {
+
+    return lsVarsKey ? state.ds.ls.vars[lsVarsKey] : ''
+}
+export const getLsRequiredVarsByArrObj = (state: RootState, lsVarsKeys: any): any => {
+    let lsRequiredVarsObj: any = {}
+    lsVarsKeys?.length && lsVarsKeys.forEach((key: string) => {
+        if (state.ds.ls.requiredVars[key] !== undefined) {
+            lsRequiredVarsObj[key] = state.ds.ls.requiredVars[key]
+        }
+    })
+    return lsRequiredVarsObj
+}
+
+export const getLsVarsByArrObj = (state: RootState, lsVarsKeys: Array<any>): any => {
+    let lsObj: any = {}
+    lsVarsKeys?.length && lsVarsKeys.forEach((key: string) => {
+        lsObj[key] = state.ds.ls.vars[key]
+    })
+    return lsObj
+}
+
+export const getDsByArrKey = (state: RootState, dsKeys: Array<any>): any => {
+    let dsObj: any = {}
+    dsKeys?.length && dsKeys.forEach((key: string) => {
+        dsObj[key] = state.ds.ds[key]
+    })
+    return Object.keys(dsObj).length ? dsObj : false
+}
+
+export const getsLsVarsByArrObj = createSelector(
+    [getLsVarsByArrObj], (state: any, lsVarsKeys: any) => {
+        let lsObj: any = {}
+        return lsVarsKeys?.length && lsVarsKeys.map((key: string) => {
+            return lsObj[key] = state.ds.ls.vars[key]
+        })
+        //  Object.keys(lsObj).length ? lsObj : false
+    }
+);
 
 export const getDataSourceAllLs = createSelector(
-    [getDataSourceLs], (ls: IDataSourceAll) => {
+    [getDataSourceLs], (ls: any) => {
         return ls
+    }
+);
+
+export const getDataSourcesLsVarsByKey = createSelector(
+    [getDataSourceLsVarsByKey], (state: any, key: string | undefined) => {
+        return key ? state.ds.ls.vars[key] : ''
     }
 );
 

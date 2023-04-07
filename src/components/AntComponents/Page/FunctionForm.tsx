@@ -1,6 +1,6 @@
 import React, {FC, useState} from "react";
 import {useLocation} from "react-router-dom";
-import {useTypedSelector,useActions} from "../../../hooks";
+import {useTypedSelector, useActions} from "../../../hooks";
 import {getPage} from "../../../redux/project/project.selector";
 import {FunctionPage} from "./FunctionPage";
 import {Button, Form} from "antd";
@@ -18,9 +18,10 @@ const tailLayout = {
 interface IFunctionForm {
     cmp: any
     handleCancel?: any
+    editing?: boolean
 }
 
-export const FunctionForm: FC<IFunctionForm> = ({cmp, handleCancel}) => {
+export const FunctionForm: FC<IFunctionForm> = ({cmp, handleCancel, editing = true}) => {
     const {savePage} = useActions();
     const {pathname} = useLocation();
     const [form] = Form.useForm();
@@ -44,13 +45,13 @@ export const FunctionForm: FC<IFunctionForm> = ({cmp, handleCancel}) => {
 
     return (
         <Form {...layout} form={form} name="control-hooks" onFinish={onFinish} initialValues={initialValues}>
-            <FunctionPage cmp={cmp} initialValues={initialValues} setInitialValues={setInitialValues}/>
+            <FunctionPage cmp={cmp} initialValues={initialValues} setInitialValues={setInitialValues} editing={false} />
 
-            <Form.Item {...tailLayout} style={{marginTop: '-20px'}}>
+            {editing && <Form.Item {...tailLayout} style={{marginTop: '-20px'}}>
                 <Button type="primary" htmlType="submit">
                     Сохранить глобальные функций
                 </Button>
-            </Form.Item>
+            </Form.Item>}
 
         </Form>
     )

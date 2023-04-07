@@ -70,9 +70,9 @@ const HomePage = ({projectsAll, auth}: ProjectBlockType) => {
     }
 
     return <>
-        <Row style={{marginTop: '100px'}} gutter={[16, 16]}>
+        <Row style={{marginTop: '100px'}}>
             <Col xs={24} sm={24} lg={{span: 16, offset: 4}}
-                 xl={{span: 12, offset: 6}}>
+                xl={{span: 12, offset: 6}}>
                 <Card size="small" title="Доступные проекты" actions={actions} className="lcCard">
                     <List
                         itemLayout="horizontal"
@@ -82,10 +82,10 @@ const HomePage = ({projectsAll, auth}: ProjectBlockType) => {
                                 {
                                     item.logo ? (
                                         <List.Item.Meta
-                                        avatar={<Avatar shape={"square"} src={`${baseUrl}/${item.logo}`}/>}
-                                        title={item.title}
-                                        description={item.description}
-                                    />
+                                            avatar={<Avatar shape={"square"} src={`${baseUrl}/${item.logo}`} />}
+                                            title={item.title}
+                                            description={item.description}
+                                        />
                                     ) : (
                                         <List.Item.Meta
                                             avatar={<Avatar src={`${baseUrl}/logo.png`} />}

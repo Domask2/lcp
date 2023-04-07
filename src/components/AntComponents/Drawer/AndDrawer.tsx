@@ -28,7 +28,7 @@ const AndDrawer = ({cmp, props}: AntDrawerType) => {
             placement="right"
             closable={true}
             onClose={() => {setShow(false)}}
-            visible={show}
+            open={show}
             key={"placement"}
         >
             {cmp.children.map((item: ComponentInterface) =>

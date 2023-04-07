@@ -54,7 +54,7 @@ const identDbByDs = (element: any, db: Array<IDB>) => {
                 objResource['dataSourceAccess'] = eds.dataSourceAccess
                 elementResource.push(objResource);
             })
-
+            // eslint-disable-next-line
             if (JSON.stringify(elementResource) == JSON.stringify(item.dataSources)) {
                 result = true
             }
